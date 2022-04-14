@@ -1,0 +1,22 @@
+.fa-trash {
+    cursor: pointer;
+}
+
+#logout {
+    cursor: pointer;
+}
+
+.nav-link {
+    cursor: pointer;
+}
+
+.message-err {
+    color: crimson;
+}
+
+#delete-all {
+    cursor: pointer;
+}
+#delete-all:hover {
+    color: crimson;
+}
