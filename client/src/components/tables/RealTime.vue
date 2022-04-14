@@ -18,6 +18,7 @@
               sortable
               searchable
               fixed-columns
+              table-wrapper
             ">
                     <div class="dataTable-top">
                         <!-- <div class="dataTable-dropdown">

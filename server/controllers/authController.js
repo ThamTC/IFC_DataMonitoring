@@ -120,7 +120,7 @@ const authController = {
                 return res.status(200).json(newAccessToken)
             })
         } catch (error) {
-            
+            return res.status(500).json("Có lỗi trong quá trình refresh token")
         }
         
     }

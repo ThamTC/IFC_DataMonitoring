@@ -41,6 +41,16 @@ const apiRequest = {
             return error.response
         }
         
+    },
+    resetPassword: async(email) => {
+        try {
+            const res = axios.post("/api/auth/reset", {
+                email: email
+            })
+            return res.data
+        } catch (error) {
+            return error.response
+        }
     }
 }
 

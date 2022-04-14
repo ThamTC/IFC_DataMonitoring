@@ -18,10 +18,11 @@
               sortable
               searchable
               fixed-columns
+              table-wrapper
             ">
                     <div class="dataTable-top"></div>
 
-                    <table table class="table table-striped table-dark table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table table class="table table-striped table-dark table-hover table-bordered " id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
                                 <th>Hệ thống</th>

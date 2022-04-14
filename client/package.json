@@ -5,7 +5,7 @@
     "main": "main.js",
     "scripts": {
         "serve": "vue-cli-service serve",
-        "build": "vue-cli-service build && npm run serve",
+        "build": "vue-cli-service build",
         "lint": "vue-cli-service lint"
     },
     "dependencies": {
@@ -15,6 +15,7 @@
         "js-cookie": "^3.0.1",
         "jwt-decode": "^3.1.2",
         "socket.io-client": "^4.4.1",
+        "vee-validate": "^4.5.11",
         "vue": "^3.2.13",
         "vue-3-socket.io": "^1.0.5",
         "vue-axios": "^3.4.1",
@@ -23,7 +24,8 @@
         "vue-router": "^4.0.14",
         "vue-socket.io": "^3.0.10",
         "vue3-cookies": "^1.0.6",
-        "vuex": "^4.0.2"
+        "vuex": "^4.0.2",
+        "yup": "^0.32.11"
     },
     "devDependencies": {
         "@babel/core": "^7.12.16",
