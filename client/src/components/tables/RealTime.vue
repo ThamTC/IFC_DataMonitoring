@@ -18,7 +18,7 @@
               sortable
               searchable
               fixed-columns
-              table-wrapper
+
             ">
                     <div class="dataTable-top">
                         <!-- <div class="dataTable-dropdown">
@@ -37,30 +37,32 @@
                         <input class="dataTable-input" placeholder="Search..." type="text">
                     </div> -->
                     </div>
+                    <div class="table-wrapper">
+                        <table table class="table table-striped table-dark table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Hệ thống</th>
+                                    <th>Thông tin cảnh báo</th>
+                                    <th>Kiểu ALARM</th>
+                                    <th>Trạng thái</th>
+                                    <th>Kênh cảnh báo</th>
+                                    <th>Thời gian</th>
+                                </tr>
+                            </thead>
 
-                    <table table class="table table-striped table-dark table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>Hệ thống</th>
-                                <th>Thông tin cảnh báo</th>
-                                <th>Kiểu ALARM</th>
-                                <th>Trạng thái</th>
-                                <th>Kênh cảnh báo</th>
-                                <th>Thời gian</th>
-                            </tr>
-                        </thead>
+                            <tbody id="realtime-content">
+                                <tr v-for="(item, idx) in items" :key="idx">
+                                    <td>{{ item?.name }}</td>
+                                    <td>{{ item?.content }}</td>
+                                    <td>{{ item?.style }}</td>
+                                    <td>{{ item?.status }}</td>
+                                    <td>{{ item?.contact }}</td>
+                                    <td>{{ item?.time }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                        <tbody id="realtime-content">
-                            <tr v-for="(item, idx) in items" :key="idx">
-                                <td>{{ item?.name }}</td>
-                                <td>{{ item?.content }}</td>
-                                <td>{{ item?.style }}</td>
-                                <td>{{ item?.status }}</td>
-                                <td>{{ item?.contact }}</td>
-                                <td>{{ item?.time }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
                     <!-- <TableBottom/> -->
                     <!-- <div class="input-group mb-3 ">
               <span class="input-group-text" id="basic-addon3">Change Time Request to DB</span>
@@ -87,16 +89,16 @@ export default {
     },
     created() {
         redisRequest.getIndexStore("realtime").then((res) => {
-            this.items = res.data
-            this.isLoading = false
-        }).catch((err) => {
-            console.log(err)
-        }),
-        document.title = "Trực tuyến"
+                this.items = res.data
+                this.isLoading = false
+            }).catch((err) => {
+                console.log(err)
+            }),
+            document.title = "Trực tuyến"
     },
     sockets: {
         realtime: function (data) {
-          this.items.unshift(data)
+            this.items.unshift(data)
         }
     }
 };

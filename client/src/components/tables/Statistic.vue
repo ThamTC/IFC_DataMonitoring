@@ -18,35 +18,36 @@
               sortable
               searchable
               fixed-columns
-              table-wrapper
             ">
                     <div class="dataTable-top"></div>
+                    <div class="table-wrapper">
+                        <table table class="table table-striped table-dark table-hover table-bordered " id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Hệ thống</th>
+                                    <th>Nội dung cảnh báo</th>
+                                    <th>Số lượng</th>
+                                    <th>Xử lý?</th>
+                                    <th>Người thực hiện</th>
+                                    <th id="delete-all" data-bs-toggle="modal" data-bs-target="#exampleModal">Xóa</th>
+                                </tr>
+                            </thead>
 
-                    <table table class="table table-striped table-dark table-hover table-bordered " id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>Hệ thống</th>
-                                <th>Nội dung cảnh báo</th>
-                                <th>Số lượng</th>
-                                <th>Xử lý?</th>
-                                <th>Người thực hiện</th>
-                                <th id="delete-all" data-bs-toggle="modal" data-bs-target="#exampleModal">Xóa</th>
-                            </tr>
-                        </thead>
+                            <tbody id="statistic">
+                                <tr v-for="(item, idx) in items" :key="idx">
+                                    <td>{{ item.name }}</td>
+                                    <td>{{ item.content }}</td>
+                                    <td>{{ item.count }}</td>
+                                    <td>
+                                        <input @click="check" name="chkbox" :value="idx" class="form-check-input" type="checkbox" :checked="item.isAction" :disabled="isDisable(item.username)" />
+                                    </td>
+                                    <td :ref="'checkerName_' + idx">{{ item.username }}</td>
+                                    <td><i @click="doneTask" :id="idx" class="fas fa-trash"></i></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                        <tbody id="statistic">
-                            <tr v-for="(item, idx) in items" :key="idx">
-                                <td>{{ item.name }}</td>
-                                <td>{{ item.content }}</td>
-                                <td>{{ item.count }}</td>
-                                <td>
-                                    <input @click="check" name="chkbox" :value="idx" class="form-check-input" type="checkbox" :checked="item.isAction" :disabled="isDisable(item.username)" />
-                                </td>
-                                <td :ref="'checkerName_' + idx">{{ item.username }}</td>
-                                <td><i @click="doneTask" :id="idx" class="fas fa-trash"></i></td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
