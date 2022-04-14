@@ -65,7 +65,7 @@ const meterController = {
                 // add default element
                 doneData.push({
                     "name": req.body.name || "",
-                    "content": req.body.content,
+                    "content": req.body.content || "",
                     "count": 1,
                     "isAction": false,
                     "username": ""

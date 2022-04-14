@@ -101,24 +101,28 @@ const authController = {
         if (!redisToken.isExistToken(refreshToken)) {
             return res.status(403).json("Refresh Token is not valid")
         }
-        jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, user) => {
-            if (err) {
-                return res.status(403).json("Token is not valid")
-            }
-            console.log("user:", user)
-            // create new accessToken, new refreshToken
-            var newAccessToken = authController.generateAccessToken(user)
-            var newRefreshToken = authController.generateRefreshToken(user)
-            redisToken.storeToken("accessToken", newAccessToken)
-            redisToken.storeToken("refreshToken", newRefreshToken)
-            res.cookie("refreshToken", newRefreshToken, {
-                httpOnly: true,
-                secure: false,
-                path: "/",
-                sameSite: "strict"
+        try {
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, user) => {
+                if (err) {
+                    return res.status(403).json("Token is not valid")
+                }
+                // create new accessToken, new refreshToken
+                var newAccessToken = authController.generateAccessToken(user)
+                var newRefreshToken = authController.generateRefreshToken(user)
+                redisToken.storeToken("accessToken", newAccessToken)
+                redisToken.storeToken("refreshToken", newRefreshToken)
+                res.cookie("refreshToken", newRefreshToken, {
+                    httpOnly: true,
+                    secure: false,
+                    path: "/",
+                    sameSite: "strict"
+                })
+                return res.status(200).json(newAccessToken)
             })
-            return res.status(200).json(newAccessToken)
-        })
+        } catch (error) {
+            
+        }
+        
     }
 }
 module.exports = authController

@@ -97,7 +97,8 @@ export default {
             })
             .catch((err) => {
                 alert(err.response.data);
-            });
+            }),
+            document.title = "Thống kê"
     },
     methods: {
         async check(e) {
@@ -116,9 +117,10 @@ export default {
     },
     sockets: {
         statistic: function (data) {
-            this.items.unshift(data)
+            this.items = data
         }
     },
+    watch: {}
 };
 </script>
 

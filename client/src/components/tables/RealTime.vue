@@ -90,7 +90,8 @@ export default {
             this.isLoading = false
         }).catch((err) => {
             console.log(err)
-        })
+        }),
+        document.title = "Trực tuyến"
     },
     sockets: {
         realtime: function (data) {
