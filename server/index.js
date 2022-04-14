@@ -6,7 +6,6 @@ const cors = require("cors")
 
 const bodyParser = require('body-parser')
 const rateLimit = require('express-rate-limit')
-
 const app = express()
 const limiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 15 minutes
@@ -14,22 +13,35 @@ const limiter = rateLimit({
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
+const redisRouter = require("./routes/api/redisRouter")
+const authRouter = require("./routes/api/authRouter")
+const meterRouter = require("./routes/api/meterRouter")
+
+const db = require("./config/db_connection")
 
 app.use(limiter)
 app.use(cookieParser())
 app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
-app.use(express.static(__dirname + '/public'))
-app.set("view engine", "ejs")
-app.set("views", "./views")
+app.use("/api/redis", redisRouter)
+app.use("/api/auth", authRouter)
+app.use("/api", meterRouter)
+app.use(express.static(__dirname + '/public/'))
 
 
 const server = require("http").Server(app)
 
-global.io = require('socket.io')(server)
-app.get('/.*/', (req, res) => res.sendFile(__dirname + '/public/index.html'))
+global.io = require('socket.io')(server, {
+    cors: {
+        credentials: true,
+        origin: '*',
+        methods: ["GET", "POST"]
+    }
+})
+
+app.get('*', (req, res) => res.sendFile(__dirname + '/public/index.html'))
+
 app.use((req, res, next) => {
     const error = new Error("Not found");
     error.status = 404;
