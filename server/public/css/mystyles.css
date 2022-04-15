@@ -22,12 +22,14 @@
 }
 .table-wrapper {
     max-height: 47rem;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
  /* width */
 ::-webkit-scrollbar {
     width: 10px;
+    height: 10px;
   }
   
   /* Track */
