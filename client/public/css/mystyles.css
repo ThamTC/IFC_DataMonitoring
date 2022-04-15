@@ -39,11 +39,15 @@
    
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: rgb(0, 140, 255); 
+    background: #0d6efd; 
     border-radius: 10px;
   }
   
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #00379e; 
+    background: #0b5ed7; 
+  }
+
+  .mt_warning{
+      color: var(--bs-yellow);
   }

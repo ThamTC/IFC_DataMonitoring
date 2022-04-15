@@ -58,7 +58,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Cảnh báo</h5>
+                    <h5 class="modal-title mt_warning" id="exampleModalLabel">Cảnh báo !!!</h5>
                 </div>
                 <div class="modal-body">
                     Bạn có muốn hoàn thành tất cả các công việc không?
