@@ -22,8 +22,7 @@
 }
 .table-wrapper {
     max-height: 47rem;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: auto;
   }
 
  /* width */
