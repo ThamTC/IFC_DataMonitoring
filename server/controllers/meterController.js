@@ -1,9 +1,10 @@
 const asyncRedis = require("async-redis");
 const client = asyncRedis.createClient();
-
+const webpushController = require("./webpushController")
 client.on("error", function (err) {
   console.log("Error " + err);
 });
+webpushController.config()
 
 const meterController = {
     alarm: async(req, res) => {
@@ -74,7 +75,8 @@ const meterController = {
 
             await client.set("statistic", JSON.stringify(doneData))
             global.io.sockets.emit("statistic", doneData)
-        
+            // push notification to clients
+            webpushController.pushNotification(dataRedis.content)
             return res.status(200).json("success" )
         } catch (error) {
             return res.status(500).json("Please check frame data")

@@ -7,18 +7,22 @@ client.on("error", function (err) {
 
 const redisToken = {
   setData: async (key, value) => {
-    redis_client.set(key, JSON.stringify(value));
+    try {
+      await client.set(key, JSON.stringify(value));
+    } catch (error) {
+      return error;
+    }
   },
-  getData: function (key) {
-    const resData = [];
-    redis_client.get(key, (err, data) => {
-      if (err) {
-        throw err;
-      } else {
-        resData = JSON.parse(data);
-        return resData;
+  getData: async (key) => {
+    try {
+      const resData = await client.get(key);
+      if (resData !== "[]" || resData !== null) {
+        resData = JSON.parse(resData);
       }
-    });
+      return resData;
+    } catch (error) {
+      return error;
+    }
   },
   clearData: (key) => {
     const resData = [];
@@ -57,7 +61,7 @@ const redisToken = {
     if (!resData.includes(refreshToken)) {
       return false;
     }
-    resData.filter((item) => item !== refreshToken)
+    resData.filter((item) => item !== refreshToken);
     return true;
   },
   clearCacheInterval: () => {

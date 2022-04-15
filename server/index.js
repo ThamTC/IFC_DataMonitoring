@@ -16,6 +16,7 @@ const limiter = rateLimit({
 const redisRouter = require("./routes/api/redisRouter")
 const authRouter = require("./routes/api/authRouter")
 const meterRouter = require("./routes/api/meterRouter")
+const webPushRouter = require("./routes/api/webPush")
 
 const db = require("./config/db_connection")
 
@@ -27,6 +28,7 @@ app.use(bodyParser.json())
 app.use("/api/redis", redisRouter)
 app.use("/api/auth", authRouter)
 app.use("/api", meterRouter)
+app.use("/api/webpush", webPushRouter)
 app.use(express.static(__dirname + '/public/'))
 
 

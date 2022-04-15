@@ -7,12 +7,14 @@ const redisToken = require("../redis/redis")
 const authController = {
     generateAccessToken: (user) => {
         return jwt.sign({
+            _id: user._id,
             username: user.username,
             email: user.email
         }, process.env.ACCESS_TOKEN, { expiresIn: "1d" })
     },
     generateRefreshToken: (user) => {
         return jwt.sign({
+            _id: user._id,
             username: user.username,
             email: user.email
         }, process.env.REFRESH_TOKEN, { expiresIn: "365d" })
