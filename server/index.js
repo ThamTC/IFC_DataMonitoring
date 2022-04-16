@@ -17,6 +17,7 @@ const redisRouter = require("./routes/api/redisRouter")
 const authRouter = require("./routes/api/authRouter")
 const meterRouter = require("./routes/api/meterRouter")
 const webPushRouter = require("./routes/api/webPush")
+const redisClient = require("./redis/redis")
 
 const db = require("./config/db_connection")
 
@@ -60,7 +61,7 @@ app.use((error, req, res, next) => {
         },
     });
 });
-
+redisClient.clearCacheInterval()
 server.listen(process.env.SERVER_PORT || 5000)
 server.on('listening', function() {
     console.log('Express server started on port %s at %s', server.address().port, server.address().address);

@@ -66,18 +66,15 @@ const redisToken = {
   },
   clearCacheInterval: () => {
     setInterval(() => {
-      const d = new Date();
-      let isRemoved = true;
+      const d = new Date(); 
       if (
         d.getHours() == process.env.REDIS_TIME_CLEAR &&
-        d.getMinutes() == 0 &&
-        isRemoved
+        d.getMinutes() == 0 
       ) {
-        redisToken.clearData("warning");
-        redisToken.clearData("do-alarm");
-        isRemoved = false;
+        redisToken.clearData("realtime");
+        redisToken.clearData("statistic");
       }
-    }, 1000 * 60 * 60 * 24);
+    }, 1000 * 60);
   },
 };
 
