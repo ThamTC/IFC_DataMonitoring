@@ -76,7 +76,11 @@ const meterController = {
             await client.set("statistic", JSON.stringify(doneData))
             global.io.sockets.emit("statistic", doneData)
             // push notification to clients
-            webpushController.pushNotification(dataRedis.content)
+            webpushController.pushNotification(dataRedis.content).then((data) => {
+                console.log("data: ", data)
+            }).catch((err) => {
+                console.log("err: ", err)
+            })
             return res.status(200).json("success" )
         } catch (error) {
             return res.status(500).json("Please check frame data")

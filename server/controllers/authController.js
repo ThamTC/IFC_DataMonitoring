@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const UserModel = require("../models/user")
 const redisToken = require("../redis/redis")
-
+const emailExistence = require("../utils/checkEmail")
 
 const authController = {
     generateAccessToken: (user) => {
@@ -57,6 +57,11 @@ const authController = {
         try {
             const username = req.body.username
             const email = req.body.email
+            //check exist email on cloud
+            const isEmailExist = await emailExistence.check(email)
+            if (!isEmailExist) {
+                return res.status(404).json('Email không tồn tại');
+            }
             const user = await UserModel.findOne({ email: email }).exec()
             if (user)
                 return res.status(404).json('Email đã tồn tại.');

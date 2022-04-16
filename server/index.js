@@ -41,7 +41,9 @@ global.io = require('socket.io')(server, {
         methods: ["GET", "POST"]
     }
 })
-
+// app.post("/api/webpush/subcrible", (req, res)=>{
+//     return res.status(200).json("success")
+// })
 app.get('*', (req, res) => res.sendFile(__dirname + '/public/index.html'))
 
 app.use((req, res, next) => {
@@ -59,8 +61,10 @@ app.use((error, req, res, next) => {
     });
 });
 
-server.listen(process.env.SERVER_PORT || 5000, () => console.log(`Server started ON port ${process.env.SERVER_PORT}`))
-
+server.listen(process.env.SERVER_PORT || 5000)
+server.on('listening', function() {
+    console.log('Express server started on port %s at %s', server.address().port, server.address().address);
+});
 global.io.on("connection", function(socket) {
     console.log("Co nguoi ket noi " + socket.id)
     socket.on("disconnect", function(client) {

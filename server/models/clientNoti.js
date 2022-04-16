@@ -7,7 +7,7 @@ const ClientNotiSchema = new mongoose.Schema({
         unique: true
     },
     endpoint: {
-        type: String,
+        type: Object,
         required: true
     },
 }, { timestamps: true });
