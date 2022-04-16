@@ -4,7 +4,8 @@ const store = createStore({
     state: {
         user: {},
         loadTable: "realtime",
-        isLogin: false
+        isLogin: false,
+        isPlaySoundMessage: false
     },
     getters: {
         getLoadTable(state) {
@@ -12,6 +13,9 @@ const store = createStore({
         },
         getLoginName(state) {
             return state.user?.username
+        },
+        getIsPlaySoundMess(state) {
+            return state.isPlaySoundMessage
         }
     },
     mutations: {

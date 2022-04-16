@@ -79,6 +79,7 @@
 
 <script>
 import redisRequest from '../../redisRequest'
+import sound from '../../services/howl'
 export default {
     name: "RealTime",
     data() {
@@ -98,6 +99,7 @@ export default {
     },
     sockets: {
         realtime: function (data) {
+            sound.play()
             this.items.unshift(data)
         }
     }
