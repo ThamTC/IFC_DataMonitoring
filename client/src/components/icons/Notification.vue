@@ -1,5 +1,5 @@
 <template>
-<div class="noti-icon px-3">
+<div class="noti-icon px-2">
     <div class="position-relative">
         <i class="fas fa-bell noti circle-icon"></i>
         <span class="position-absolute top-1 start-100 translate-right badge rounded-pill bg-warning">
