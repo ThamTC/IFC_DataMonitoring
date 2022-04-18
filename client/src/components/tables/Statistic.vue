@@ -34,7 +34,7 @@
                             </thead>
 
                             <tbody id="statistic">
-                                <tr v-for="(item, idx) in items" :key="idx">
+                                <tr v-for="(item, idx) in dataItems" :key="idx">
                                     <td>{{ item.name }}</td>
                                     <td>{{ item.content }}</td>
                                     <td>{{ item.count }}</td>
@@ -82,10 +82,14 @@ export default {
 
     data() {
         return {
-            items: [],
             isLoading: true,
             checkerName: "",
         };
+    },
+    computed: {
+        dataItems() {
+            return store.getters.getDataStatistic
+        }
     },
     mounted() {
         this.checkerName = store.getters.getLoginName
@@ -94,7 +98,7 @@ export default {
         redisRequest
             .getIndexStore("statistic")
             .then((res) => {
-                this.items = res.data;
+                store.commit("setDataStatistic",res.data);
                 this.isLoading = false;
             })
             .catch((err) => {
@@ -104,25 +108,22 @@ export default {
     },
     methods: {
         async check(e) {
-            this.items = await redisRequest.selectTask(e, this.checkerName)
+            const resData = await redisRequest.selectTask(e, this.checkerName)
+            store.commit("setDataStatistic",resData);
         },
         async doneTask(e) {
             let doneName = this.$refs["checkerName_" + e.target.id][0].innerText || this.checkerName
-            this.items = await redisRequest.doneTask(e.target.id, this.checkerName, doneName)
+            const resData = await redisRequest.doneTask(e.target.id, this.checkerName, doneName)
+            store.commit("setDataStatistic",resData);
         },
         isDisable(name) {
             return this.checkerName !== name && name != ''
         },
         async deleteAll() {
-            this.items = await redisRequest.doneAllTask(this.checkerName)
+            const resData = await redisRequest.doneAllTask(this.checkerName)
+            store.commit("setDataStatistic",resData);
         }
-    },
-    sockets: {
-        statistic: function (data) {
-            this.items = data
-        }
-    },
-    watch: {}
+    }
 };
 </script>
 

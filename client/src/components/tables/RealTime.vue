@@ -51,7 +51,7 @@
                             </thead>
 
                             <tbody id="realtime-content">
-                                <tr v-for="(item, idx) in items" :key="idx">
+                                <tr v-for="(item, idx) in dataItems" :key="idx">
                                     <td>{{ item?.name }}</td>
                                     <td>{{ item?.content }}</td>
                                     <td>{{ item?.style }}</td>
@@ -79,30 +79,29 @@
 
 <script>
 import redisRequest from '../../redisRequest'
-import sound from '../../services/howl'
+import store from '../../stores/store'
 export default {
     name: "RealTime",
     data() {
         return {
-            items: [],
             isLoading: true,
         };
     },
+    computed: {
+        dataItems() {
+            return store.getters.getDataRealtime
+        }
+    },
     created() {
         redisRequest.getIndexStore("realtime").then((res) => {
-                this.items = res.data
+                store.commit("setDataRealtime",res.data)
                 this.isLoading = false
             }).catch((err) => {
                 console.log(err)
             }),
             document.title = "Trực tuyến"
     },
-    sockets: {
-        realtime: function (data) {
-            sound.play()
-            this.items.unshift(data)
-        }
-    }
+
 };
 </script>
 
