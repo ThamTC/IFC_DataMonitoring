@@ -88,8 +88,9 @@ const redisToken = {
             const timeOut =
               Math.round(d.getTime() / 1000) - resData[idx].createAt;              
             if (
-              timeOut > 60 * process.env.REDIS_TIMEOUT  ||
-              resData[idx].count > process.env.REDIS_COUNT_WARNING
+              !resData[idx].isAction &&
+              (timeOut > 60 * process.env.REDIS_TIMEOUT ||
+                resData[idx].count > process.env.REDIS_COUNT_WARNING)
             ) {
               // write to DB
               const record = {
