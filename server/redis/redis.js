@@ -68,16 +68,14 @@ const redisToken = {
     setInterval(() => {
       const d = new Date(); 
       const hours = d.getHours()
-      const minutes = d.getMinutes()
-      console.log(hours, minutes)
+      console.log(hours)
       if (
-        hours == process.env.REDIS_TIME_CLEAR &&
-        minutes == 0 
+        hours == process.env.REDIS_TIME_CLEAR
       ) {
         redisToken.clearData("realtime");
         redisToken.clearData("statistic");
       }
-    }, 1000 * 60);
+    }, 1000 * 60 * 60);
   },
 };
 
