@@ -13,7 +13,7 @@ export default {
             store.commit("insertDataRealtime", data)
         },
         statistic: function (data) {
-            store.commit("insertDataStatistic", data)
+            store.commit("setDataStatistic", data)
         }
     }
 };

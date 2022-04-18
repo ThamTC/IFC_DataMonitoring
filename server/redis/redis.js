@@ -1,5 +1,6 @@
 const asyncRedis = require("async-redis");
 const client = asyncRedis.createClient();
+const StatisticModel = require("../models/statistic");
 
 client.on("error", function (err) {
   console.log("Error " + err);
@@ -24,7 +25,7 @@ const redisToken = {
       return error;
     }
   },
-  clearData: async(key) => {
+  clearData: async (key) => {
     const resData = [];
     await client.set(key, JSON.stringify(resData));
   },
@@ -65,17 +66,59 @@ const redisToken = {
     return true;
   },
   clearCacheInterval: () => {
-    setInterval(() => {
-      const d = new Date(); 
-      const hours = d.getHours()
-      console.log(hours)
-      if (
-        hours == process.env.REDIS_TIME_CLEAR
-      ) {
-        redisToken.clearData("realtime");
-        redisToken.clearData("statistic");
+    setInterval(async () => {
+      const d = new Date();
+      const hours = d.getHours();
+      console.log(hours);
+      if (hours == process.env.REDIS_TIME_CLEAR) {
+        await redisToken.clearData("realtime");
+        await redisToken.clearData("statistic");
       }
     }, 1000 * 60 * 60);
+  },
+  trackToTask: () => {
+    setInterval(() => {
+      client
+        .get("statistic")
+        .then((data) => {
+          const resData = JSON.parse(data);
+          const d = new Date();
+          var itemsDelete = [];
+          for (let idx = 0; idx < resData.length; idx++) {
+            const timeOut =
+              Math.round(d.getTime() / 1000) - resData[idx].createAt;              
+            if (
+              timeOut > 60 * process.env.REDIS_TIMEOUT  ||
+              resData[idx].count > process.env.REDIS_COUNT_WARNING
+            ) {
+              // write to DB
+              const record = {
+                name: resData[idx]?.name ?? "",
+                content: resData[idx]?.content ?? "",
+                count: resData[idx]?.count ?? 0,
+                contact: resData[idx]?.contact ?? "",
+                firstTime: resData[idx]?.createAt ?? "",
+                finalTime: resData[idx]?.updateAt ?? "",
+              };
+              itemsDelete.push(idx);
+              StatisticModel.create(record);
+            }
+          }
+          
+          // delete item
+          if (itemsDelete.length > 0) {
+            itemsDelete.forEach((element) => {
+              resData.splice(element, 1);
+              
+            });
+            client.set("statistic", JSON.stringify(resData));
+            global.io.sockets.emit("statistic", resData);
+          }
+
+          // send to email, skype, telegram,...
+        })
+        .catch((err) => console.log(err));
+    }, 1000 * 60);
   },
 };
 
