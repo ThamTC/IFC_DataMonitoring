@@ -24,9 +24,9 @@ const redisToken = {
       return error;
     }
   },
-  clearData: (key) => {
+  clearData: async(key) => {
     const resData = [];
-    redis_client.set(key, JSON.stringify(resData));
+    await client.set(key, JSON.stringify(resData));
   },
   updateData: async (key, value, newValue) => {
     const resData = await client.get(key);
@@ -67,9 +67,12 @@ const redisToken = {
   clearCacheInterval: () => {
     setInterval(() => {
       const d = new Date(); 
+      const hours = d.getHours()
+      const minutes = d.getMinutes()
+      console.log(hours, minutes)
       if (
-        d.getHours() == process.env.REDIS_TIME_CLEAR &&
-        d.getMinutes() == 0 
+        hours == process.env.REDIS_TIME_CLEAR &&
+        minutes == 0 
       ) {
         redisToken.clearData("realtime");
         redisToken.clearData("statistic");
