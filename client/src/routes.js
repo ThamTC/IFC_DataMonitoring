@@ -59,7 +59,7 @@ const routers = [
         component: Register
     },
     {
-        path: '/*/',
+        path: '/:pathMatch(.*)*',
         component: Err404
     }
 ]
