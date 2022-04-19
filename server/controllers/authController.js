@@ -31,9 +31,9 @@ const authController = {
             if (!isPass) {
                 return res.status(404).json("Sai mật khẩu")
             }
-            const accesssToken = authController.generateAccessToken(user)
+            const accessToken = authController.generateAccessToken(user)
             const refreshToken = authController.generateRefreshToken(user)
-            redisToken.storeToken("accessToken", accesssToken)
+            redisToken.storeToken("accessToken", accessToken)
             redisToken.storeToken("refreshToken", refreshToken)
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
@@ -47,10 +47,10 @@ const authController = {
             } = user._doc
             return res.status(200).json({
                 ...others,
-                accesssToken
+                accessToken
             })
-        } catch (error) {
-            return res.status(500).json(error)
+        } catch (err) {
+            return res.status(500).json(err)
         }
     },
     register: async(req, res) => {
@@ -83,8 +83,8 @@ const authController = {
                 return res.status(404).json('Có lỗi trong quá trình tạo tài khoản, vui lòng thử lại.');
             }
             return res.status(200).json("Đăng ký thành công");
-        } catch (error) {
-            return res.status(500).json(error)
+        } catch (err) {
+            return res.status(500).json(err)
         }
 
 
@@ -126,10 +126,32 @@ const authController = {
                 })
                 return res.status(200).json(newAccessToken)
             })
-        } catch (error) {
+        } catch (err) {
             return res.status(500).json("Có lỗi trong quá trình refresh token")
         }
         
+    },
+    isLogged: (req, res) => {
+        const refreshToken = req.cookies?.refreshToken
+        const userReq = req.body?.user
+        if(!refreshToken) {
+           return res.status(401).json("Token is not valid")
+        }
+        if (!redisToken.isExistToken(refreshToken)) {
+            return res.status(403).json("Token is not valid")
+        }
+        try {
+            jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, user) => {
+                if (err) {
+                    return res.status(403).json(err.message)
+                }
+                return res.status(200).json(
+                    userReq
+                )
+            })
+        } catch (err) {
+            return res.status(403).json(err.message)
+        }
     }
 }
 module.exports = authController

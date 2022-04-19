@@ -4,12 +4,18 @@ const store = createStore({
     state: {
         user: {},
         loadTable: "realtime",
-        isLogin: false,
+        isLoggin: false,
         isPlaySoundMessage: false,
         dataRealtime: {},
         dataStatistic: []
     },
     getters: {
+        checkLoggin(state){
+            return state.isLoggin
+        },
+        getUser(state) {
+            return state.user
+        },
         getLoadTable(state) {
             return state.loadTable
         },
@@ -27,9 +33,12 @@ const store = createStore({
         }
     },
     mutations: {
+        setIsLoggin(state, status){
+            state.isLoggin = status
+        },
         setUser(state, user){
             state.user = user
-            state.isLogin = true
+            state.isLoggin = true
         },
         setLoadTable(state, tableName) {
             state.loadTable = tableName

@@ -3,7 +3,7 @@
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="#">IFC</a>
     <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" @click="sidebarToggle">
+    <button v-if="isLoggin" class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" @click="sidebarToggle">
         <i class="fas fa-bars"></i>
     </button>
     <!-- Navbar Search-->
@@ -15,12 +15,12 @@
             </button>
         </div>
     </form>
-    <NotiIcon v-if="!isLogin"></NotiIcon>
+    <NotiIcon v-if="isLoggin"></NotiIcon>
     <!-- Navbar-->
-    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4 navbar-expand">
 
-        <router-link v-if="isLogin" class="nav-link ps-4" to="/login"> Login </router-link>
-        <router-link v-if="isLogin" class="nav-link ps-4" to="/register"> Register </router-link>
+        <router-link v-if="!isLoggin" class="nav-link ps-4" to="/login"> Login </router-link>
+        <router-link v-if="!isLoggin" class="nav-link ps-4" to="/register"> Register </router-link>
         
         <div class="noti-icon px-3">
 
@@ -29,10 +29,10 @@
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="#!">Settings</a></li>
                 <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                <li>
+                <li v-show="isLoggin">
                     <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
+                <li v-show="isLoggin"><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
             </ul>
         </li>
         </div>
@@ -52,18 +52,18 @@ export default {
     },
     data() {
         return {
-            isLogin: true
         }
     },
-    computed: {},
-    mounted() {
-        this.isLogin = store.state.user.username ? false : true
+    computed: {
+        isLoggin() {
+            return store.getters.checkLoggin
+        }
     },
     methods: {
         logout() {
             apiRequest.logout().then((data) => {
                 this.$router.push({
-                    name: "login"
+                    name: "dashboard"
                 })
             }).catch((error) => {
                 console.log(error)
@@ -77,4 +77,7 @@ export default {
 </script>
 
 <style>
+.navbar-expand {
+    align-items: center;
+}
 </style>

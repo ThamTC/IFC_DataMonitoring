@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken")
 const redisToken = require("../redis/redis")
 
 const middlewareController = {
-    isLogin: (req, res, next) => {
+    isLoggin: (req, res, next) => {
         const refreshToken = req.cookies.refreshToken
         if (refreshToken) {
             jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, user) => {

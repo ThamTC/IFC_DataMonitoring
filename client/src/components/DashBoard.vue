@@ -1,14 +1,28 @@
 <template>
-<h3>welcome to dashboard</h3>
-  
+<div>
+    <NavBar></NavBar>
+    <!-- <SideNav /> -->
+</div>
 </template>
 
 <script>
+import NavBar from "./NavBar.vue";
+// import SideNav from './SideNav.vue'
+
 export default {
-    name: "dashboard"
-}
+    name: "dashboard",
+    data() {
+        return {
+            tableName: ""
+        }
+    },
+    components: {
+        NavBar,
+        // SideNav
+    },
+    mounted() {
+        console.log(JSON.parse(this.$cookies.get("refreshToken")))
+    },
+
+};
 </script>
-
-<style>
-
-</style>

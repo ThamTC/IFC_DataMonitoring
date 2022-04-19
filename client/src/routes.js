@@ -8,35 +8,20 @@ import DashBoard from './components/DashBoard.vue'
 import store from './stores/store'
 import jwt_decode from 'jwt-decode'
 import apiRequest from './apiRequest'
+import {authUser, isLogged} from './middlewares/authBasic'
 
 const routers = [
     {
         path: '/',
         name: "",
         component: HomePage,
-        beforeEnter: async(to, from, next) => {
-            let refreshToken = await apiRequest.refreshToken()
-            if(refreshToken?.status){
-                next({name: "login"})
-            }
-            let decoded = jwt_decode(refreshToken)
-            store.state.user.username = decoded.username
-            next()
-        }
+        beforeEnter: authUser
     },
     {
         path: '/home',
         name: "home",
         component: HomePage,
-        beforeEnter: async(to, from, next) => {
-            let refreshToken = await apiRequest.refreshToken()
-            if(refreshToken?.status){
-                next({name: "login"})
-            }
-            let decoded = jwt_decode(refreshToken)
-            store.state.user.username = decoded.username
-            next()
-        }
+        beforeEnter: authUser
     },
     {
         path: '/dashboard',
@@ -46,17 +31,20 @@ const routers = [
     {
         path: '/login',
         name: "login",
-        component: Login
+        component: Login,
+        beforeEnter: isLogged
     },
     {
         path: '/password',
         name: "password",
-        component: Password
+        component: Password,
+        beforeEnter: isLogged
     },
     {
         path: '/register',
         name: "register",
-        component: Register
+        component: Register,
+        beforeEnter: isLogged
     },
     {
         path: '/:pathMatch(.*)*',

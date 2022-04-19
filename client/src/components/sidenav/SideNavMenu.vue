@@ -13,6 +13,12 @@
         </div>
         Thống kê
       </a>
+      <a ref="test" class="nav-link" @click="setLoadTable('test')">
+        <div class="sb-nav-link-icon">
+          <i class="fas fa-table"></i>
+        </div>
+        Test
+      </a>
     </div>
   </div>
 </template>
