@@ -89,6 +89,9 @@ export default {
             message: "",
         }
     },
+    created() {
+        document.title = "Đăng nhập"
+    },
     methods: {
         submit() {
             console.log("form", this.user);

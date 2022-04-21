@@ -110,6 +110,9 @@ export default {
             messageErr: "",
         };
     },
+    created() {
+        document.title = "Đăng ký tài khoản"
+    },
     methods: {
         submit() {
             apiRequest

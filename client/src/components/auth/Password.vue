@@ -46,6 +46,9 @@ export default {
             resetPass: ""
         }
     },
+    created() {
+        document.title = "Quên mật khẩu"
+    },
     methods: {
         resetPassword(){
             console.log(this.resetPass)

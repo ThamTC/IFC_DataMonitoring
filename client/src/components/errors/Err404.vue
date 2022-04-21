@@ -24,7 +24,10 @@
 
 <script>
 export default {
-    name: 'Err404'
+    name: 'Err404',
+    created() {
+        document.title = "Đã xảy ra lỗi"
+    },
 }
 </script>
 

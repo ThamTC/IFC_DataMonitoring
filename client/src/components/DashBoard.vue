@@ -16,6 +16,9 @@ export default {
             tableName: ""
         }
     },
+    created() {
+        document.title = "Trang chủ"
+    },
     components: {
         NavBar,
         // SideNav
