@@ -115,12 +115,12 @@ const redisToken = {
             ) {
               // write to DB
               const record = {
-                name: resData[idx]?.name ?? "",
-                content: resData[idx]?.content ?? "",
+                name: resData[idx]?.name ?? "name",
+                content: resData[idx]?.content ?? "content",
                 count: resData[idx]?.count ?? 0,
-                contact: resData[idx]?.contact ?? "",
-                firstTime: resData[idx]?.createAt ?? "",
-                finalTime: resData[idx]?.updateAt ?? "",
+                contact: resData[idx]?.contact ?? "0123456789",
+                firstTime: resData[idx]?.createAt ?? d.toISOString(),
+                finalTime: resData[idx]?.updateAt ?? d.toISOString(),
               };
               itemsDelete.push(idx);
               StatisticModel.create(record);
