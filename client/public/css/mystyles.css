@@ -21,7 +21,7 @@
     color: crimson;
 }
 .table-wrapper {
-    max-height: 47rem;
+    max-height: calc(100vh - 200px);;
     overflow: auto;
   }
 

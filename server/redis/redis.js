@@ -1,5 +1,5 @@
-const asyncRedis = require("async-redis");
-const client = asyncRedis.createClient();
+const redis = require("redis");
+const client = redis.createClient();
 const StatisticModel = require("../models/statistic");
 
 client.on("error", function (err) {
@@ -7,30 +7,51 @@ client.on("error", function (err) {
 });
 
 const redisToken = {
-  setData: async (key, value) => {
-    try {
-      await client.set(key, JSON.stringify(value));
-    } catch (error) {
-      return error;
-    }
+  get: (key) => {
+    return new Promise((resolve, reject) => {
+      client.get(key, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        if (data != null) {
+          return resolve(data);
+        }
+        resolve([]);
+      });
+    });
   },
-  getData: async (key) => {
-    try {
-      const resData = await client.get(key);
-      if (resData !== "[]" || resData !== null) {
-        resData = JSON.parse(resData);
-      }
-      return resData;
-    } catch (error) {
-      return error;
-    }
+  hgetall: (key) => {
+    return new Promise((resolve, reject) => {
+      client.hgetall(key, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        if (data != null) {
+          return resolve(data);
+        }
+        resolve([]);
+      });
+    });
+  },
+  set: (key, value) => {
+    return new Promise((resolve, reject) => {
+      client.set(key, value, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        if (data != null) {
+          return resolve(data);
+        }
+        resolve(JSON.stringify("Failed"));
+      });
+    });
   },
   clearData: async (key) => {
     const resData = [];
-    await client.set(key, JSON.stringify(resData));
+    await redisToken.set(key, JSON.stringify(resData));
   },
   updateData: async (key, value, newValue) => {
-    const resData = await client.get(key);
+    const resData = await redisToken.get(key);
     resData = JSON.parse(resData);
     for (let idx = 0; idx < resData.length; idx++) {
       if (resData[idx] === value) {
@@ -38,10 +59,10 @@ const redisToken = {
         break;
       }
     }
-    await client.set(key, resData);
+    await redisToken.set(key, resData);
   },
   storeToken: async (key, value) => {
-    var resData = await client.get(key);
+    var resData = await redisToken.get(key);
     resData = JSON.parse(resData);
     let isFoundValue = false;
     for (let idx = 0; idx < resData.length; idx++) {
@@ -54,10 +75,10 @@ const redisToken = {
     if (!isFoundValue) {
       resData.push(value);
     }
-    await client.set(key, JSON.stringify(resData));
+    await redisToken.set(key, JSON.stringify(resData));
   },
   isExistToken: async (refreshToken) => {
-    var resData = await client.get("refreshToken");
+    var resData = await redisToken.get("refreshToken");
     resData = JSON.parse(resData);
     if (!resData.includes(refreshToken)) {
       return false;
@@ -78,7 +99,7 @@ const redisToken = {
   },
   trackToTask: () => {
     setInterval(() => {
-      client
+      redisToken
         .get("statistic")
         .then((data) => {
           const resData = JSON.parse(data);
@@ -86,7 +107,7 @@ const redisToken = {
           var itemsDelete = [];
           for (let idx = 0; idx < resData.length; idx++) {
             const timeOut =
-              Math.round(d.getTime() / 1000) - resData[idx].createAt;              
+              Math.round(d.getTime() / 1000) - resData[idx].createAt;
             if (
               !resData[idx].isAction &&
               (timeOut > 60 * process.env.REDIS_TIMEOUT ||
@@ -105,14 +126,13 @@ const redisToken = {
               StatisticModel.create(record);
             }
           }
-          
+
           // delete item
           if (itemsDelete.length > 0) {
             itemsDelete.forEach((element) => {
               resData.splice(element, 1);
-              
             });
-            client.set("statistic", JSON.stringify(resData));
+            redisToken.set("statistic", JSON.stringify(resData));
             global.io.sockets.emit("statistic", resData);
           }
 

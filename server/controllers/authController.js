@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const UserModel = require("../models/user")
+const RolePermissionModel = require("../models/role-permission")
 const redisToken = require("../redis/redis")
 const emailExistence = require("../utils/checkEmail")
 
@@ -27,6 +28,8 @@ const authController = {
             if (!user) {
                 return res.status(404).json("Email không tồn tại")
             }
+            const rolePermission = await RolePermissionModel.findOne({name: user.role}).exec() ?? []
+            const permissions = rolePermission.permission
             const isPass = await bcrypt.compare(req.body.password, user.password)
             if (!isPass) {
                 return res.status(404).json("Sai mật khẩu")
@@ -47,6 +50,7 @@ const authController = {
             } = user._doc
             return res.status(200).json({
                 ...others,
+                permissions,
                 accessToken
             })
         } catch (err) {

@@ -96,6 +96,39 @@ const meterController = {
       return res.status(500).json("Please check frame data");
     }
   },
+  test: async(req, res) => {
+    console.log(req.body);
+    try {
+      var dataRedis = {};
+      var contact = req.body.contact.split(",");
+
+      if (contact.length > 1) {
+        dataRedis.contact = contact[0] + ",...";
+      } else {
+        dataRedis.contact = contact[0];
+      }
+      console.log(dataRedis.contact);
+      dataRedis.name = req.body?.name;
+      dataRedis.content = req.body?.content;
+      dataRedis.style = req.body?.style;
+      dataRedis.status = req.body?.status;
+      dataRedis.contactAppend = req.body?.contact;
+      dataRedis.time = req.body?.time;
+
+      global.io.sockets.emit("test", dataRedis);
+      var realtimeData = [];
+      const resRealtime = await client.get("test");
+      if (resRealtime != null) {
+        realtimeData = JSON.parse(resRealtime);
+      }
+      realtimeData.unshift(dataRedis);
+      await client.set("test", JSON.stringify(realtimeData));
+      
+      return res.status(200).json("success");
+    } catch (error) {
+      return res.status(500).json("Please check frame data");
+    }
+  }
 };
 
 module.exports = meterController;

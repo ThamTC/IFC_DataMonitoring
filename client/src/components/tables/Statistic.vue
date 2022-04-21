@@ -12,16 +12,10 @@
         </div> -->
 
             <div class="card-body">
-                <div class="
-              dataTable-wrapper dataTable-loading
-              no-footer
-              sortable
-              searchable
-              fixed-columns
-            ">
+                <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
                     <div class="dataTable-top"></div>
                     <div class="table-wrapper">
-                        <table table class="table table-striped table-dark table-hover table-bordered " id="dataTable" width="100%" cellspacing="0">
+                        <table class="table table-striped table-dark table-hover table-bordered " id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>Hệ thống</th>
@@ -98,7 +92,7 @@ export default {
         redisRequest
             .getIndexStore("statistic")
             .then((res) => {
-                store.commit("setDataStatistic",res.data);
+                store.commit("setDataStatistic", res.data);
                 this.isLoading = false;
             })
             .catch((err) => {
@@ -109,19 +103,19 @@ export default {
     methods: {
         async check(e) {
             const resData = await redisRequest.selectTask(e, this.checkerName)
-            store.commit("setDataStatistic",resData);
+            store.commit("setDataStatistic", resData);
         },
         async doneTask(e) {
             let doneName = this.$refs["checkerName_" + e.target.id][0].innerText || this.checkerName
             const resData = await redisRequest.doneTask(e.target.id, this.checkerName, doneName)
-            store.commit("setDataStatistic",resData);
+            store.commit("setDataStatistic", resData);
         },
         isDisable(name) {
             return this.checkerName !== name && name != ''
         },
         async deleteAll() {
             const resData = await redisRequest.doneAllTask(this.checkerName)
-            store.commit("setDataStatistic",resData);
+            store.commit("setDataStatistic", resData);
         }
     }
 };

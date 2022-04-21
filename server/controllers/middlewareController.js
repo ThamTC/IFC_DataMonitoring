@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken")
-const redisToken = require("../redis/redis")
 
 const middlewareController = {
     isLoggin: (req, res, next) => {
@@ -13,7 +12,7 @@ const middlewareController = {
             })
             next()
         } else {
-            return res.redirect("user/login")
+            return res.status(401).json("Token is not valid")
         }
 
     },

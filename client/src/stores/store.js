@@ -6,7 +6,7 @@ const store = createStore({
         loadTable: "realtime",
         isLoggin: false,
         isPlaySoundMessage: false,
-        dataRealtime: {},
+        dataRealtime: [],
         dataStatistic: []
     },
     getters: {

@@ -6,8 +6,10 @@ const apiRequest = {
     try {
       const res = await axios.post("api/auth/login", user);
       // save to vuex
+      const loadTableName = res.data.permissions[0].split('-')[1]
       store.commit("setUser", res.data);
       store.commit("setIsLoggin", true);
+      store.commit("setLoadTable", loadTableName)
       localStorage.setItem("user", JSON.stringify(res.data));
       return res;
     } catch (error) {
@@ -70,9 +72,10 @@ const apiRequest = {
           withCredentials: true,
         }
       );
-      //   console.log()
+      const loadTableName = res.data.permissions[0].split('-')[1]
       store.commit("setUser", res.data);
       store.commit("setIsLoggin", true);
+      store.commit("setLoadTable", loadTableName)
       return res; // return true or false
     } catch (error) {
       return error.response;

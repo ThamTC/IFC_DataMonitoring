@@ -1,10 +1,10 @@
 <template>
-    <div id="layoutSidenav_content">
-        <RealTime v-if="loadTable === 'realtime'"></RealTime>
-        <Statistic v-if="loadTable === 'statistic'"></Statistic>
-        <Test v-if="loadTable === 'test'"></Test>
-        <Footer></Footer>
-    </div>
+<div id="layoutSidenav_content">
+    <RealTime v-if="canShowRealTime && loadTable === 'realtime'" name="realtime"></RealTime>
+    <Statistic v-if="canShowStatistic && loadTable === 'statistic'" name="statistic"></Statistic>
+    <Test v-if="canShowTest && loadTable === 'test'" name="test"></Test>
+    <Footer></Footer>
+</div>
 </template>
 
 <script>
@@ -14,6 +14,7 @@ import Footer from '../Footer.vue'
 import RealTime from '../tables/RealTime.vue'
 import Statistic from '../tables/Statistic.vue'
 import Test from '../tables/Test.vue'
+import checkPermission from '../../untils/checkPermission'
 
 export default {
     name: "SideNavContent",
@@ -24,8 +25,17 @@ export default {
         Test
     },
     computed: {
-        loadTable(){
+        loadTable() {
             return store.getters.getLoadTable
+        },
+        canShowRealTime() {
+            return checkPermission(store.getters.getUser, ["view-realtime"])
+        },
+        canShowStatistic() {
+            return checkPermission(store.getters.getUser, ["view-statistic"])
+        },
+        canShowTest() {
+            return checkPermission(store.getters.getUser, ["view-test"])
         }
     }
 }
