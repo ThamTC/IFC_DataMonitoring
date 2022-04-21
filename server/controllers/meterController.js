@@ -8,17 +8,19 @@ webpushController.config();
 
 const meterController = {
   alarm: async (req, res) => {
-    console.log(req.body);
+    console.log("frame: ", req.body);
+    if (Object.keys(req.body).length === 0) {
+      return res.status(500).json("Please check frame data");
+    }
     try {
       var dataRedis = {};
-      var contact = req.body.contact.split(",");
+      var contact = req.body?.contact ? req.body?.contact.split(","):[];
 
       if (contact.length > 1) {
         dataRedis.contact = contact[0] + ",...";
       } else {
         dataRedis.contact = contact[0];
       }
-      console.log(dataRedis.contact);
       dataRedis.name = req.body?.name;
       dataRedis.content = req.body?.content;
       dataRedis.style = req.body?.style;
@@ -93,6 +95,7 @@ const meterController = {
         });
       return res.status(200).json("success");
     } catch (error) {
+      console.log(error)
       return res.status(500).json("Please check frame data");
     }
   },
