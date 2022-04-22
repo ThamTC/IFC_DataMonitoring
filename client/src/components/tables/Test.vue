@@ -26,7 +26,7 @@
                                     <th>Value</th>
                                     <th>Unit</th>
                                     <th>Time</th>
-                                    <th>Status</th>
+                                    <!-- <th>Status</th> -->
                                     <!-- <th>Priority</th> -->
                                     <th>Message</th>
                                     <th>Action</th>
@@ -41,7 +41,7 @@
                                     <td>{{ dataItem?.value }}</td>
                                     <td>{{ dataItem?.unit }}</td>
                                     <td>{{ dataItem?.time }}</td>
-                                    <td>{{ dataItem?.status }}</td>
+                                    <!-- <td>{{ dataItem?.status }}</td> -->
                                     <!-- <td>{{ dataItem?.priority }}</td> -->
                                     <td>{{ dataItem?.message }}</td>
                                     <td>{{ dataItem?.action }}</td>
