@@ -10,21 +10,44 @@
             <div class="card-body">
                 <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
                     <div class="dataTable-top"></div>
-                    <div class="align-items-end">
+                    <!-- <div class="align-items-end">
                         <button type="button" class="btn btn-primary mb-1" id="add-column" data-bs-toggle="modal" data-bs-target="#addColumnModal">Thêm cột</button>
+                    </div> -->
+                    <div>
+                        <button type="button" :class="'btn btn-' +countColor[0]+' mxy-2'" v-for="(countColor, idx) in countColors" :key="idx">{{countColor[1]}}</button>
                     </div>
                     <div class="table-wrapper">
-                        <table class="table table-striped table-dark table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table-test  table-dark table-test-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
-                                <tr>
-                                    <th>Hệ thống</th>
-                                    <th>Thông tin cảnh báo</th>
-                                    <th>Kiểu ALARM</th>
-                                    <th>Trạng thái</th>
-                                    <th>Kênh cảnh báo</th>
-                                    <th>Thời gian</th>
+                                <tr id="0">
+                                    <th>Type</th>
+                                    <th>System</th>
+                                    <th>Parameter</th>
+                                    <th>Value</th>
+                                    <th>Unit</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                    <!-- <th>Priority</th> -->
+                                    <th>Message</th>
+                                    <th>Action</th>
+                                    <th>Contact</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                <tr ref="item" :id="dataItem?.priority" v-for="(dataItem, idx) in dataItems" :key="idx">
+                                    <td>{{ dataItem?.type }}</td>
+                                    <td>{{ dataItem?.system }}</td>
+                                    <td>{{ dataItem?.parameter }}</td>
+                                    <td>{{ dataItem?.value }}</td>
+                                    <td>{{ dataItem?.unit }}</td>
+                                    <td>{{ dataItem?.time }}</td>
+                                    <td>{{ dataItem?.status }}</td>
+                                    <!-- <td>{{ dataItem?.priority }}</td> -->
+                                    <td>{{ dataItem?.message }}</td>
+                                    <td>{{ dataItem?.action }}</td>
+                                    <td>{{ dataItem?.contact }}</td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -76,11 +99,15 @@
 </template>
 
 <script>
+import redisRequest from '../../redisRequest'
+import store from '../../stores/store'
+import convert from '../../untils/convert'
+
 export default {
     name: "Test",
     data() {
         return {
-            isLoading: false,
+            isLoading: true,
             shows: [0],
             querys: [0],
             inputShows: ["Hệ thống"],
@@ -88,12 +115,34 @@ export default {
             titles: ["Hệ thống"]
         }
     },
+    computed: {
+        dataItems() {
+            return store.getters.getDataTest
+        },
+        countColors() {
+            return store.getters.getCountColors
+        }
+    },
+    created() {
+        redisRequest.getIndexStore("test_sorted").then((res) => {
+                store.commit("setDataTest", res.data)
+                store.commit("setCountColors", res.data)
+                this.isLoading = false
+            }).catch((err) => {
+                console.log(err)
+            }),
+            document.title = "Dữ liệu Test"
+    },
     mounted() {
         if (this.inputShows.length == 1) {
             this.$refs.iconMinus.style.cursor = "not-allowed"
         }
+
     },
     methods: {
+        convertColorName() {
+
+        },
         inputShowTable() {
             this.$refs.show.forEach(ele => {
                 console.log(ele.id)
@@ -127,7 +176,7 @@ export default {
             } else {
                 this.$refs.iconMinus.style.cursor = "not-allowed"
             }
-        }
+        },
     },
 }
 </script>

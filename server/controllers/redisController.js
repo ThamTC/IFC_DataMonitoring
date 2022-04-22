@@ -8,6 +8,16 @@ client.on("error", function (err) {
 });
 
 const redisController = {
+  hgetall: async (req, res) => {
+    var resData = [];
+    const key = req.body.key;
+    try {
+      resData = await client.hgetall(key);
+      return res.status(200).send(resData);
+    } catch (error) {
+      return error;
+    }
+  },
   indexStore: async (req, res) => {
     var resData = [];
     const key = req.body.key;

@@ -100,35 +100,85 @@ const meterController = {
     }
   },
   test: async(req, res) => {
+    // nhan data tu cac request -> luu xuong test_realtime -> lay data tu sorted_test -> chen data theo thu tu -> luu xuong sorted_test -> socket sang client hien thi
     console.log(req.body);
+    if (Object.keys(req.body).length === 0) {
+      return res.status(500).json("Please check frame data");
+    }
     try {
-      var dataRedis = {};
-      var contact = req.body.contact.split(",");
-
-      if (contact.length > 1) {
-        dataRedis.contact = contact[0] + ",...";
-      } else {
-        dataRedis.contact = contact[0];
+      // nhan data tu cac request
+      const d = new Date()
+      const payload = {
+        type: req.body?.type ?? "test",
+        system: req.body?.system ?? "test",
+        parameter: req.body?.parameter ?? "test",
+        value: req.body?.value ?? "test",
+        unit: req.body?.unit ?? "test",
+        time: req.body?.time ?? d.toISOString(),
+        status: req.body?.status ?? "Null",
+        priority: req.body?.priority ?? '0',
+        message: req.body?.message ?? "test",
+        action: req.body?.action ?? "test",
+        contact: req.body?.contact
       }
-      console.log(dataRedis.contact);
-      dataRedis.name = req.body?.name;
-      dataRedis.content = req.body?.content;
-      dataRedis.style = req.body?.style;
-      dataRedis.status = req.body?.status;
-      dataRedis.contactAppend = req.body?.contact;
-      dataRedis.time = req.body?.time;
-
-      global.io.sockets.emit("test", dataRedis);
-      var realtimeData = [];
-      const resRealtime = await client.get("test");
-      if (resRealtime != null) {
-        realtimeData = JSON.parse(resRealtime);
+      // luu xuong test_realtime theo id la so phan tu co trong key real_realtime
+      const len = await client.hlen("test_realtime")
+      await client.hsetnx("test_realtime", "test:"+len, JSON.stringify(payload))
+      //  lay data tu sorted_test
+      const data = await client.get("test_sorted")
+      // value la string nen can parse sang object
+      var resParser = []
+      if (data !== "[]") {
+        resParser = JSON.parse(data)
       }
-      realtimeData.unshift(dataRedis);
-      await client.set("test", JSON.stringify(realtimeData));
+      // sau khi parse ta duoc array chua cac object
+      // chen data theo thu tu
+      for (let idx = 0; idx < resParser.length; idx++) {
+        if (
+          resParser[idx].priority == 0 ||
+          (payload.priority > 0 && payload.priority <= resParser[idx].priority)
+        ) {
+          resParser.splice(idx, 0, payload);
+          break;
+        } else if (idx == resParser.length - 1) {
+          resParser.push(payload);
+          break
+        }
+      }
+      console.log(resParser)
+      // luu xuong sorted_test
+      await client.set("test_sorted", JSON.stringify(resParser))
+      // gui data sang client de hien thi
+      global.io.sockets.emit("test_realtime", resParser)
+      // const resData = await client.hgetall("test")
+      // const itemArray = []
+      // if (resData) {
+      //   Object.keys(resData).forEach((ele)=>{
+      //     itemArray.push(JSON.parse(resData[ele]))
+      //   })
+      // }else {
+      //   await client.hsetnx("test", "test:0", JSON.stringify(payload))
+      //   global.io.sockets.emit("test", payload);
+      //   // console.log("done:", isDone)
+      //   return res.status(200).json("success");
+      // }
+      // const priorPos = payload.priority;
       
+      // // console.log(typeof(itemArray[0]))
+      
+      // console.log(itemArray)
+      // var payloadToSave
+      // for (let idx = 0; idx < itemArray.length; idx++) {
+        
+      // }
+      // save to redis with key=test
+      // await client.hsetnx("test", "test:" + payload.time, JSON.stringify(payload))
+      // send to client using socke.io
+      // global.io.sockets.emit("test", payload);
+      // console.log("done:", isDone)
       return res.status(200).json("success");
     } catch (error) {
+      console.log("error", error)
       return res.status(500).json("Please check frame data");
     }
   }

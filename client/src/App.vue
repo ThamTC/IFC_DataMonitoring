@@ -22,11 +22,12 @@ export default {
                 store.commit("setDataStatistic", data)
             }
         },
-        test: function (data) {
+        test_realtime: function (data) {
             const isCanView = checkPermission(store.getters.getUser, ["view-test"])
             if (isCanView) {
                 sound.play()
-                store.commit("insertDataTest", data)
+                store.commit("setDataTest", data)
+                store.commit("setCountColors", data)
             }
         }
     }

@@ -1,53 +1,164 @@
 .fa-trash {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #logout {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .nav-link {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .message-err {
-    color: crimson;
+  color: crimson;
 }
 
 #delete-all {
-    cursor: pointer;
+  cursor: pointer;
 }
+
 #delete-all:hover {
-    color: crimson;
+  color: crimson;
 }
+
 .table-wrapper {
-    max-height: calc(100vh - 200px);;
-    overflow: auto;
-  }
+  max-height: calc(100vh - 200px);
+  ;
+  overflow: auto;
+}
 
- /* width */
+/* width */
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-  
-  /* Track */
-  ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px grey; 
-    border-radius: 10px;
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #0d6efd; 
-    border-radius: 10px;
-  }
-  
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #0b5ed7; 
-  }
+  width: 10px;
+  height: 10px;
+}
 
-  .mt_warning{
-      color: var(--bs-yellow);
-  }
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #0d6efd;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #0b5ed7;
+}
+
+.mt_warning {
+  color: var(--bs-yellow);
+}
+
+.table-test {
+  --bs-table-hover-bg-test: #323539;
+}
+
+.table-test>:not(caption)>*>* {
+  padding: 0.5rem 0.5rem;
+  background-color: var(--bs-table-bg);
+  border-bottom-width: 1px;
+  box-shadow: inset 0 0 0 9999px var(--bs-table-accent-bg-test);
+}
+
+.table-test>tbody>tr[id="1"]>* {
+  background-color: red;
+  --bs-table-hover-bg-test: rgb(209, 0, 0);
+}
+
+.table-test>tbody>tr[id="2"]>* {
+  color: black;
+  background-color: orange;
+  --bs-table-hover-bg-test: darkorange;
+}
+
+.table-test>tbody>tr[id="3"]>* {
+  color: black;
+  background-color: yellow;
+  --bs-table-hover-bg-test: gold;
+}
+
+.table-test>tbody>tr[id="4"]>* {
+  background-color: green;
+  --bs-table-hover-bg-test: darkgreen;
+}
+
+.table-test>tbody>tr[id="5"]>* {
+  background-color: blue;
+  --bs-table-hover-bg-test: darkblue;
+}
+
+.table-test>tbody>tr[id="6"]>* {
+  color: black;
+  background-color: cyan;
+  --bs-table-hover-bg-test: darkcyan;
+}
+
+.table-test>tbody>tr[id="7"]>* {
+  color: black;
+  background-color: violet;
+  --bs-table-hover-bg-test: darkviolet;
+}
+
+.table-test-hover>tbody>tr:hover>* {
+  --bs-table-accent-bg-test: var(--bs-table-hover-bg-test);
+  /* background-color: #0b5ed7; */
+}
+/*  ----------------------------------- */
+.btn-red {
+  color: white;
+  background-color: red;
+  border-color: red;
+}
+
+.btn-orange {
+  color: white;
+  background-color: orange;
+  border-color: orange;
+}
+
+.btn-yellow {
+  color: black;
+  background-color: yellow;
+  border-color: yellow;
+}
+
+.btn-green {
+  color: white;
+  background-color: green;
+  border-color: green;
+}
+
+.btn-blue {
+  color: white;
+  background-color: blue;
+  border-color: blue;
+}
+
+.btn-cyan {
+  color: black;
+  background-color: cyan;
+  border-color: cyan;
+}
+
+.btn-violet {
+  color: black;
+  background-color: violet;
+  border-color: violet;
+}
+
+.btn-dark {
+  color: white;
+  background-color: #212529;
+  border-color: #212529;
+}
+
+.mxy-2 {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}

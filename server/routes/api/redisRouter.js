@@ -10,4 +10,6 @@ router.post("/delete", redisController.deleteItem)
 
 router.post("/deleteAll", redisController.deleteStore)
 
+router.post("/hgetall", redisController.hgetall)
+
 module.exports = router

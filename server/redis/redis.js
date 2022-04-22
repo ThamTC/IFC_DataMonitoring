@@ -1,4 +1,4 @@
-const redis = require("redis");
+const redis = require("async-redis");
 const client = redis.createClient();
 const StatisticModel = require("../models/statistic");
 
@@ -7,51 +7,12 @@ client.on("error", function (err) {
 });
 
 const redisToken = {
-  get: (key) => {
-    return new Promise((resolve, reject) => {
-      client.get(key, (err, data) => {
-        if (err) {
-          return reject(err);
-        }
-        if (data != null) {
-          return resolve(data);
-        }
-        resolve([]);
-      });
-    });
-  },
-  hgetall: (key) => {
-    return new Promise((resolve, reject) => {
-      client.hgetall(key, (err, data) => {
-        if (err) {
-          return reject(err);
-        }
-        if (data != null) {
-          return resolve(data);
-        }
-        resolve([]);
-      });
-    });
-  },
-  set: (key, value) => {
-    return new Promise((resolve, reject) => {
-      client.set(key, value, (err, data) => {
-        if (err) {
-          return reject(err);
-        }
-        if (data != null) {
-          return resolve(data);
-        }
-        resolve(JSON.stringify("Failed"));
-      });
-    });
-  },
   clearData: async (key) => {
     const resData = [];
-    await redisToken.set(key, JSON.stringify(resData));
+    await client.set(key, JSON.stringify(resData));
   },
   updateData: async (key, value, newValue) => {
-    const resData = await redisToken.get(key);
+    const resData = await client.get(key);
     resData = JSON.parse(resData);
     for (let idx = 0; idx < resData.length; idx++) {
       if (resData[idx] === value) {
@@ -59,10 +20,10 @@ const redisToken = {
         break;
       }
     }
-    await redisToken.set(key, resData);
+    await client.set(key, resData);
   },
   storeToken: async (key, value) => {
-    var resData = await redisToken.get(key);
+    var resData = await client.get(key);
     resData = JSON.parse(resData);
     let isFoundValue = false;
     for (let idx = 0; idx < resData.length; idx++) {
@@ -75,10 +36,10 @@ const redisToken = {
     if (!isFoundValue) {
       resData.push(value);
     }
-    await redisToken.set(key, JSON.stringify(resData));
+    await client.set(key, JSON.stringify(resData));
   },
   isExistToken: async (refreshToken) => {
-    var resData = await redisToken.get("refreshToken");
+    var resData = await client.get("refreshToken");
     resData = JSON.parse(resData);
     if (!resData.includes(refreshToken)) {
       return false;
@@ -92,14 +53,14 @@ const redisToken = {
       const hours = d.getHours();
       console.log(hours);
       if (hours == process.env.REDIS_TIME_CLEAR) {
-        await redisToken.clearData("realtime");
-        await redisToken.clearData("statistic");
+        await client.clearData("realtime");
+        await client.clearData("statistic");
       }
     }, 1000 * 60 * 60);
   },
   trackToTask: () => {
     setInterval(() => {
-      redisToken
+      client
         .get("statistic")
         .then((data) => {
           const resData = JSON.parse(data);
@@ -132,7 +93,7 @@ const redisToken = {
             itemsDelete.forEach((element) => {
               resData.splice(element, 1);
             });
-            redisToken.set("statistic", JSON.stringify(resData));
+            client.set("statistic", JSON.stringify(resData));
             global.io.sockets.emit("statistic", resData);
           }
 
