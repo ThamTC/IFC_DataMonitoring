@@ -4,6 +4,7 @@
     <Statistic v-if="canShowStatistic && loadTable === 'statistic'" name="statistic"></Statistic>
     <TestRealtime v-if="canShowTest && loadTable === 'test_realtime'" name="test_realtime"></TestRealtime>
     <TestStatistic v-if="canShowTest && loadTable === 'test_statistic'" name="test_statistic"></TestStatistic>
+    <ManagerUsers v-if="canShowManager && loadTable === 'manager'" name="manager"></ManagerUsers>
     <Footer></Footer>
 </div>
 </template>
@@ -16,6 +17,7 @@ import RealTime from '../tables/RealTime.vue'
 import Statistic from '../tables/Statistic.vue'
 import TestRealtime from '../tables/Test_Realtime.vue'
 import TestStatistic from '../tables/Test_Statistic.vue'
+import ManagerUsers from '../tables/ManagerUser.vue'
 import checkPermission from '../../untils/checkPermission'
 
 export default {
@@ -25,7 +27,8 @@ export default {
         RealTime,
         Statistic,
         TestRealtime,
-        TestStatistic
+        TestStatistic,
+        ManagerUsers
     },
     computed: {
         loadTable() {
@@ -39,6 +42,9 @@ export default {
         },
         canShowTest() {
             return checkPermission(store.getters.getUser, ["view-test"])
+        },
+        canShowManager() {
+            return checkPermission(store.getters.getUser, ["view-manager"])
         }
     }
 }

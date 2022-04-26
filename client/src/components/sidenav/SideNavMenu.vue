@@ -25,6 +25,12 @@
         </div>
         Test - Thống kê
       </a>
+      <a v-if="canShowManager" ref="manager" class="nav-link" @click="setLoadTable('manager')">
+        <div class="sb-nav-link-icon">
+          <i class="fas fa-users-cog"></i>
+        </div>
+        Manager Users
+      </a>
     </div>
   </div>
 </template>
@@ -44,6 +50,9 @@ export default {
     },
     canShowTest(){
       return checkPermission(store.getters.getUser, ["view-test"])
+    },
+    canShowManager() {
+      return checkPermission(store.getters.getUser, ["view-manager"])
     }
   },
   methods: {
