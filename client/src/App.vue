@@ -29,6 +29,12 @@ export default {
                 store.commit("setDataTest", data)
                 store.commit("setCountColors", data)
             }
+        },
+        test_statistic: function (data) {
+            const isCanView = checkPermission(store.getters.getUser, ["view-test"])
+            if (isCanView) {
+                store.commit("setDataTestStatistic", data)
+            }
         }
     }
 };

@@ -93,8 +93,8 @@ export default {
         }
     },
     created() {
-        redisRequest.getIndexStore("realtime").then((res) => {
-                store.commit("setDataRealtime",res.data)
+        redisRequest.getIndexStore("realtime").then((data) => {
+                store.commit("setDataRealtime",data)
                 this.isLoading = false
             }).catch((err) => {
                 console.log(err)

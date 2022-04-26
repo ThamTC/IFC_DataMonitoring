@@ -13,11 +13,17 @@
         </div>
         Thống kê
       </a>
-      <a v-if="canShowTest" ref="test" class="nav-link" @click="setLoadTable('test')">
+      <a v-if="canShowTest" ref="test_realtime" class="nav-link" @click="setLoadTable('test_realtime')">
+        <div class="sb-nav-link-icon">
+          <i class="fas fa-chart-area"></i>
+        </div>
+        Test - Trực tiếp
+      </a>
+      <a v-if="canShowTest" ref="test_statistic" class="nav-link" @click="setLoadTable('test_statistic')">
         <div class="sb-nav-link-icon">
           <i class="fas fa-table"></i>
         </div>
-        Test
+        Test - Thống kê
       </a>
     </div>
   </div>

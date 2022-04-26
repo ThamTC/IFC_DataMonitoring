@@ -2,7 +2,8 @@
 <div id="layoutSidenav_content">
     <RealTime v-if="canShowRealTime && loadTable === 'realtime'" name="realtime"></RealTime>
     <Statistic v-if="canShowStatistic && loadTable === 'statistic'" name="statistic"></Statistic>
-    <Test v-if="canShowTest && loadTable === 'test'" name="test"></Test>
+    <TestRealtime v-if="canShowTest && loadTable === 'test_realtime'" name="test_realtime"></TestRealtime>
+    <TestStatistic v-if="canShowTest && loadTable === 'test_statistic'" name="test_statistic"></TestStatistic>
     <Footer></Footer>
 </div>
 </template>
@@ -13,7 +14,8 @@ import store from '../../stores/store'
 import Footer from '../Footer.vue'
 import RealTime from '../tables/RealTime.vue'
 import Statistic from '../tables/Statistic.vue'
-import Test from '../tables/Test.vue'
+import TestRealtime from '../tables/Test_Realtime.vue'
+import TestStatistic from '../tables/Test_Statistic.vue'
 import checkPermission from '../../untils/checkPermission'
 
 export default {
@@ -22,7 +24,8 @@ export default {
         Footer,
         RealTime,
         Statistic,
-        Test
+        TestRealtime,
+        TestStatistic
     },
     computed: {
         loadTable() {

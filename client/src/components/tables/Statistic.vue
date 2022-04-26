@@ -91,8 +91,8 @@ export default {
     created() {
         redisRequest
             .getIndexStore("statistic")
-            .then((res) => {
-                store.commit("setDataStatistic", res.data);
+            .then((data) => {
+                store.commit("setDataStatistic", data);
                 this.isLoading = false;
             })
             .catch((err) => {
@@ -102,12 +102,12 @@ export default {
     },
     methods: {
         async check(e) {
-            const resData = await redisRequest.selectTask(e, this.checkerName)
+            const resData = await redisRequest.selectTask(e, this.checkerName, "statistic")
             store.commit("setDataStatistic", resData);
         },
         async doneTask(e) {
             let doneName = this.$refs["checkerName_" + e.target.id][0].innerText || this.checkerName
-            const resData = await redisRequest.doneTask(e.target.id, this.checkerName, doneName)
+            const resData = await redisRequest.doneTask(e.target.id, this.checkerName, doneName, "statistic")
             store.commit("setDataStatistic", resData);
         },
         isDisable(name) {

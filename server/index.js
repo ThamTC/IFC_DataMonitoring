@@ -63,6 +63,7 @@ app.use((error, req, res, next) => {
 });
 redisClient.clearCacheInterval()
 redisClient.trackToTask()
+redisClient.trackToTaskTest()
 server.listen(process.env.SERVER_PORT || 5000)
 server.on('listening', function() {
     console.log('Express server started on port %s at %s', server.address().port, server.address().address);

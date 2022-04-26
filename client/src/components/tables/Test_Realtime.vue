@@ -14,10 +14,10 @@
                         <button type="button" class="btn btn-primary mb-1" id="add-column" data-bs-toggle="modal" data-bs-target="#addColumnModal">Thêm cột</button>
                     </div> -->
                     <div>
-                        <button type="button" :class="'btn btn-' +countColor[0]+' mxy-2'" v-for="(countColor, idx) in countColors" :key="idx">{{countColor[1]}}</button>
+                        <button type="button" :class="'btn btn-' +countColor[0]+' mbr-2'" v-for="(countColor, idx) in countColors" :key="idx">{{countColor[1]}}</button>
                     </div>
                     <div class="table-wrapper">
-                        <table class="table-test  table-dark table-test-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table-test table-dark table-test-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr id="0">
                                     <th>Type</th>
@@ -43,9 +43,9 @@
                                     <td>{{ dataItem?.time }}</td>
                                     <!-- <td>{{ dataItem?.status }}</td> -->
                                     <!-- <td>{{ dataItem?.priority }}</td> -->
-                                    <td>{{ dataItem?.message }}</td>
+                                    <td>{{ collapMessage(dataItem?.message) }}</td>
                                     <td>{{ dataItem?.action }}</td>
-                                    <td>{{ dataItem?.contact }}</td>
+                                    <td>{{ collapContact(dataItem?.contact) }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -101,10 +101,9 @@
 <script>
 import redisRequest from '../../redisRequest'
 import store from '../../stores/store'
-import convert from '../../untils/convert'
 
 export default {
-    name: "Test",
+    name: "Test_Raltime",
     data() {
         return {
             isLoading: true,
@@ -124,14 +123,14 @@ export default {
         }
     },
     created() {
-        redisRequest.getIndexStore("test_sorted").then((res) => {
-                store.commit("setDataTest", res.data)
-                store.commit("setCountColors", res.data)
+        redisRequest.getIndexStore("test_sorted").then((data) => {
+                store.commit("setDataTest", data)
+                store.commit("setCountColors", data)
                 this.isLoading = false
             }).catch((err) => {
                 console.log(err)
             }),
-            document.title = "Dữ liệu Test"
+            document.title = "Test Realtime"
     },
     mounted() {
         if (this.inputShows.length == 1) {
@@ -177,6 +176,20 @@ export default {
                 this.$refs.iconMinus.style.cursor = "not-allowed"
             }
         },
+        collapContact(contacts) {
+            const phoneNums = contacts.split(',')
+            if (phoneNums.length > 1) {
+                return phoneNums[0] + ",..."
+            }
+            return phoneNums[0]
+        },
+        collapMessage(message) {
+            const messages = message.split(' ')
+            if (messages.length > 10) {
+                return message.slice(0, 10) + ",..."
+            }
+            return message
+        }
     },
 }
 </script>

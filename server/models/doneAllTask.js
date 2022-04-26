@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const DoneAllTaskSchema = new mongoose.Schema({
+    tasks: {
+        type: Array,
+    },
     userCheck: {
         type: String,
         required: true

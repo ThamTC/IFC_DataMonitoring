@@ -14,11 +14,11 @@
   color: crimson;
 }
 
-#delete-all {
+#delete-all:not(.disable) {
   cursor: pointer;
 }
 
-#delete-all:hover {
+#delete-all:hover:not(.disable) {
   color: crimson;
 }
 
@@ -158,7 +158,7 @@
   border-color: #212529;
 }
 
-.mxy-2 {
+.mbr-2 {
   margin-right: 0.5rem;
   margin-bottom: 0.5rem;
 }

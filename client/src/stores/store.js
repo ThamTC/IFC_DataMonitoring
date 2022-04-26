@@ -10,6 +10,7 @@ const store = createStore({
     dataRealtime: [],
     dataStatistic: [],
     dataTest: [],
+    dataTestStatistic: [],
     countColors: {},
   },
   getters: {
@@ -39,6 +40,9 @@ const store = createStore({
     },
     getCountColors(state) {
       return state.countColors
+    },
+    getDataTestStatistic(state) {
+      return state.dataTestStatistic;
     }
   },
   mutations: {
@@ -77,6 +81,9 @@ const store = createStore({
         showCountSorted[colorName] = (showCountSorted[colorName] || 0) + 1;
       });
       state.countColors = Object.entries(showCountSorted);
+    },
+    setDataTestStatistic(state, data) {
+      state.dataTestStatistic = data;
     },
   },
   actions: {
