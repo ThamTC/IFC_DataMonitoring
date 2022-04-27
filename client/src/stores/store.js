@@ -12,6 +12,7 @@ const store = createStore({
     dataTest: [],
     dataTestStatistic: [],
     countColors: {},
+    sideNavContent: ""
   },
   getters: {
     checkLoggin(state) {
@@ -43,6 +44,9 @@ const store = createStore({
     },
     getDataTestStatistic(state) {
       return state.dataTestStatistic;
+    },
+    getSideNavContent(state) {
+      return state.sideNavContent
     }
   },
   mutations: {
@@ -85,6 +89,9 @@ const store = createStore({
     setDataTestStatistic(state, data) {
       state.dataTestStatistic = data;
     },
+    setSideNavContent(state, content) {
+      state.sideNavContent = content
+    }
   },
   actions: {
     handleSetLoadTable(context, tabelName) {

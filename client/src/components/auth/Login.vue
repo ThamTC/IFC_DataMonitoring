@@ -57,7 +57,7 @@
 
 <script>
 import Footer from "../Footer.vue";
-import apiRequest from "../../apiRequest";
+import authRequest from "../../apis/authRequest";
 import store from "../../stores/store";
 import {
     Form,
@@ -95,11 +95,13 @@ export default {
     methods: {
         submit() {
             console.log("form", this.user);
-            apiRequest
+            authRequest
                 .login(this.user)
                 .then((res) => {
+                    const redirectPath = this.$route.query.redirect
+                    store.commit("setSideNavContent", redirectPath ?? "home")
                     this.$router.push({
-                        name: "home"
+                        name: redirectPath ?? "home"
                     });
                 })
                 .catch((err) => {

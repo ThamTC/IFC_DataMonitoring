@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import redisRequest from "../../redisRequest";
+import redisRequest from "../../apis/redisRequest";
 import store from "../../stores/store";
 
 export default {

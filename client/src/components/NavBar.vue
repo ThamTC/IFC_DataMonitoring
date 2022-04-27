@@ -1,7 +1,7 @@
 <template>
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="#">IFC</a>
+    <router-link class="navbar-brand ps-3" to="/">IFC</router-link>
     <!-- Sidebar Toggle-->
     <button v-if="isLoggin" class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" @click="sidebarToggle">
         <i class="fas fa-bars"></i>
@@ -16,25 +16,28 @@
         </div>
     </form>
     <NotiIcon v-if="isLoggin"></NotiIcon>
+
     <!-- Navbar-->
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4 navbar-expand">
 
         <router-link v-if="!isLoggin" class="nav-link ps-4" to="/login"> Login </router-link>
         <router-link v-if="!isLoggin" class="nav-link ps-4" to="/register"> Register </router-link>
-        
+
         <div class="noti-icon px-3">
 
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle px-1" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#!">Settings</a></li>
-                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                <li v-show="isLoggin">
-                    <hr class="dropdown-divider" />
-                </li>
-                <li v-show="isLoggin"><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
-            </ul>
-        </li>
+            <li class="nav-item dropdown">
+                <router-link class="nav-link px-1" id="navbarDropdown" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" style="width: 30px;" alt="Avatar" />
+                </router-link>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><router-link class="dropdown-item" to="/account">Settings</router-link></li>
+                    <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                    <li v-show="isLoggin">
+                        <hr class="dropdown-divider" />
+                    </li>
+                    <li v-show="isLoggin"><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
+                </ul>
+            </li>
         </div>
     </ul>
 </nav>
@@ -42,7 +45,7 @@
 
 <script>
 import store from '../stores/store'
-import apiRequest from '../apiRequest'
+import authRequest from '../apis/authRequest'
 import NotiIcon from './icons/Notification.vue'
 export default {
 
@@ -51,8 +54,7 @@ export default {
         NotiIcon
     },
     data() {
-        return {
-        }
+        return {}
     },
     computed: {
         isLoggin() {
@@ -61,7 +63,7 @@ export default {
     },
     methods: {
         logout() {
-            apiRequest.logout().then((data) => {
+            authRequest.logout().then((data) => {
                 this.$router.push({
                     name: "dashboard"
                 })

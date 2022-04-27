@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import redisRequest from '../../redisRequest'
+import redisRequest from '../../apis/redisRequest'
 import store from '../../stores/store'
 import DoneModal from '../../components/modals/DoneModal.vue'
 export default {

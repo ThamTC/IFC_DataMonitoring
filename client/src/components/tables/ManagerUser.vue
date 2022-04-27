@@ -49,11 +49,11 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Michael Holz</td>
-                                    <td>04/10/2013</td>
-                                    <td>Admin</td>
+                                <tr v-for="(user, idx) in users" :key="idx">
+                                    <td>{{ idx+1 }}</td>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.createdAt }}</td>
+                                    <td>{{ user.role }}</td>
                                     <td><span class="status text-success">&bull;</span> Active</td>
                                     <td>
                                         <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i class="fas fa-cog"></i></a>
@@ -71,16 +71,25 @@
 </template>
 
 <script>
-import apiRequest from '../../apiRequest'
+import dbRequest from '../../apis/dbRequest'
+
 export default {
     name: "ManagerUsers",
     data() {
         return {
-            isLoading: false,
+            isLoading: true,
+            users: []
         };
     },
     mounted() {
         // get all user from DB
+        dbRequest.getAllUsers().then((data) => {
+            this.users = data.data
+            this.isLoading = false
+        })
+        .catch((err) => {
+            console.log(err)
+        })
     },
 };
 </script>

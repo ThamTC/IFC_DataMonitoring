@@ -1,5 +1,5 @@
 import axios from "axios";
-import store from "./stores/store";
+import store from "../stores/store";
 axios.defaults.withCredentials = true;
 const apiRequest = {
   login: async (user) => {

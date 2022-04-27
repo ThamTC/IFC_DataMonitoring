@@ -75,7 +75,7 @@
 
 <script>
 import Footer from "../Footer.vue";
-import apiRequest from "../../apiRequest";
+import authRequest from "../../apis/authRequest";
 import {
     Form,
     Field,
@@ -115,7 +115,7 @@ export default {
     },
     methods: {
         submit() {
-            apiRequest
+            authRequest
                 .register(this.user)
                 .then((res) => {
                     this.$router.push("/login");

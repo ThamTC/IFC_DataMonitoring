@@ -1,8 +1,8 @@
 <template>
-    <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-        <SideNavMenu/>
-        <SideNavFooter/>
-    </nav>
+<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+    <SideNavMenu />
+    <SideNavFooter />
+</nav>
 </template>
 
 <script>
