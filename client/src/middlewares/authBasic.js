@@ -10,7 +10,7 @@ export const authUser = async (to, from, next) => {
         store.commit("setSideNavContent", to.name)
         next();
       } else {
-        next({ name: "login", query:{redirect: "account"}});
+        next({ name: "login", query:{redirect: to.name}});
       }
   }
 };
