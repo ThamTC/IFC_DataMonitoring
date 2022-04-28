@@ -1,27 +1,36 @@
 const mongoose = require("mongoose");
 
 const StatisticSchema = new mongoose.Schema({
-    name: {
+    type: {
         type: String,
         required: true,
     },
-    content: {
+    system: {
         type: String,
         required: true,
     },
-    count: {
+    parameter: {
         type: String,
         required: true
     },
-    firstTime: {
+    total: {
         type: String,
         required: true
     },
-    finalTime: {
+    action: {
         type: String,
         required: true
+    },
+    usernameDone: {
+        type: String
+    },
+    createAt: {
+        type: String
+    },
+    updateAt: {
+        type: String
     }
-}, { timestamps: true });
+});
 
 const Statistic = mongoose.model("Statistic", StatisticSchema);
 

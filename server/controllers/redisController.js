@@ -1,5 +1,4 @@
 const DoneTask = require("../models/doneTask");
-const DoneTaskTest = require("../models/doneTaskTest");
 const DoneAllTask = require("../models/doneAllTask");
 const asyncRedis = require("async-redis");
 const client = asyncRedis.createClient();
@@ -41,7 +40,7 @@ const redisController = {
           }
         }
         client.set(key, JSON.stringify(resData));
-        global.io.sockets.emit("test_statistic", resData);
+        global.io.sockets.emit(key, resData);
         return res.status(200).json(resData);
       });
     } catch (error) {
@@ -60,29 +59,19 @@ const redisController = {
           if (req.body.id == idx) {
             const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
             const localISOTime = new Date(Date.now() - tzoffset).toISOString();
-            var doAlarm = {};
-            if (key == "statistic") {
-              doAlarm = {
-                content: resData[idx].content,
-                count: resData[idx].count,
-                userCheck: req.body.userCheck,
-                userDone: req.body.userDone,
-                doneTime: localISOTime,
-              };
-            } else if (key == "test_statistic") {
-              doAlarm = {
-                type: resData[idx].type,
-                system: resData[idx].system,
-                parameter: resData[idx].parameter,
-                total: resData[idx].total,
-                priority: resData[idx].priority,
-                userCheck: req.body?.userCheck,
-                userDone: req.body?.userDone,
-                doneTime: localISOTime,
-                createAt: resData[idx].createAt,
-                updateAt: resData[idx].updateAt,
-              };
-            }
+            
+            const doAlarm = {
+              type: resData[idx].type,
+              system: resData[idx].system,
+              parameter: resData[idx].parameter,
+              total: resData[idx].total,
+              priority: resData[idx].priority,
+              userCheck: req.body?.userCheck,
+              userDone: req.body?.userDone,
+              doneTime: localISOTime,
+              createAt: resData[idx].createAt,
+              updateAt: resData[idx].updateAt,
+            };
             try {
               resData.splice(idx, 1);
             } catch (error) {
@@ -91,8 +80,6 @@ const redisController = {
             var isCreate;
             if (key == "statistic") {
               isCreate = await DoneTask.create(doAlarm);
-            } else if (key == "test_statistic") {
-              isCreate = await DoneTaskTest.create(doAlarm);
             }
             if (!isCreate) {
               return res.status(401).json("Co loi trong qua trinh thao tac DB");
@@ -108,47 +95,38 @@ const redisController = {
       return error;
     }
   },
-  deleteStore: async (req, res) => {
-    var resData = [];
-    try {
-      await client.set("statistic", JSON.stringify(resData));
-      const d = new Date();
-      const doAlarm = {
-        userCheck: req.body.userCheck,
-        userDone: req.body.userDone,
-        doneTime: d.toLocaleString(),
-      };
-      const isCreate = await DoneAllTask.create(doAlarm);
-      if (!isCreate) {
-        return res.status(401).json("Co loi trong qua trinh thao tac DB");
-      }
-      return res.status(200).json(resData);
-    } catch (error) {
-      return error;
-    }
-  },
   deleteSelection: async (req, res) => {
     const key = req.body.key;
     const selection = req.body.selection;
     try {
       const data = await client.get(key);
-      var resData = JSON.parse(data)
+      var resData = JSON.parse(data);
       const filter =
-        selection == "checked" ? true : (selection == "unchecked" ? false : "checkedall");
+        selection == "checked"
+          ? true
+          : selection == "unchecked"
+          ? false
+          : "checkedall";
+      var dataTasks = []
       if (filter == "checkedall") {
         await client.set(key, JSON.stringify([]));
-        resData = []
-      }else {
-        const itemFilters = resData.filter((ele) => ele.isAction == filter)
+        resData = [];
+        dataTasks = resData
+      } else {
+        const itemFilters = resData.filter((ele) => ele.isAction == filter);
+        dataTasks = itemFilters
         itemFilters.forEach(() => {
-          resData.splice(resData.findIndex((ele) => ele.isAction == filter), 1)
+          resData.splice(
+            resData.findIndex((ele) => ele.isAction == filter),
+            1
+          );
         });
         await client.set(key, JSON.stringify(resData));
       }
       const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
       const localISOTime = new Date(Date.now() - tzoffset).toISOString();
       const doAlarm = {
-        tasks: resData,
+        tasks: dataTasks,
         userCheck: req.body.userCheck,
         userDone: req.body.userDone,
         doneTime: localISOTime,

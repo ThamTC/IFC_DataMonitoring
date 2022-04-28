@@ -9,8 +9,6 @@ const store = createStore({
     isPlaySoundMessage: false,
     dataRealtime: [],
     dataStatistic: [],
-    dataTest: [],
-    dataTestStatistic: [],
     countColors: {},
     sideNavContent: ""
   },
@@ -36,14 +34,8 @@ const store = createStore({
     getDataStatistic(state) {
       return state.dataStatistic;
     },
-    getDataTest(state) {
-      return state.dataTest;
-    },
     getCountColors(state) {
       return state.countColors
-    },
-    getDataTestStatistic(state) {
-      return state.dataTestStatistic;
     },
     getSideNavContent(state) {
       return state.sideNavContent
@@ -72,12 +64,6 @@ const store = createStore({
     insertDataStatistic(state, item) {
       state.dataStatistic.unshift(item);
     },
-    setDataTest(state, data) {
-      state.dataTest = data;
-    },
-    insertDataTest(state, item) {
-      state.dataTest.unshift(item);
-    },
     setCountColors(state, data) {
       var showCountSorted = {};
       data.forEach((ele) => {
@@ -85,9 +71,6 @@ const store = createStore({
         showCountSorted[colorName] = (showCountSorted[colorName] || 0) + 1;
       });
       state.countColors = Object.entries(showCountSorted);
-    },
-    setDataTestStatistic(state, data) {
-      state.dataTestStatistic = data;
     },
     setSideNavContent(state, content) {
       state.sideNavContent = content

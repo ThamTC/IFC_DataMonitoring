@@ -12,18 +12,6 @@
         </div>
         Thống kê
     </a>
-    <a v-if="canShowTest" ref="test_realtime" class="nav-link" @click="setLoadTable('test_realtime')">
-        <div class="sb-nav-link-icon">
-            <i class="fas fa-chart-area"></i>
-        </div>
-        Test - Trực tiếp
-    </a>
-    <a v-if="canShowTest" ref="test_statistic" class="nav-link" @click="setLoadTable('test_statistic')">
-        <div class="sb-nav-link-icon">
-            <i class="fas fa-table"></i>
-        </div>
-        Test - Thống kê
-    </a>
     <a v-if="canShowManager" ref="manager" class="nav-link" @click="setLoadTable('manager')">
         <div class="sb-nav-link-icon">
             <i class="fas fa-users-cog"></i>
@@ -45,9 +33,6 @@ export default {
         },
         canShowStatistic() {
             return checkPermission(store.getters.getUser, ["view-statistic"])
-        },
-        canShowTest() {
-            return checkPermission(store.getters.getUser, ["view-test"])
         },
         canShowManager() {
             return checkPermission(store.getters.getUser, ["view-manager"])

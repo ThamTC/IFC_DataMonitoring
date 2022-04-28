@@ -13,27 +13,14 @@ export default {
             const isCanView = checkPermission(store.getters.getUser, ["view-realtime"])
             if (isCanView) {
                 sound.play()
-                store.commit("insertDataRealtime", data)
+                store.commit("setDataRealtime", data)
+                store.commit("setCountColors", data)
             }
         },
         statistic: function (data) {
             const isCanView = checkPermission(store.getters.getUser, ["view-statistic"])
             if (isCanView) {
                 store.commit("setDataStatistic", data)
-            }
-        },
-        test_realtime: function (data) {
-            const isCanView = checkPermission(store.getters.getUser, ["view-test"])
-            if (isCanView) {
-                sound.play()
-                store.commit("setDataTest", data)
-                store.commit("setCountColors", data)
-            }
-        },
-        test_statistic: function (data) {
-            const isCanView = checkPermission(store.getters.getUser, ["view-test"])
-            if (isCanView) {
-                store.commit("setDataTestStatistic", data)
             }
         }
     }

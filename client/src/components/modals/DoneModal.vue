@@ -55,9 +55,9 @@ export default {
     },
     methods: {
         async deleteAll() {
-            const resData = await redisRequest.doneSelectionTask(this.checkerName, this.selection)
+            const resData = await redisRequest.doneSelectionTask(this.checkerName, this.selection, "statistic")
             console.log("resData: ", resData)
-            store.commit("setDataTestStatistic", resData);
+            store.commit("setDataStatistic", resData);
         },
     },
 }

@@ -46,10 +46,10 @@ const redisRequest = {
             return error.response
         }
     },
-    doneSelectionTask: async(doneName, selection) => {
+    doneSelectionTask: async(doneName, selection, key) => {
         try {
             const resData = await axios.post("api/redis/deleteSelection", {
-                key: "test_statistic",
+                key: key,
                 selection: selection,
                 userCheck: doneName,
                 userDone: doneName

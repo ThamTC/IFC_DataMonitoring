@@ -1,7 +1,6 @@
 const redis = require("async-redis");
 const client = redis.createClient();
 const StatisticModel = require("../models/statistic");
-const TestStatisticModel = require("../models/testStatistic");
 
 client.on("error", function (err) {
   console.log("Error " + err);
@@ -64,50 +63,6 @@ const redisToken = {
         .get("statistic")
         .then((data) => {
           const resData = JSON.parse(data);
-          const d = new Date();
-          var itemsDelete = [];
-          for (let idx = 0; idx < resData.length; idx++) {
-            const timeOut =
-              Math.round(d.getTime() / 1000) - resData[idx].createAt;
-            if (
-              !resData[idx].isAction &&
-              (timeOut > 60 * process.env.REDIS_TIMEOUT ||
-                resData[idx].count > process.env.REDIS_COUNT_WARNING)
-            ) {
-              // write to DB
-              const record = {
-                name: resData[idx].name ?? "name",
-                content: resData[idx].content ?? "content",
-                count: resData[idx].count ?? 0,
-                contact: resData[idx].contact ?? "0123456789",
-                firstTime: resData[idx].createAt ?? d.toISOString(),
-                finalTime: resData[idx].updateAt ?? d.toISOString(),
-              };
-              itemsDelete.push(idx);
-              StatisticModel.create(record);
-            }
-          }
-
-          // delete item
-          if (itemsDelete.length > 0) {
-            itemsDelete.forEach((element) => {
-              resData.splice(element, 1);
-            });
-            client.set("statistic", JSON.stringify(resData));
-            global.io.sockets.emit("statistic", resData);
-          }
-
-          // send to email, skype, telegram,...
-        })
-        .catch((err) => console.log(err));
-    }, 1000 * 60);
-  },
-  trackToTaskTest: () => {
-    setInterval(() => {
-      client
-        .get("test_statistic")
-        .then((data) => {
-          const resData = JSON.parse(data);
           const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
           const localISOTime = new Date(Date.now()-tzoffset).toISOString()
           var itemsDelete = [];
@@ -131,7 +86,7 @@ const redisToken = {
                 updateAt: resData[idx].updateAt ?? localISOTime,
               };
               itemsDelete.push(idx);
-              TestStatisticModel.create(record);
+              StatisticModel.create(record);
             }
           }
 
@@ -140,9 +95,8 @@ const redisToken = {
             itemsDelete.forEach((element) => {
               resData.splice(element, 1);
             });
-            client.set("test_statistic", JSON.stringify(resData));
-            global.io.sockets.emit("test_statistic", resData);
-            console.log("kgfgksdjfglk")
+            client.set("statistic", JSON.stringify(resData));
+            global.io.sockets.emit("statistic", resData);
           }
           // send to email, skype, telegram,...
         })
