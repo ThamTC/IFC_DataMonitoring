@@ -140,6 +140,28 @@ const redisController = {
       return error;
     }
   },
+  deleteTaskHour: async(req, res) => {
+    const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+    const localTime = new Date(Date.now() - tzoffset).getTime();
+    try {
+      const hour = req.body.hour
+      const userDone = req.body.userDone
+      const currentTime = localTime - (hour * 60 * 60 * 1000)
+      const data = await client.get("realtime")
+      var resData = JSON.parse(data)
+      const dataFilter = resData.filter((ele) => {
+        const timeEle = (new Date(ele.time)).getTime()
+        return timeEle < currentTime
+      })
+      dataFilter.forEach((f) => {
+        resData.splice(resData.findIndex((ele) => ele.time == f.time), 1)
+      })
+      await client.set("realtime", JSON.stringify(resData))
+      return res.status(200).json(resData)
+    } catch (error) {
+      return error;
+    }
+  }
 };
 
 module.exports = redisController;

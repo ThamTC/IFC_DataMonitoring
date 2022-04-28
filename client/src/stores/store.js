@@ -10,7 +10,8 @@ const store = createStore({
     dataRealtime: [],
     dataStatistic: [],
     countColors: {},
-    sideNavContent: ""
+    sideNavContent: "",
+    currentData: {}
   },
   getters: {
     checkLoggin(state) {
@@ -39,6 +40,9 @@ const store = createStore({
     },
     getSideNavContent(state) {
       return state.sideNavContent
+    },
+    getCurrentData(state) {
+      return state.currentData
     }
   },
   mutations: {
@@ -65,15 +69,13 @@ const store = createStore({
       state.dataStatistic.unshift(item);
     },
     setCountColors(state, data) {
-      var showCountSorted = {};
-      data.forEach((ele) => {
-        const colorName = convert.idToColor(ele.priority);
-        showCountSorted[colorName] = (showCountSorted[colorName] || 0) + 1;
-      });
-      state.countColors = Object.entries(showCountSorted);
+      state.countColors = data
     },
     setSideNavContent(state, content) {
       state.sideNavContent = content
+    },
+    setCurrentData(state, data) {
+      state.currentData = data
     }
   },
   actions: {

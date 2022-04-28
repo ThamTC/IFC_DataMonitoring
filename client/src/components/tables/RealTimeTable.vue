@@ -13,8 +13,10 @@
                     <!-- <div class="align-items-end">
                         <button type="button" class="btn btn-primary mb-1" id="add-column" data-bs-toggle="modal" data-bs-target="#addColumnModal">Thêm cột</button>
                     </div> -->
-                    <div>
-                        <button type="button" :class="'btn btn-' +countColor[0]+' mbr-2'" v-for="(countColor, idx) in countColors" :key="idx">{{countColor[1]}}</button>
+                    <div class="d-flex">
+                        <button type="button" :class="'btn btn-' + countColor[0]+' mbr-2'" v-for="(countColor, idx) in countColors" :key="idx">{{countColor[1]}}</button>
+                        <button type="button" :class="'btn btn-' + currentData.color+' mbr-2 mx-5 flex-grow-1'" disabled>{{currentData.msg}}</button>
+                        <button v-if="dataItems.length > 0" @click="removeTask" type="button" class="btn btn-primary mbr-2">Remove Data</button>
                     </div>
                     <div class="table-wrapper">
                         <table class="table-ifc table-dark table-ifc-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -95,15 +97,21 @@
             </div>
         </div>
     </div>
+    <DoneModal :content="title"></DoneModal>
 </main>
 </template>
 
 <script>
 import redisRequest from '../../apis/redisRequest'
 import store from '../../stores/store'
+import storeController from '../../controllers/storeController'
+import DoneModal from '../modals/DoneModal.vue'
 
 export default {
     name: "Realtime",
+    components: {
+        DoneModal
+    },
     data() {
         return {
             isLoading: true,
@@ -111,7 +119,8 @@ export default {
             querys: [0],
             inputShows: ["Hệ thống"],
             inputQuerys: ["name"],
-            titles: ["Hệ thống"]
+            titles: ["Hệ thống"],
+            title: "realtime"
         }
     },
     computed: {
@@ -120,12 +129,15 @@ export default {
         },
         countColors() {
             return store.getters.getCountColors
+        },
+        currentData() {
+            return store.getters.getCurrentData
         }
     },
     created() {
         redisRequest.getIndexStore("realtime").then((data) => {
-                store.commit("setDataRealtime", data)
-                store.commit("setCountColors", data)
+                storeController.redisRealtimeStore(data)
+                storeController.counterColorStore()
                 this.isLoading = false
             }).catch((err) => {
                 console.log(err)
@@ -189,6 +201,12 @@ export default {
                 return message.slice(0, 10) + ",..."
             }
             return message
+        },
+        removeTask() {
+            var myModal = new bootstrap.Modal(document.getElementById('doneModal'))
+            if(store.getters.getDataRealtime.length > 0) {
+                myModal.show()
+            }
         }
     },
 }

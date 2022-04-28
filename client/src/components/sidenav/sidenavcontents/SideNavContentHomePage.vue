@@ -11,8 +11,8 @@
 // import BreadCrumbs from './BreadCrumbs.vue'
 import store from '../../../stores/store'
 import Footer from '../../Footer.vue'
-import RealTime from '../../tables/Realtime.vue'
-import Statistic from '../../tables/Statistic.vue'
+import RealTime from '../../tables/RealTimeTable.vue'
+import Statistic from '../../tables/StatisticTable.vue'
 import ManagerUsers from '../../tables/ManagerUser.vue'
 import checkPermission from '../../../untils/checkPermission'
 

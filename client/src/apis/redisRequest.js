@@ -56,7 +56,18 @@ const redisRequest = {
             })
             return resData.data
         } catch (error) {
-            
+            return error.response
+        }
+    },
+    removeTask: async(removeName, hourRemove) => {
+        try {
+            const resData = await axios.post("api/redis/deleteTaskHour", {
+                hour: hourRemove,
+                userDone: removeName
+            })
+            return resData.data
+        } catch (error) {
+            return error.response
         }
     }
 }

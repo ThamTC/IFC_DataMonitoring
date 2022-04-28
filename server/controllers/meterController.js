@@ -15,14 +15,15 @@ const meterController = {
       return res.status(500).json("Please check frame data");
     }
     // nhan data tu cac request
-    const d = new Date();
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+    const localISOTime = new Date(Date.now()-tzoffset).toISOString()
     const payload = {
       type: req.body.type ?? "test",
       system: req.body.system ?? "test",
       parameter: req.body.parameter ?? "test",
       value: req.body.value ?? "test",
       unit: req.body.unit ?? "test",
-      time: req.body.time ?? d.toISOString(),
+      time: req.body.time ?? localISOTime,
       status: req.body.status ?? "Null",
       priority: req.body.priority ?? "0",
       message: req.body.message ?? "test",
@@ -31,6 +32,8 @@ const meterController = {
       timeout: req.body.timeout ?? 10,
       count: req.body.count ?? 10
     };
+    // gui data sang client de hien thi realtime theo thu tu uu tien
+    global.io.sockets.emit("realtime", payload);
     // luu xuong realtime theo id la so phan tu co trong key real_realtime
     client
       .get("realtime")
@@ -57,8 +60,6 @@ const meterController = {
         } else {
           resParser.push(payload);
         }
-        // gui data sang client de hien thi realtime theo thu tu uu tien
-        global.io.sockets.emit("realtime", resParser);
         // luu xuong sorted_realtime
         return client.set("realtime", JSON.stringify(resParser));
       })
@@ -67,8 +68,6 @@ const meterController = {
         return client.get("statistic");
       })
       .then((data) => {
-        const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-        const localISOTime = new Date(Date.now()-tzoffset).toISOString()
         var resData = JSON.parse(data);
         const statisticPayload = {
           type: payload.type,

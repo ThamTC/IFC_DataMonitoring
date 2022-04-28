@@ -53,7 +53,7 @@
             </div>
         </div>
     </div>
-    <DoneModal></DoneModal>
+    <DoneModal :content="title"></DoneModal>
 </main>
 </template>
 
@@ -70,6 +70,7 @@ export default {
         return {
             isLoading: true,
             checkerName: "",
+            title: "statistic"
         };
     },
     mounted() {

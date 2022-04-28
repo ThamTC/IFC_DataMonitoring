@@ -6,6 +6,7 @@
 import store from './stores/store'
 import sound from './services/howl'
 import checkPermission from './untils/checkPermission'
+import storeController from './controllers/storeController'
 export default {
     name: "App",
     sockets: {
@@ -13,8 +14,11 @@ export default {
             const isCanView = checkPermission(store.getters.getUser, ["view-realtime"])
             if (isCanView) {
                 sound.play()
-                store.commit("setDataRealtime", data)
-                store.commit("setCountColors", data)
+                storeController.currentDataStore(data)
+                storeController.realtimeStore(data)
+                storeController.counterColorStore()
+                // store.commit("setDataRealtime", data)
+                // store.commit("setCountColors", data)
             }
         },
         statistic: function (data) {

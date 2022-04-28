@@ -12,4 +12,6 @@ router.post("/deleteSelection", redisController.deleteSelection)
 
 router.post("/hgetall", redisController.hgetall)
 
+router.post("/deleteTaskHour", redisController.deleteTaskHour)
+
 module.exports = router
