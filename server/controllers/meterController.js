@@ -215,7 +215,7 @@ const meterController = {
           if(idx == resData.length) {
             var priority
             if (isFoundPriority) {
-              priority = 1
+              priority = prioPayload
             } else {
               priority = parseInt(prioPayload) + 1
               if (parseInt(prioPayload) == 0) {

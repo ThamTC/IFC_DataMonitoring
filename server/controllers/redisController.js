@@ -132,29 +132,30 @@ const redisController = {
     const selection = req.body.selection;
     try {
       const data = await client.get(key);
-      const resData = JSON.parse(data)
+      var resData = JSON.parse(data)
       const filter =
         selection == "checked" ? true : (selection == "unchecked" ? false : "checkedall");
       if (filter == "checkedall") {
         await client.set(key, JSON.stringify([]));
-        const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-        const localISOTime = new Date(Date.now()-tzoffset).toISOString()
-        const doAlarm = {
-          tasks: resData,
-          userCheck: req.body.userCheck,
-          userDone: req.body.userDone,
-          doneTime: localISOTime,
-        };
-        const isCreate = await DoneAllTask.create(doAlarm);
-        if (!isCreate) {
-          return res.status(401).json("Co loi trong qua trinh thao tac DB");
-        }
-        return res.status(200).json([]);
+        resData = []
       }else {
         const itemFilters = resData.filter((ele) => ele.isAction == filter)
         itemFilters.forEach(() => {
           resData.splice(resData.findIndex((ele) => ele.isAction == filter), 1)
         });
+        await client.set(key, JSON.stringify(resData));
+      }
+      const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+      const localISOTime = new Date(Date.now() - tzoffset).toISOString();
+      const doAlarm = {
+        tasks: resData,
+        userCheck: req.body.userCheck,
+        userDone: req.body.userDone,
+        doneTime: localISOTime,
+      };
+      const isCreate = await DoneAllTask.create(doAlarm);
+      if (!isCreate) {
+        return res.status(401).json("Co loi trong qua trinh thao tac DB");
       }
       return res.status(200).json(resData);
     } catch (error) {
