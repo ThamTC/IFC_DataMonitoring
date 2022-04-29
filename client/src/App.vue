@@ -26,6 +26,20 @@ export default {
             if (isCanView) {
                 store.commit("setDataStatistic", data)
             }
+        },
+        updateRealtime: function (data) {
+            if (data.error == null) {
+                if (data.data.length == 0) {
+                    store.commit("setCurrentData", {})
+                }
+                storeController.redisRealtimeStore(data.data)
+                storeController.counterColorStore()
+            }
+        },
+        updateStatistic: function (data) {
+            if (data.error == null) {
+                store.commit("setDataStatistic", data.data);
+            }
         }
     }
 };

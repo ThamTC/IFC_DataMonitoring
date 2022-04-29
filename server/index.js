@@ -19,6 +19,7 @@ const meterRouter = require("./routes/api/meterRouter")
 const webPushRouter = require("./routes/api/webPush")
 const redisClient = require("./redis/redis")
 const dbRouter = require("./routes/api/dbRouter")
+const socketIO = require("./socketIO")
 
 const db = require("./config/db_connection")
 
@@ -64,7 +65,7 @@ app.use((error, req, res, next) => {
     });
 });
 
-redisClient.clearCacheInterval()
+// redisClient.clearCacheInterval()
 redisClient.trackToTask()
 
 server.listen(process.env.SERVER_PORT || 5000)
@@ -76,4 +77,7 @@ global.io.on("connection", function(socket) {
     socket.on("disconnect", function(client) {
         console.log(socket.id + " da ngat ket noi")
     })
+    socket.on("deleteRealtime", socketIO.deleteRealtime)
+    socket.on("doneSelectionTask", socketIO.doneSelectionTask)
+    socket.on("doneTask", socketIO.doneTask)
 })

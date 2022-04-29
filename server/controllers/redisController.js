@@ -95,73 +95,76 @@ const redisController = {
       return error;
     }
   },
-  deleteSelection: async (req, res) => {
-    const key = req.body.key;
-    const selection = req.body.selection;
-    try {
-      const data = await client.get(key);
-      var resData = JSON.parse(data);
-      const filter =
-        selection == "checked"
-          ? true
-          : selection == "unchecked"
-          ? false
-          : "checkedall";
-      var dataTasks = []
-      if (filter == "checkedall") {
-        await client.set(key, JSON.stringify([]));
-        resData = [];
-        dataTasks = resData
-      } else {
-        const itemFilters = resData.filter((ele) => ele.isAction == filter);
-        dataTasks = itemFilters
-        itemFilters.forEach(() => {
-          resData.splice(
-            resData.findIndex((ele) => ele.isAction == filter),
-            1
-          );
-        });
-        await client.set(key, JSON.stringify(resData));
-      }
-      const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
-      const localISOTime = new Date(Date.now() - tzoffset).toISOString();
-      const doAlarm = {
-        tasks: dataTasks,
-        userCheck: req.body.userCheck,
-        userDone: req.body.userDone,
-        doneTime: localISOTime,
-      };
-      const isCreate = await DoneAllTask.create(doAlarm);
-      if (!isCreate) {
-        return res.status(401).json("Co loi trong qua trinh thao tac DB");
-      }
-      return res.status(200).json(resData);
-    } catch (error) {
-      return error;
-    }
-  },
-  deleteTaskHour: async(req, res) => {
-    const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
-    const localTime = new Date(Date.now() - tzoffset).getTime();
-    try {
-      const hour = req.body.hour
-      const userDone = req.body.userDone
-      const currentTime = localTime - (hour * 60 * 60 * 1000)
-      const data = await client.get("realtime")
-      var resData = JSON.parse(data)
-      const dataFilter = resData.filter((ele) => {
-        const timeEle = (new Date(ele.time)).getTime()
-        return timeEle < currentTime
-      })
-      dataFilter.forEach((f) => {
-        resData.splice(resData.findIndex((ele) => ele.time == f.time), 1)
-      })
-      await client.set("realtime", JSON.stringify(resData))
-      return res.status(200).json(resData)
-    } catch (error) {
-      return error;
-    }
-  }
+  // deleteSelection: async (req, res) => {
+  //   const key = req.body.key;
+  //   const selection = req.body.selection;
+  //   try {
+  //     const data = await client.get(key);
+  //     var resData = JSON.parse(data);
+  //     const filter =
+  //       selection == "checked"
+  //         ? true
+  //         : selection == "unchecked"
+  //         ? false
+  //         : "checkedall";
+  //     var dataTasks = []
+  //     if (filter == "checkedall") {
+  //       await client.set(key, JSON.stringify([]));
+  //       resData = [];
+  //       dataTasks = resData
+  //     } else {
+  //       const itemFilters = resData.filter((ele) => ele.isAction == filter);
+  //       dataTasks = itemFilters
+  //       itemFilters.forEach(() => {
+  //         resData.splice(
+  //           resData.findIndex((ele) => ele.isAction == filter),
+  //           1
+  //         );
+  //       });
+  //       await client.set(key, JSON.stringify(resData));
+  //     }
+  //     const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+  //     const localISOTime = new Date(Date.now() - tzoffset).toISOString();
+  //     const doAlarm = {
+  //       tasks: dataTasks,
+  //       userCheck: req.body.userCheck,
+  //       userDone: req.body.userDone,
+  //       doneTime: localISOTime,
+  //     };
+  //     const isCreate = await DoneAllTask.create(doAlarm);
+  //     if (!isCreate) {
+  //       return res.status(401).json("Co loi trong qua trinh thao tac DB");
+  //     }
+  //     return res.status(200).json(resData);
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // },
+  // deleteTaskHour: async(req, res) => {
+  //   const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+  //   const localTime = new Date(Date.now() - tzoffset).getTime();
+  //   try {
+  //     const hour = req.body.hour
+  //     const userDone = req.body.userDone
+  //     const currentTime = localTime - (hour * 60 * 60 * 1000)
+  //     const data = await client.get("realtime")
+  //     var resData = JSON.parse(data)
+  //     const dataFilter = resData.filter((ele) => {
+  //       const timeEle = (new Date(ele.time)).getTime()
+  //       return timeEle < currentTime
+  //     })
+  //     dataFilter.forEach((f) => {
+  //       resData.splice(resData.findIndex((ele) => ele.time == f.time), 1)
+  //     })
+  //     // save to redis
+  //     await client.set("realtime", JSON.stringify(resData))
+  //     // emit to other clients
+  //     global.io.sockets.emit("deleteRealtime", resData)
+  //     return res.status(200).json(resData)
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
 };
 
 module.exports = redisController;

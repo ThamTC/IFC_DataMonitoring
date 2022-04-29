@@ -47,16 +47,16 @@ const redisToken = {
     resData.filter((item) => item !== refreshToken);
     return true;
   },
-  clearCacheInterval: () => {
-    setInterval(async () => {
-      const d = new Date();
-      const hours = d.getHours();
-      if (hours == process.env.REDIS_TIME_CLEAR) {
-        await client.set("realtime", "[]");
-        await client.set("statistic", "[]");
-      }
-    }, 1000 * 60 * 60);
-  },
+  // clearCacheInterval: () => {
+  //   setInterval(async () => {
+  //     const d = new Date();
+  //     const hours = d.getHours();
+  //     if (hours == process.env.REDIS_TIME_CLEAR) {
+  //       await client.set("realtime", "[]");
+  //       await client.set("statistic", "[]");
+  //     }
+  //   }, 1000 * 60 * 60);
+  // },
   trackToTask: () => {
     setInterval(() => {
       client

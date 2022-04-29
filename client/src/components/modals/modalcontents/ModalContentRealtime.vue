@@ -31,7 +31,7 @@
                 </label>
             </div>
             <div class="input-group input-group-sm mb-3 mt-1">
-                <input @keyup="getHour" v-model="inputHour" type="number" class="form-control input-hour" placeholder="2" aria-label="Recipient's username" aria-describedby="basic-addon2" min="1" max="99">
+                <input @keyup="getHour" v-model="inputHour" type="number" class="form-control input-hour" placeholder="2" aria-label="Recipient's username" aria-describedby="basic-addon2" min="0.1" max="99" step="0.1">
                 <span class="px-2">giờ trước</span>
             </div>
         </div>
@@ -67,12 +67,13 @@ export default {
             if (!this.inputDisable) {
                 this.hourRemove = parseInt(this.selection)
             }
-            const resData = await redisRequest.removeTask(this.checkerName, this.hourRemove)
-            if (resData.length == 0) {
-                store.commit("setCurrentData", {})
-            }
-            storeController.redisRealtimeStore(resData)
-            storeController.counterColorStore()
+            this.$socket.emit("deleteRealtime", {username: this.checkerName, hour: this.hourRemove})
+            // const resData = await redisRequest.removeTask(this.checkerName, this.hourRemove)
+            // if (resData.length == 0) {
+            //     store.commit("setCurrentData", {})
+            // }
+            // storeController.redisRealtimeStore(resData)
+            // storeController.counterColorStore()
         },
         isNaN(x) {
             x = Number(x);
@@ -80,7 +81,7 @@ export default {
         },
         getHour() {
             this.hourRemove = parseInt(this.inputHour)
-            if (!isNaN(parseFloat(this.inputHour)) && this.hourRemove > 0) {
+            if (!isNaN(this.hourRemove) && parseFloat(this.inputHour) > 0) {
                 this.inputDisable = true
             } else {
                 this.inputDisable = false

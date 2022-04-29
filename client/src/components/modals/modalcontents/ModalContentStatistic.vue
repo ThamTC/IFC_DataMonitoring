@@ -50,8 +50,9 @@ export default {
     },
     methods: {
         async deleteAll() {
-            const resData = await redisRequest.doneSelectionTask(this.checkerName, this.selection, "statistic")
-            store.commit("setDataStatistic", resData);
+            this.$socket.emit("doneSelectionTask", {username: this.checkerName, selection: this.selection})
+            // const resData = await redisRequest.doneSelectionTask(this.checkerName, this.selection, "statistic")
+            // store.commit("setDataStatistic", resData);
         },
     },
 }

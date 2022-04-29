@@ -9,7 +9,7 @@ webpushController.config();
 const meterController = {
   
   realtime: async (req, res) => {
-    // nhan data tu cac request -> luu xuong realtime -> lay data tu sorted_realtime -> chen data theo thu tu -> luu xuong sorted_realtime -> socket sang client hien thi
+    // nhan data tu cac request -> luu xuong realtime -> lay data tu realtime -> chen data theo thu tu -> luu xuong realtime -> socket sang client hien thi
     console.log(req.body);
     if (Object.keys(req.body).length == 0) {
       return res.status(500).json("Please check frame data");
@@ -130,13 +130,11 @@ const meterController = {
                 priority = 0
               }
             }
-            console.log("priority: ", priority)
             // tim element dau tien co priority lon hon priority hien tai 1 don vi
             const idxFound = resData.findIndex((ele) => {
               return ele.priority == priority || ele.priority == 0
             })
             // neu tim thay thi insert tai vi tri duoc tim thay
-            console.log("idxFound: ", idxFound)
             if (idxFound >= 0) {
               resData.splice(idxFound, 0, statisticPayload)
             }else{
@@ -146,12 +144,10 @@ const meterController = {
         } else {
           resData.push(statisticPayload);
         }
-        console.log("resData: ", resData);
         global.io.sockets.emit("statistic", resData)
         return client.set("statistic", JSON.stringify(resData));
       })
       .catch((error) => {
-        console.log("error", error);
         return res.status(500).json("Please check frame data");
       });
     return res.status(200).json("success");

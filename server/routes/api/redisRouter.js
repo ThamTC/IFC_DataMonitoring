@@ -8,10 +8,10 @@ router.post("/update", redisController.updateStore)
 
 router.post("/delete", redisController.deleteItem)
 
-router.post("/deleteSelection", redisController.deleteSelection)
+// router.post("/deleteSelection", redisController.deleteSelection)
 
 router.post("/hgetall", redisController.hgetall)
 
-router.post("/deleteTaskHour", redisController.deleteTaskHour)
+// router.post("/deleteTaskHour", redisController.deleteTaskHour)
 
 module.exports = router

@@ -105,8 +105,9 @@ export default {
         async doneTask(e) {
             console.log(e.target.id)
             let doneName = this.$refs["checkerName_" + e.target.id][0].innerText || this.checkerName
-            const resData = await redisRequest.doneTask(e.target.id, this.checkerName, doneName, "statistic")
-            store.commit("setDataStatistic", resData);
+            this.$socket.emit("doneTask", {checkerName: this.checkerName, doneName: doneName, id: e.target.id, key: "statistic"})
+            // const resData = await redisRequest.doneTask(e.target.id, this.checkerName, doneName, "statistic")
+            // store.commit("setDataStatistic", resData);
         },
         isDisable(name) {
             return this.checkerName !== name && name != ''
