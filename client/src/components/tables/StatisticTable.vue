@@ -53,24 +53,23 @@
             </div>
         </div>
     </div>
-    <DoneModal :content="title"></DoneModal>
+    <ModalStatistic></ModalStatistic>
 </main>
 </template>
 
 <script>
 import redisRequest from '../../apis/redisRequest'
 import store from '../../stores/store'
-import DoneModal from '../modals/DoneModal.vue'
+import ModalStatistic from '../modals/ModalStatistic.vue'
 export default {
     name: "Statistic",
     components: {
-        DoneModal
+        ModalStatistic
     },
     data() {
         return {
             isLoading: true,
             checkerName: "",
-            title: "statistic"
         };
     },
     mounted() {
@@ -91,7 +90,7 @@ export default {
             }).catch((err) => {
                 console.log(err)
             }),
-            document.title = "Statistic"
+            document.title = "Thống kê"
     },
     methods: {
         check(e) {
@@ -113,7 +112,7 @@ export default {
             return this.checkerName !== name && name != ''
         },
         done() {
-            var myModal = new bootstrap.Modal(document.getElementById('doneModal'))
+            var myModal = new bootstrap.Modal(document.getElementById('modal'))
             if(store.getters.getDataStatistic.length > 0) {
                 myModal.show()
             }

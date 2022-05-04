@@ -97,7 +97,7 @@
             </div>
         </div>
     </div>
-    <DoneModal :content="title"></DoneModal>
+    <ModalRealtime></ModalRealtime>
 </main>
 </template>
 
@@ -105,12 +105,12 @@
 import redisRequest from '../../apis/redisRequest'
 import store from '../../stores/store'
 import storeController from '../../controllers/storeController'
-import DoneModal from '../modals/DoneModal.vue'
+import ModalRealtime from '../modals/ModalRealtime.vue'
 
 export default {
     name: "Realtime",
     components: {
-        DoneModal
+        ModalRealtime
     },
     data() {
         return {
@@ -120,7 +120,6 @@ export default {
             inputShows: ["Hệ thống"],
             inputQuerys: ["name"],
             titles: ["Hệ thống"],
-            title: "realtime"
         }
     },
     computed: {
@@ -142,7 +141,7 @@ export default {
             }).catch((err) => {
                 console.log(err)
             }),
-            document.title = "Realtime"
+            document.title = "Trực tuyến"
     },
     mounted() {
         if (this.inputShows.length == 1) {
@@ -203,7 +202,7 @@ export default {
             return message
         },
         removeTask() {
-            var myModal = new bootstrap.Modal(document.getElementById('doneModal'))
+            var myModal = new bootstrap.Modal(document.getElementById('modal'))
             if(store.getters.getDataRealtime.length > 0) {
                 myModal.show()
             }

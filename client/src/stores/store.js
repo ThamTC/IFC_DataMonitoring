@@ -11,7 +11,8 @@ const store = createStore({
     dataStatistic: [],
     countColors: {},
     sideNavContent: "",
-    currentData: {}
+    currentData: {},
+    
   },
   getters: {
     checkLoggin(state) {

@@ -49,14 +49,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(user, idx) in users" :key="idx">
+                                <tr v-for="(user, idx) in getUsers" :key="idx">
                                     <td>{{ idx+1 }}</td>
                                     <td>{{ user.username }}</td>
                                     <td>{{ user.createdAt }}</td>
                                     <td>{{ user.role }}</td>
                                     <td><span class="status text-success">&bull;</span> Active</td>
                                     <td>
-                                        <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i class="fas fa-cog"></i></a>
+                                        <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i :id="idx" @click="setting" class="fas fa-cog"></i></a>
                                         <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="fas fa-user-times"></i></a>
                                     </td>
                                 </tr>
@@ -67,29 +67,62 @@
             </div>
         </div>
     </div>
+    <ModalManagerUser :modal="modal"></ModalManagerUser>
 </main>
 </template>
 
 <script>
 import dbRequest from '../../apis/dbRequest'
+import ModalManagerUser from '../modals/ModalManagerUser.vue'
+import managerStore from '../../stores/managerStore'
 
 export default {
     name: "ManagerUsers",
+    components: {
+        ModalManagerUser
+    },
     data() {
         return {
             isLoading: true,
-            users: []
+            modal: "",
+            role: ["manager", "admin", "user", "callcenter"]
         };
+    },
+    computed: {
+        getUsers() {
+            return managerStore.getters.getUsers
+        }
+    },
+    created() {
+        document.title = "Quản lý User"
     },
     mounted() {
         // get all user from DB
         dbRequest.getAllUsers().then((data) => {
-            this.users = data.data
-            this.isLoading = false
-        })
-        .catch((err) => {
-            console.log(err)
-        })
+                managerStore.commit("setUsers", data.data)
+                this.isLoading = false
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    },
+    methods: {
+        setting(e) {
+            const id = e.target.id
+            // console.log(this.users[id])
+            const users = managerStore.getters.getUsers
+            var modalUsername = document.getElementById("inputUsernameModal")
+            modalUsername.value = users[id].username
+            var modalSelection = document.querySelectorAll(".role")
+            const role = this.role.findIndex((ele) => ele == users[id].role)
+            modalSelection[role].setAttribute("selected", "selected")
+            var myModal = new bootstrap.Modal(document.getElementById('modal'))
+            managerStore.commit("setUserInfo", users[id])
+            this.modal = myModal
+            // if(store.getters.getDataRealtime.length > 0) {
+            myModal.show()
+            // }
+        }
     },
 };
 </script>

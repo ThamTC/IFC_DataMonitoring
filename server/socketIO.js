@@ -33,9 +33,10 @@ const socketIO = {
         }
     },
     doneSelectionTask: async (data) => {
-        const userCheck = data.checkerName;
-        const userDone = data.checkerName;
+        const userCheck = data.userCheck;
+        const userDone = data.userCheck;
         const selection = data.selection;
+        const key = data.key
         try {
             const data = await client.get(key);
             var resData = JSON.parse(data);

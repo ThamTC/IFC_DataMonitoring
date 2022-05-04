@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import store from "./stores/store";
+import managerStore from "./stores/managerStore"
 import App from "./App.vue";
 import router from "./routes";
 import VueAxios from "vue-axios"; //gọi thư viện axios
@@ -18,4 +19,5 @@ app.use(VueCookies);
 app.use(VueAxios, axios);
 app.use(router);
 app.use(store);
+app.use(managerStore)
 app.mount("#app");
