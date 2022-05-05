@@ -2,6 +2,7 @@ const asyncRedis = require("async-redis");
 const client = asyncRedis.createClient();
 const webpushController = require("./webpushController");
 const formatPayload = require("../utils/formatPayload")
+const logger = require("../services/logger")("request-realtime", "request")
 
 client.on("error", function (err) {
   console.log("Error " + err);
@@ -12,9 +13,13 @@ const meterController = {
   
   realtime: async (req, res) => {
     // nhan data tu cac request -> luu xuong realtime -> lay data tu realtime -> chen data theo thu tu -> luu xuong realtime -> socket sang client hien thi
-    console.log(req.body);
     if (Object.keys(req.body).length == 0) {
+      logger.log("error", req.body)
       return res.status(500).json("Please check frame data");
+    }
+    logger.log("info", req.body)
+    if (req.body?.mode) {
+      return res.status(200).json("success");
     }
     // nhan data tu cac request
     const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds

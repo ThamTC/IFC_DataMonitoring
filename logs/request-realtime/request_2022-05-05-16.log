@@ -1,0 +1,19 @@
+{
+  mode: 'test',
+  type: 'AMI',
+  system: 'Ninh Thuận',
+  parameter: 'Dồn file',
+  value: '1234',
+  unit: 'file',
+  time: '2022-04-28T11:46:23.292Z',
+  status: 'Null',
+  priority: 3,
+  message: 'Hãy liểm tra ngay',
+  action: 'CALL, SMS',
+  contact: '0123456789',
+  timeout: 100,
+  count: 10,
+  level: 'info',
+  label: 'IFC log',
+  timestamp: '2022-05-05T16:24:27.768Z'
+}
