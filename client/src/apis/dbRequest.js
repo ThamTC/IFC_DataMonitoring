@@ -18,6 +18,14 @@ const dbRequest = {
         } catch (error) {
             return error
         }
+    },
+    getAllRoles: async() => {
+        try {
+            const resData = await axios.get("/api/db/role/index")
+            return resData
+        } catch (error) {
+            return error
+        }
     }
 }
 export default dbRequest

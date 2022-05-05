@@ -23,7 +23,7 @@
 }
 
 .table-wrapper {
-  max-height: calc(100vh - 150px);
+  max-height: calc(100vh - 170px);
   ;
   overflow: auto;
 }
@@ -189,4 +189,12 @@
 
 .text-violet {
   color: violet;
+}
+
+.icon-green {
+  color: var(--bs-green);
+}
+
+.icon-red {
+  color: var(--bs-red);
 }

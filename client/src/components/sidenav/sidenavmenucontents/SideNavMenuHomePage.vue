@@ -12,11 +12,18 @@
         </div>
         Thống kê
     </a>
-    <a v-if="canShowManager" ref="manager" class="nav-link" @click="setLoadTable('manager')">
+    <a v-if="canShowManagerUser" ref="managerUser" class="nav-link" @click="setLoadTable('managerUser')">
         <div class="sb-nav-link-icon">
             <i class="fas fa-users-cog"></i>
         </div>
         Manager Users
+    </a>
+
+    <a v-if="canShowManagerRole" ref="managerRole" class="nav-link" @click="setLoadTable('managerRole')">
+        <div class="sb-nav-link-icon">
+            <i class="fas fa-user-tag"></i>
+        </div>
+        Manager Roles
     </a>
 </div>
 </template>
@@ -34,8 +41,11 @@ export default {
         canShowStatistic() {
             return checkPermission(store.getters.getUser, ["view-statistic"])
         },
-        canShowManager() {
-            return checkPermission(store.getters.getUser, ["view-manager"])
+        canShowManagerUser() {
+            return checkPermission(store.getters.getUser, ["view-managerUser"])
+        },
+        canShowManagerRole() {
+            return checkPermission(store.getters.getUser, ["view-managerRole"])
         }
     },
     methods: {

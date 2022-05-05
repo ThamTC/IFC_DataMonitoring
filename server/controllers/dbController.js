@@ -1,7 +1,8 @@
 const { ObjectId } = require("mongodb");
 const UserModel = require("../models/user");
+const RoleModel = require("../models/role-permission")
 const dbController = {
-  getAll: async (req, res) => {
+  getAllUsers: async (req, res) => {
     try {
       const resData = await UserModel.find().exec();
       const dataMap = resData.map((item) => {
@@ -29,6 +30,14 @@ const dbController = {
       return res.status(400).json(error)
     }
   },
+  getAllRoles: async (req, res) => {
+    try {
+      const resData = await RoleModel.find().exec()
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
+  }
 };
 
 module.exports = dbController;

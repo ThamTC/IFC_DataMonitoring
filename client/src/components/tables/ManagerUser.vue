@@ -1,6 +1,6 @@
 <template>
 <main>
-    <div class="container-fluid px-4">
+    <div class="container-fluid p-2">
         <div class="text-center mt-5" v-if="isLoading">
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
@@ -12,13 +12,7 @@
         </div> -->
 
             <div class="card-body">
-                <div class="
-              dataTable-wrapper dataTable-loading
-              no-footer
-              sortable
-              searchable
-              fixed-columns
-            ">
+                <div class=" dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns ">
                     <div class="dataTable-top">
                         <!-- <div class="dataTable-dropdown">
                         <label>
@@ -95,8 +89,6 @@ export default {
     },
     created() {
         document.title = "Quản lý User"
-    },
-    mounted() {
         // get all user from DB
         dbRequest.getAllUsers().then((data) => {
                 managerStore.commit("setUsers", data.data)
@@ -105,6 +97,8 @@ export default {
             .catch((err) => {
                 console.log(err)
             })
+    },
+    mounted() {
     },
     methods: {
         setting(e) {

@@ -2,7 +2,8 @@
 <div id="layoutSidenav_content">
         <RealTime v-if="canShowRealTime && loadTable === 'realtime'" name="realtime"></RealTime>
         <Statistic v-if="canShowStatistic && loadTable === 'statistic'" name="statistic"></Statistic>
-        <ManagerUsers v-if="canShowManager && loadTable === 'manager'" name="manager"></ManagerUsers>
+        <ManagerUsers v-if="canShowManagerUser && loadTable === 'managerUser'" name="managerUser"></ManagerUsers>
+        <ManagerRoles v-if="canShowManagerRole && loadTable === 'managerRole'" name="managerRole"></ManagerRoles>
         <Footer></Footer>
 </div>
 </template>
@@ -14,6 +15,7 @@ import Footer from '../../Footer.vue'
 import RealTime from '../../tables/RealTimeTable.vue'
 import Statistic from '../../tables/StatisticTable.vue'
 import ManagerUsers from '../../tables/ManagerUser.vue'
+import ManagerRoles from '../../tables/ManagerRole.vue'
 import checkPermission from '../../../untils/checkPermission'
 
 export default {
@@ -22,7 +24,8 @@ export default {
         Footer,
         RealTime,
         Statistic,
-        ManagerUsers
+        ManagerUsers,
+        ManagerRoles
     },
     computed: {
         canShow() {
@@ -37,8 +40,11 @@ export default {
         canShowStatistic() {
             return checkPermission(store.getters.getUser, ["view-statistic"])
         },
-        canShowManager() {
-            return checkPermission(store.getters.getUser, ["view-manager"])
+        canShowManagerUser() {
+            return checkPermission(store.getters.getUser, ["view-managerUser"])
+        },
+        canShowManagerRole() {
+            return checkPermission(store.getters.getUser, ["view-managerRole"])
         }
     }
 }

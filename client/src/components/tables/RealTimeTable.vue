@@ -1,6 +1,6 @@
 <template>
 <main>
-    <div class="container-fluid px-4">
+    <div class="container-fluid p-2">
         <div class="text-center mt-5" v-if="isLoading">
             <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
