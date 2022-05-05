@@ -1,6 +1,8 @@
 const asyncRedis = require("async-redis");
 const client = asyncRedis.createClient();
 const webpushController = require("./webpushController");
+const formatPayload = require("../utils/formatPayload")
+
 client.on("error", function (err) {
   console.log("Error " + err);
 });
@@ -17,21 +19,7 @@ const meterController = {
     // nhan data tu cac request
     const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
     const localISOTime = new Date(Date.now()-tzoffset).toISOString()
-    const payload = {
-      type: req.body.type ?? "test",
-      system: req.body.system ?? "test",
-      parameter: req.body.parameter ?? "test",
-      value: req.body.value ?? "test",
-      unit: req.body.unit ?? "test",
-      time: req.body.time ?? localISOTime,
-      status: req.body.status ?? "Null",
-      priority: req.body.priority ?? "0",
-      message: req.body.message ?? "test",
-      action: req.body.action ?? "none",
-      contact: req.body.contact ?? "",
-      timeout: req.body.timeout ?? 10,
-      count: req.body.count ?? 10
-    };
+    const payload = formatPayload.payload(req.body, localISOTime)
     // gui data sang client de hien thi realtime theo thu tu uu tien
     global.io.sockets.emit("realtime", payload);
     // luu xuong realtime theo id la so phan tu co trong key real_realtime
@@ -69,20 +57,7 @@ const meterController = {
       })
       .then((data) => {
         var resData = JSON.parse(data);
-        const statisticPayload = {
-          type: payload.type,
-          system: payload.system,
-          parameter: payload.parameter,
-          priority: payload.priority,
-          action: payload.action,
-          total: 1,
-          timeout: payload.timeout,
-          count: payload.count,
-          isAction: false,
-          username: "",
-          createAt: localISOTime,
-          updateAt: localISOTime,
-        };
+        const statisticPayload = formatPayload.statisticPayload(payload, localISOTime)
         if (resData.length > 0) {
           const strPayload =
             statisticPayload.type +
