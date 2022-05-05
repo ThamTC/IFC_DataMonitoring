@@ -85,6 +85,7 @@ const socketIO = {
         const userDone = data.doneName
         const id = data.id
         const key = data.key
+        var contentStatistic;
         try {
             resData = await client.get(key);
             if (resData != null) {
@@ -107,6 +108,7 @@ const socketIO = {
                             createAt: resData[idx].createAt,
                             updateAt: resData[idx].updateAt,
                         };
+                        contentStatistic = resData[idx].type + resData[idx].system + resData[idx].parameter
                         try {
                             resData.splice(idx, 1);
                         } catch (error) {
@@ -122,6 +124,17 @@ const socketIO = {
                 await client.set(key, JSON.stringify(resData));
             }
             global.io.sockets.emit("updateStatistic", { error: null, data: resData })
+            resData = await client.get("realtime");
+            if (resData != null) {
+                // chuyen string ve object
+                resData = JSON.parse(resData);
+                resData = resData.filter((value, idx) => {
+                    const contentRealtime = value.type + value.system + value.parameter
+                    return contentStatistic !== contentRealtime
+                })
+            }
+            await client.set("realtime", JSON.stringify(resData))
+            global.io.sockets.emit("updateRealtime", { error: null, data: resData })
         } catch (error) {
             global.io.sockets.emit("updateStatistic", { error: error, data: [] })
         }
