@@ -67,6 +67,7 @@ const redisToken = {
           const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
           const localISOTime = new Date(Date.now() - tzoffset).toISOString()
           var itemsDelete = [];
+          var itemsDeleteIdx = [];
           for (let idx = 0; idx < resData.length; idx++) {
             const timeOut =
               (new Date(localISOTime)).getTime() - (new Date(resData[idx].createAt)).getTime(); // milisecond
@@ -77,7 +78,6 @@ const redisToken = {
             ) {
               // write to DB
               const record = {
-                index: idx,
                 type: resData[idx]?.type,
                 system: resData[idx]?.system,
                 priority: resData[idx]?.priority,
@@ -92,17 +92,19 @@ const redisToken = {
                 updatedAt: resData[idx].updateAt ?? localISOTime,
               };
               itemsDelete.push(record);
+              itemsDeleteIdx.push(idx);
               // StatisticModel.create(record);
             }
           }
           // delete item
           if (itemsDelete.length > 0) {
+            console.log("info: ", itemsDelete)
             db.GS_Statistic.bulkCreate(itemsDelete)
-            .then(() => logger.log("infor", "Insert DB thanh cong"))
+            .then(() => logger.log("info", "Insert DB thanh cong"))
             .catch((error) => logger.log("error", "Co loi xay ra voi DB: " + error))
 
-            itemsDelete.forEach((element) => {
-              resData.splice(element.index, 1);
+            itemsDeleteIdx.forEach((ele) => {
+              resData.splice(ele, 1);
             });
             client.set("statistic", JSON.stringify(resData));
             global.io.sockets.emit("statistic", resData);

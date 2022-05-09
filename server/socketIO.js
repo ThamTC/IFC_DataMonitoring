@@ -2,6 +2,8 @@ const DoneAllTask = require("./models/doneAllTask")
 const DoneTask = require("./models/doneTask")
 const asyncRedis = require("async-redis");
 const client = asyncRedis.createClient();
+const db = require("./models/index")
+const logger = require("./services/logger")("statistic", "db_error")
 
 client.on("error", function (err) {
     throw err;
@@ -64,22 +66,34 @@ const socketIO = {
             }
             const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
             const localISOTime = new Date(Date.now() - tzoffset).toISOString();
-            const doAlarm = {
-                tasks: dataTasks,
-                userCheck: userCheck,
-                userDone: userDone,
-                doneTime: localISOTime,
-            };
-            const isCreate = await DoneAllTask.create(doAlarm);
-            if (!isCreate) {
-                global.io.sockets.emit("updateStatistic", { error: "Co loi trong qua trinh thao tac DB", data: [] })
-            }
+            const doAlarm = dataTasks.map((ele) => {
+                return {
+                    type: ele?.type ?? "test",
+                    system: ele?.system ?? "test",
+                    parameter: ele?.parameter ?? "test",
+                    status: ele?.status ?? "Null",
+                    total: ele?.total ?? "1",
+                    priority: ele?.priority ?? "0",
+                    userCheck: userCheck ?? "",
+                    userDone: userDone ?? "",
+                    doneTime: localISOTime,
+                    createAt: ele?.createAt ?? localISOTime,
+                    updateAt: ele?.updateAt ?? localISOTime,
+                }
+            })
+            db.GS_Statistic.bulkCreate(doAlarm)
+                .then(() => logger.log("info", "Insert DB thanh cong"))
+                .catch((error) => {
+                    logger.log("error", "Co loi trong qua trinh thao tac DB: " + error)
+                    global.io.sockets.emit("updateStatistic", { error: "Co loi trong qua trinh thao tac DB", data: [] })
+                })
             global.io.sockets.emit("updateStatistic", { error: null, data: resData })
         } catch (error) {
+            logger.log("error", "Co loi xay ra: " + error)
             global.io.sockets.emit("updateStatistic", { error: error, data: [] })
         }
     },
-    doneTask: async(data) => {
+    doneTask: async (data) => {
         var resData = [];
         const userCheck = data.checkerName
         const userDone = data.doneName
@@ -100,13 +114,14 @@ const socketIO = {
                             type: resData[idx].type,
                             system: resData[idx].system,
                             parameter: resData[idx].parameter,
+                            status: resData[idx].status,
                             total: resData[idx].total,
                             priority: resData[idx].priority,
                             userCheck: userCheck,
                             userDone: userDone,
                             doneTime: localISOTime,
-                            createAt: resData[idx].createAt,
-                            updateAt: resData[idx].updateAt,
+                            createdAt: resData[idx].createAt ?? localISOTime,
+                            updatedAt: resData[idx].updateAt ?? localISOTime,
                         };
                         contentStatistic = resData[idx].type + resData[idx].system + resData[idx].parameter
                         try {
@@ -114,10 +129,12 @@ const socketIO = {
                         } catch (error) {
                             global.io.sockets.emit("updateStatistic", { error: error, data: [] })
                         }
-                        const isCreate = await DoneTask.create(doAlarm);
-                        if (!isCreate) {
-                            global.io.sockets.emit("updateStatistic", { error: "Co loi trong qua trinh thao tac DB", data: [] })
-                        }
+                        db.GS_Statistic.create(doAlarm)
+                            .then(() => logger.log("info", "Insert DB thanh cong"))
+                            .catch((error) => {
+                                logger.log("error", "Co loi trong qua trinh thao tac DB: " + error)
+                                global.io.sockets.emit("updateStatistic", { error: "Co loi trong qua trinh thao tac DB", data: [] })
+                            })
                         break;
                     }
                 }
@@ -136,6 +153,7 @@ const socketIO = {
             await client.set("realtime", JSON.stringify(resData))
             global.io.sockets.emit("updateRealtime", { error: null, data: resData })
         } catch (error) {
+            logger.log("error", "Co loi xay ra: " + error)
             global.io.sockets.emit("updateStatistic", { error: error, data: [] })
         }
     }

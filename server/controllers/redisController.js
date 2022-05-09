@@ -79,14 +79,11 @@ const redisController = {
             } catch (error) {
               throw error;
             }
-            var isCreate;
             if (key == "statistic") {
-              isCreate = await db.GS_Statistic.create(doAlarm)
+              db.GS_Statistic.create(doAlarm)
+              .then(() => logger.log("info", "Insert DB thanh cong"))
+              .catch((error) => logger.log("error", "Co loi trong qua trinh thao tac DB: " + error))
               // isCreate = await DoneTask.create(doAlarm);
-            }
-            if (!isCreate) {
-              logger.log("error", "Co loi trong qua trinh thao tac DB")
-              return res.status(401).json("Co loi trong qua trinh thao tac DB");
             }
             break;
           }
