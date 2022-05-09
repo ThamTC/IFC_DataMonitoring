@@ -1,7 +1,5 @@
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
-const UserModel = require("../models/user")
-const RolePermissionModel = require("../models/role-permission")
 const redisToken = require("../redis/redis")
 const emailExistence = require("../utils/checkEmail")
 const { connectDB } = require("../config/mssqlConnect")

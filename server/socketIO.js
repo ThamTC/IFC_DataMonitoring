@@ -1,5 +1,4 @@
-const DoneAllTask = require("./models/doneAllTask")
-const DoneTask = require("./models/doneTask")
+
 const asyncRedis = require("async-redis");
 const client = asyncRedis.createClient();
 const db = require("./models/index")

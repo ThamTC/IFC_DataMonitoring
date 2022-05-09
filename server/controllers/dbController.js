@@ -1,11 +1,14 @@
-const { ObjectId } = require("mongodb");
-const UserModel = require("../models/user");
-const RoleModel = require("../models/role-permission")
+
+const db = require("../models/index")
+const logger = require("../services/logger")("statistic", "db_error")
+
 const dbController = {
   getAllUsers: async (req, res) => {
     try {
-      const resData = await UserModel.find().exec();
-      const dataMap = resData.map((item) => {
+      const resData = await db.GS_UserIFC.findAll()
+      const users = resData.filter(user => user.email !== null)
+      // const resData = await UserModel.find().exec();
+      const dataMap = users.map((item) => {
         return {
           username: item.username,
           email: item.email,
@@ -23,16 +26,26 @@ const dbController = {
       const email = req.body.user.email
       const username = req.body.user.username
       const role = req.body.user.role
-      const resData = await UserModel.findOneAndUpdate({email: email}, {username: username, role: role}).exec()
-      const {password, ...other} = resData._doc
-      return res.status(200).json(other)
+      const userUpdated = await db.GS_UserIFC.update({ username: username, role: role }, { where: { email: email } })
+      console.log("userUpdated: ", userUpdated)
+      if (userUpdated) {
+        logger.log("info", "update user thanh cong")
+        return res.status(200).json({
+          email: userUpdated.email,
+          username: userUpdated.username,
+          role: userUpdated.role,
+          createdAt: userUpdated.createdAt
+        })
+      }
+
     } catch (error) {
+      logger.log("error", "" + error)
       return res.status(400).json(error)
     }
   },
   getAllRoles: async (req, res) => {
     try {
-      const resData = await RoleModel.find().exec()
+      const resData = await db.GS_RolePermission.findAll({raw: true})
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
