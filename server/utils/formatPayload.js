@@ -23,6 +23,7 @@ const formatPayload = {
       parameter: payload.parameter,
       priority: payload.priority,
       action: payload.action,
+      status: payload.status,
       total: 1,
       timeout: payload.timeout,
       count: payload.count,

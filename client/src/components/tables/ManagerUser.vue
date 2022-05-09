@@ -68,7 +68,7 @@
 <script>
 import dbRequest from '../../apis/dbRequest'
 import ModalManagerUser from '../modals/ModalManagerUser.vue'
-import managerStore from '../../stores/managerStore'
+import store from '../../stores/store';
 
 export default {
     name: "ManagerUsers",
@@ -84,14 +84,14 @@ export default {
     },
     computed: {
         getUsers() {
-            return managerStore.getters.getUsers
+            return store.getters.getManagerUsers
         }
     },
     created() {
         document.title = "Quản lý User"
         // get all user from DB
         dbRequest.getAllUsers().then((data) => {
-                managerStore.commit("setUsers", data.data)
+                store.commit("setManagerUsers", data.data)
                 this.isLoading = false
             })
             .catch((err) => {
@@ -104,14 +104,14 @@ export default {
         setting(e) {
             const id = e.target.id
             // console.log(this.users[id])
-            const users = managerStore.getters.getUsers
+            const users = store.getters.getManagerUsers
             var modalUsername = document.getElementById("inputUsernameModal")
             modalUsername.value = users[id].username
             var modalSelection = document.querySelectorAll(".role")
             const role = this.role.findIndex((ele) => ele == users[id].role)
             modalSelection[role].setAttribute("selected", "selected")
             var myModal = new bootstrap.Modal(document.getElementById('modal'))
-            managerStore.commit("setUserInfo", users[id])
+            store.commit("setManagerUserInfo", users[id])
             this.modal = myModal
             // if(store.getters.getDataRealtime.length > 0) {
             myModal.show()

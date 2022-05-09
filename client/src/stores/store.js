@@ -12,7 +12,8 @@ const store = createStore({
     countColors: {},
     sideNavContent: "",
     currentData: {},
-    
+    managerUser: {},
+    managerUsers: [],
   },
   getters: {
     checkLoggin(state) {
@@ -44,6 +45,18 @@ const store = createStore({
     },
     getCurrentData(state) {
       return state.currentData
+    },
+    getManagerUserInfo(state) {
+      return state.managerUser
+    },
+    getManagerRole(state) {
+      return state.managerUser.role
+    },
+    getManagerUsername(state) {
+      return state.managerUser.username
+    },
+    getManagerUsers(state) {
+      return state.managerUsers
     }
   },
   mutations: {
@@ -77,12 +90,28 @@ const store = createStore({
     },
     setCurrentData(state, data) {
       state.currentData = data
+    },
+    setManagerUserInfo(state, user) {
+      state.managerUser = user
+    },
+    setManagerRole(state, role) {
+      state.managerUser.role = role
+    },
+    setManagerUsername(state, username) {
+      state.managerUser.username = username
+    },
+    setManagerUsers(state, users) {
+      state.managerUsers = users
     }
   },
   actions: {
     handleSetLoadTable(context, tabelName) {
       context.commit("setLoadTable", tabelName);
     },
+    updateManagerUsers({commit, state}, user) {
+      const managerUsers = state.managerUsers.map(ele => ele.email !== user.email ? ele : user)
+      commit("setManagerUsers", managerUsers)
+  }
   },
 });
 

@@ -33,6 +33,12 @@ const sequelize = new Sequelize('CORE', 'sa', 'IFC@123', {
         encrypt: false
       }
     },
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
     // schema: "GS"
   });
 

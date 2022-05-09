@@ -4,6 +4,8 @@ const UserModel = require("../models/user")
 const RolePermissionModel = require("../models/role-permission")
 const redisToken = require("../redis/redis")
 const emailExistence = require("../utils/checkEmail")
+const { connectDB } = require("../config/mssqlConnect")
+const db = require("../models/index")
 
 const authController = {
     generateAccessToken: (user) => {
@@ -20,16 +22,27 @@ const authController = {
             email: user.email
         }, process.env.REFRESH_TOKEN, { expiresIn: "365d" })
     },
-    login: async(req, res) => {
+    login: async (req, res) => {
         // const email = req.body.email
         // const password = req.body.password
         try {
-            const user = await UserModel.findOne({ email: req.body.email }).exec()
-            if (!user) {
-                return res.status(404).json("Email không tồn tại")
+            const conn = await connectDB()
+            var user;
+            if (conn?.success) {
+                user = await db.GS_UserIFC.findOne({ where: { email: req.body.email }, raw: true })
+                if (!user) {
+                    return res.status(404).json("Email không tồn tại")
+                }
+            } else {
+                return res.status(401).json("Mất kết nối tới DB")
             }
-            const rolePermission = await RolePermissionModel.findOne({name: user.role}).exec() ?? []
-            const permissions = rolePermission.permission
+            // const user = await UserModel.findOne({ email: req.body.email }).exec()
+            // if (!user) {
+            //     return res.status(404).json("Email không tồn tại")
+            // }
+            const rolePermission = await db.GS_RolePermission.findOne({ where: { name: user.role }, raw: true }) ?? []
+            // const rolePermission = await RolePermissionModel.findOne({name: user.role}).exec() ?? []
+            const permissions = JSON.parse(rolePermission.permission)
             const isPass = await bcrypt.compare(req.body.password, user.password)
             if (!isPass) {
                 return res.status(404).json("Sai mật khẩu")
@@ -44,12 +57,15 @@ const authController = {
                 path: "/",
                 sameSite: "strict"
             })
-            const {
-                password,
-                ...others
-            } = user._doc
+            // const {
+            //     password,
+            //     ...others
+            // } = user._doc
+            const email = user.email
+            const username = user.username
+            const role = user.role
             return res.status(200).json({
-                ...others,
+                email, username, role,
                 permissions,
                 accessToken
             })
@@ -57,7 +73,7 @@ const authController = {
             return res.status(500).json(err)
         }
     },
-    register: async(req, res) => {
+    register: async (req, res) => {
         try {
             const username = req.body.username
             const email = req.body.email
@@ -66,9 +82,19 @@ const authController = {
             if (!isEmailExist) {
                 return res.status(404).json('Email không tồn tại');
             }
-            const user = await UserModel.findOne({ email: email }).exec()
-            if (user)
-                return res.status(404).json('Email đã tồn tại.');
+            const conn = await connectDB()
+            var user;
+            if (conn?.success) {
+                user = await db.GS_UserIFC.findOne({ where: { email: email }, raw: true })
+                if (!user) {
+                    return res.status(404).json("Email không tồn tại")
+                }
+            } else {
+                return res.status(401).json("Mất kết nối tới DB")
+            }
+            // const user = await UserModel.findOne({ email: email }).exec()
+            // if (user)
+            //     return res.status(404).json('Email đã tồn tại.');
 
             const password = req.body.password
             const pwdConfirmation = req.body.pwdConfirmation
@@ -82,7 +108,7 @@ const authController = {
                 email: email,
                 password: hashPassword
             };
-            const createUser = await UserModel.create(newUser)
+            const createUser = await db.GS_UserIFC.create(newUser)
             if (!createUser) {
                 return res.status(404).json('Có lỗi trong quá trình tạo tài khoản, vui lòng thử lại.');
             }
@@ -103,7 +129,7 @@ const authController = {
         return res.status(200).json("Logged out !")
     },
 
-    refreshToken: async(req, res) => {
+    refreshToken: async (req, res) => {
         const refreshToken = req.cookies.refreshToken
         if (!refreshToken) {
             return res.status(401).json("You're not authenticated")
@@ -133,13 +159,13 @@ const authController = {
         } catch (err) {
             return res.status(500).json("Có lỗi trong quá trình refresh token")
         }
-        
+
     },
     isLogged: (req, res) => {
         const refreshToken = req.cookies?.refreshToken
         const userReq = req.body?.user
-        if(!refreshToken) {
-           return res.status(401).json("Token is not valid")
+        if (!refreshToken) {
+            return res.status(401).json("Token is not valid")
         }
         if (!redisToken.isExistToken(refreshToken)) {
             return res.status(403).json("Token is not valid")

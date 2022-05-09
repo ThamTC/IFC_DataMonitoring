@@ -22,6 +22,7 @@ const dbRouter = require("./routes/api/dbRouter")
 const socketIO = require("./socketIO")
 
 const db = require("./config/db_connection")
+const {connectDB} = require("./config/mssqlConnect")
 
 app.use(limiter)
 app.use(cookieParser())
@@ -35,7 +36,7 @@ app.use("/api", meterRouter)
 app.use("/api/webpush", webPushRouter)
 app.use(express.static(__dirname + '/public/'))
 
-
+connectDB()
 const server = require("http").Server(app)
 
 global.io = require('socket.io')(server, {

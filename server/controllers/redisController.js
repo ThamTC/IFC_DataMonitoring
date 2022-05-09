@@ -1,7 +1,8 @@
-const DoneTask = require("../models/doneTask");
-const DoneAllTask = require("../models/doneAllTask");
+
 const asyncRedis = require("async-redis");
 const client = asyncRedis.createClient();
+const db = require("../models/index")
+const logger = require("../services/logger")("statistic", "db_error")
 
 client.on("error", function (err) {
   throw err;
@@ -64,6 +65,7 @@ const redisController = {
               type: resData[idx].type,
               system: resData[idx].system,
               parameter: resData[idx].parameter,
+              status: resData[idx].status,
               total: resData[idx].total,
               priority: resData[idx].priority,
               userCheck: req.body?.userCheck,
@@ -79,9 +81,11 @@ const redisController = {
             }
             var isCreate;
             if (key == "statistic") {
-              isCreate = await DoneTask.create(doAlarm);
+              isCreate = await db.GS_Statistic.create(doAlarm)
+              // isCreate = await DoneTask.create(doAlarm);
             }
             if (!isCreate) {
+              logger.log("error", "Co loi trong qua trinh thao tac DB")
               return res.status(401).json("Co loi trong qua trinh thao tac DB");
             }
             break;
@@ -92,6 +96,7 @@ const redisController = {
       // global.io.sockets.emit("statistic", resData)
       return res.status(200).json(resData);
     } catch (error) {
+      logger.log("error", "Co loi: " + error)
       return error;
     }
   },

@@ -42,7 +42,7 @@
 
 <script>
 import dbRequest from '../../apis/dbRequest'
-import managerStore from '../../stores/managerStore'
+import store from '../../stores/store'
 
 export default {
     name: "ModalManagerUser",
@@ -57,7 +57,7 @@ export default {
         }
     },
     updated() {
-        this.user = managerStore.getters.getUserInfo
+        this.user = store.getters.getManagerUserInfo
     },
     props: ["modal"],
     methods: {
@@ -85,7 +85,7 @@ export default {
                 this.type = "success"
                 this.message = "updated success"
                 // update users in managerStore
-                managerStore.dispatch("updateUsers", userUpdate)
+                store.dispatch("updateManagerUsers", userUpdate)
             }).catch((err) => {
                 this.isMessage = true
                 this.type = "error"

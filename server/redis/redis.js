@@ -1,6 +1,7 @@
 const redis = require("async-redis");
 const client = redis.createClient();
-const StatisticModel = require("../models/statistic");
+const db = require("../models/index")
+const logger = require("../services/logger")("statistic", "db_error")
 
 client.on("error", function (err) {
   console.log("Error " + err);
@@ -61,39 +62,47 @@ const redisToken = {
     setInterval(() => {
       client
         .get("statistic")
-        .then((data) => {
+        .then(async(data) => {
           const resData = JSON.parse(data);
           const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-          const localISOTime = new Date(Date.now()-tzoffset).toISOString()
+          const localISOTime = new Date(Date.now() - tzoffset).toISOString()
           var itemsDelete = [];
           for (let idx = 0; idx < resData.length; idx++) {
             const timeOut =
               (new Date(localISOTime)).getTime() - (new Date(resData[idx].createAt)).getTime(); // milisecond
             if (
-              !resData[idx].isAction && (resData[idx].action ?? "null").toLowerCase() != "null" && 
+              !resData[idx].isAction && (resData[idx].action ?? "null").toLowerCase() != "null" &&
               (timeOut > (parseInt(resData[idx].timeout * 60000) ?? 60000 * process.env.REDIS_TIMEOUT) ||
                 resData[idx].total >= (parseInt(resData[idx].count) ?? process.env.REDIS_COUNT_WARNING))
             ) {
               // write to DB
               const record = {
+                index: idx,
                 type: resData[idx]?.type,
                 system: resData[idx]?.system,
+                priority: resData[idx]?.priority,
                 parameter: resData[idx]?.parameter,
+                status: resData[idx]?.status,
                 action: resData[idx]?.action,
                 total: resData[idx]?.total,
-                usernameDone: resData[idx]?.username,
-                createAt: resData[idx].createAt ?? localISOTime,
-                updateAt: resData[idx].updateAt ?? localISOTime,
+                userCheck: "",
+                userDone: "",
+                doneTime: localISOTime,
+                createdAt: resData[idx].createAt ?? localISOTime,
+                updatedAt: resData[idx].updateAt ?? localISOTime,
               };
-              itemsDelete.push(idx);
-              StatisticModel.create(record);
+              itemsDelete.push(record);
+              // StatisticModel.create(record);
             }
           }
-
           // delete item
           if (itemsDelete.length > 0) {
+            db.GS_Statistic.bulkCreate(itemsDelete)
+            .then(() => logger.log("infor", "Insert DB thanh cong"))
+            .catch((error) => logger.log("error", "Co loi xay ra voi DB: " + error))
+
             itemsDelete.forEach((element) => {
-              resData.splice(element, 1);
+              resData.splice(element.index, 1);
             });
             client.set("statistic", JSON.stringify(resData));
             global.io.sockets.emit("statistic", resData);
