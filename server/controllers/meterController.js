@@ -112,7 +112,7 @@ const meterController = {
             }
             // tim element dau tien co priority lon hon priority hien tai 1 don vi
             const idxFound = resData.findIndex((ele) => {
-              return ele.priority >= priority || ele.priority == 0
+              return priority != 0 ? (ele.priority >= priority) : (ele.priority == 0)
             })
             // neu tim thay thi insert tai vi tri duoc tim thay
             if (idxFound >= 0) {

@@ -129,8 +129,8 @@ const socketIO = {
                         } catch (error) {
                             global.io.sockets.emit("updateStatistic", { error: error, data: [] })
                         }
-                        db.GS_Statistic.create(doAlarm)
-                            .then(() => logger.log("info", "Insert DB thanh cong"))
+                        db.GS_Statistic.bulkCreate([doAlarm])
+                            .then((data) => logger.log("info", "Insert DB thanh cong: " + data))
                             .catch((error) => {
                                 logger.log("error", "Co loi trong qua trinh thao tac DB: " + error)
                                 global.io.sockets.emit("updateStatistic", { error: "Co loi trong qua trinh thao tac DB", data: [] })
