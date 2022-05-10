@@ -16,12 +16,12 @@ const limiter = rateLimit({
 const redisRouter = require("./routes/api/redisRouter")
 const authRouter = require("./routes/api/authRouter")
 const meterRouter = require("./routes/api/meterRouter")
-const webPushRouter = require("./routes/api/webPush")
+// const webPushRouter = require("./routes/api/webPush")
 const redisClient = require("./redis/redis")
 const dbRouter = require("./routes/api/dbRouter")
 const socketIO = require("./socketIO")
 
-const db = require("./config/db_connection")
+// const db = require("./config/db_connection")
 const {connectDB} = require("./config/mssqlConnect")
 
 app.use(limiter)
@@ -33,7 +33,7 @@ app.use("/api/redis", redisRouter)
 app.use("/api/auth", authRouter)
 app.use("/api/db", dbRouter)
 app.use("/api", meterRouter)
-app.use("/api/webpush", webPushRouter)
+// app.use("/api/webpush", webPushRouter)
 app.use(express.static(__dirname + '/public/'))
 
 connectDB()

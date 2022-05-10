@@ -1,13 +1,13 @@
 const asyncRedis = require("async-redis");
 const client = asyncRedis.createClient();
-const webpushController = require("./webpushController");
+// const webpushController = require("./webpushController");
 const formatPayload = require("../utils/formatPayload")
 const logger = require("../services/logger")("request-realtime", "request")
 
 client.on("error", function (err) {
   console.log("Error " + err);
 });
-webpushController.config();
+// webpushController.config();
 
 const meterController = {
   
