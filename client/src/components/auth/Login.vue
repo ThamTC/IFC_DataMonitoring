@@ -34,8 +34,12 @@
                         mb-0
                       ">
                                         <router-link to="/password">Forgot Password?</router-link>
-                                        <button class="btn btn-primary" type="submit">
+                                        <button v-if="isLogged" class="btn btn-primary" type="submit">
                                             Login
+                                        </button>
+                                        <button v-else class="btn btn-primary" type="button" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Chờ tí...
                                         </button>
                                     </div>
                                 </Form>
@@ -87,6 +91,7 @@ export default {
             },
             showError: false,
             message: "",
+            isLogged: true
         }
     },
     created() {
@@ -94,10 +99,11 @@ export default {
     },
     methods: {
         submit() {
-            console.log("form", this.user);
+            this.isLogged = false
             authRequest
                 .login(this.user)
                 .then((res) => {
+                    this.isLogged = true
                     const redirectPath = this.$route.query.redirect
                     store.commit("setSideNavContent", redirectPath ?? "home")
                     this.$router.push({
@@ -105,6 +111,7 @@ export default {
                     });
                 })
                 .catch((err) => {
+                    this.isLogged = true
                     this.message = err.response.data;
                 });
         },
