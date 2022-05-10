@@ -1,8 +1,7 @@
 const jwt = require("jsonwebtoken")
-const redisToken = require("../redis/redis")
 
 const middlewareController = {
-    isLogin: (req, res, next) => {
+    isLoggin: (req, res, next) => {
         const refreshToken = req.cookies.refreshToken
         if (refreshToken) {
             jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, user) => {
@@ -13,7 +12,7 @@ const middlewareController = {
             })
             next()
         } else {
-            return res.redirect("user/login")
+            return res.status(401).json("Token is not valid")
         }
 
     },

@@ -11,12 +11,12 @@
                                     <div class="small mb-3 text-muted">Enter your email address and we will send you a link to reset your password.</div>
                                     <form>
                                         <div class="form-floating mb-3">
-                                            <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
+                                            <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" v-model="resetPass"/>
                                             <label for="inputEmail">Email address</label>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                             <router-link to="/login">Return to login</router-link>
-                                            <a class="btn btn-primary" href="login.html">Reset Password</a>
+                                            <a class="btn btn-primary" href="#" @click="resetPassword">Reset Password</a>
                                         </div>
                                     </form>
                                 </div>
@@ -40,7 +40,20 @@ export default {
     name: 'Password',
     components: {
         Footer
-    }
+    },
+    data() {
+        return {
+            resetPass: ""
+        }
+    },
+    created() {
+        document.title = "Quên mật khẩu"
+    },
+    methods: {
+        resetPassword(){
+            console.log(this.resetPass)
+        }
+    },
 }
 </script>
 

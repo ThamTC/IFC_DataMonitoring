@@ -1,0 +1,16 @@
+module.exports = {
+  user: process.env.MSSQL_USER || "sa",
+  password: process.env.MSSQL_PASSWORD,
+  database: process.env.MSSQL_DATABASE || "CORE",
+  server: process.env.MSSQL_SERVERNAME || "101.99.52.38",
+  port: process.env.MSSQL_PORT || 1434,
+  pool: {
+    max: 10,
+    min: 0,
+    idleTimeoutMillis: 30000,
+  },
+  options: {
+    encrypt: false, // for azure
+    trustServerCertificate: true, // change to true for local dev / self-signed certs
+  },
+};

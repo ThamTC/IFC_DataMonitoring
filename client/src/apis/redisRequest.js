@@ -4,29 +4,31 @@ const redisRequest = {
     getIndexStore: async(key) => {
         try {
             const resData = await axios.post("/api/redis/index", {key: key})
-            return resData
+            return resData.data
         } catch (error) {
             return error.response
         }
     },
-    selectTask: async(e, checkerName) => {
+    selectTask: async(e, checkerName, key) => {
         try {
             const resData = await axios.post("api/redis/update", {
                 id: e.target.value,
                 isAction: e.target.checked,
-                username: e.target.checked ? checkerName : ""
+                username: e.target.checked ? checkerName : "",
+                key: key
             })
             return resData.data
         } catch (error) {
             return error.response
         }
     },
-    doneTask: async(id, checkerName, doneName) => {
+    doneTask: async(id, checkerName, doneName, key) => {
         try {
             const resData = await axios.post("api/redis/delete", {
                 id: id,
                 userCheck: checkerName,
-                userDone: doneName
+                userDone: doneName,
+                key: key
             })
             return resData.data
         } catch (error) {
@@ -38,6 +40,30 @@ const redisRequest = {
             const resData = await axios.post("api/redis/deleteAll", {
                 userCheck: doneName,
                 userDone: doneName
+            })
+            return resData.data
+        } catch (error) {
+            return error.response
+        }
+    },
+    doneSelectionTask: async(doneName, selection, key) => {
+        try {
+            const resData = await axios.post("api/redis/deleteSelection", {
+                key: key,
+                selection: selection,
+                userCheck: doneName,
+                userDone: doneName
+            })
+            return resData.data
+        } catch (error) {
+            return error.response
+        }
+    },
+    removeTask: async(removeName, hourRemove) => {
+        try {
+            const resData = await axios.post("api/redis/deleteTaskHour", {
+                hour: hourRemove,
+                userDone: removeName
             })
             return resData.data
         } catch (error) {

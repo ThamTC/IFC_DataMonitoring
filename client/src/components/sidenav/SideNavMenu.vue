@@ -1,50 +1,27 @@
 <template>
-  <div class="sb-sidenav-menu">
-    <div class="nav">
-      <a ref="realtime" class="nav-link" @click="setLoadTable('realtime')">
-        <div class="sb-nav-link-icon">
-          <i class="fas fa-chart-area"></i>
-        </div>
-        Trực tuyến
-      </a>
-      <a ref="statistic" class="nav-link" @click="setLoadTable('statistic')">
-        <div class="sb-nav-link-icon">
-          <i class="fas fa-table"></i>
-        </div>
-        Thống kê
-      </a>
-    </div>
-  </div>
+<div class="sb-sidenav-menu">
+        <SideNavMenuHomePage v-if="canShow == 'home'"></SideNavMenuHomePage>
+        <SideNavMenuAccount v-else-if="canShow == 'account'"></SideNavMenuAccount>
+</div>
 </template>
 
 <script>
+import SideNavMenuHomePage from './sidenavmenucontents/SideNavMenuHomePage.vue'
+import SideNavMenuAccount from './sidenavmenucontents/SideNavMenuAccount.vue'
 import store from '../../stores/store'
 export default {
-  name: "SideNavMenu",
-  components: {},
-  computed: {
-
-  },
-  methods: {
-    setLoadTable(name){
-      store.dispatch("handleSetLoadTable", name);
-      Object.keys(this.$refs).forEach(el => {
-          if (name !== el) {
-              this.$refs[el].classList.remove("highlight")
-              this.$refs[name].classList.add("highlight")
-          }
-      })
+    name: "SideNavMenu",
+    components: {
+        SideNavMenuHomePage,
+        SideNavMenuAccount
     },
-  },
-  mounted() {
-      let tableName = store.getters.getLoadTable
-      this.$refs[tableName].classList.add("highlight")
-  },
+    computed: {
+        canShow() {
+            return store.getters.getSideNavContent
+        }
+    }
 };
 </script>
 
 <style>
-.highlight{
-    color: white !important;
-}
 </style>

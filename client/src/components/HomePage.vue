@@ -5,10 +5,10 @@
 </div>
 </template>
 
-<script type="module">
+<script>
 import NavBar from "./NavBar.vue";
 import SideNav from './SideNav.vue'
-import Cookies from 'js-cookie'
+
 export default {
     name: "HomePage",
     data() {

@@ -1,28 +1,16 @@
-const asyncRedis = require("async-redis");
-const client = asyncRedis.createClient();
+const redis = require("async-redis");
+const client = redis.createClient();
+const db = require("../models/index")
+const logger = require("../services/logger")("statistic", "db_error")
 
 client.on("error", function (err) {
   console.log("Error " + err);
 });
 
 const redisToken = {
-  setData: async (key, value) => {
-    redis_client.set(key, JSON.stringify(value));
-  },
-  getData: function (key) {
+  clearData: async (key) => {
     const resData = [];
-    redis_client.get(key, (err, data) => {
-      if (err) {
-        throw err;
-      } else {
-        resData = JSON.parse(data);
-        return resData;
-      }
-    });
-  },
-  clearData: (key) => {
-    const resData = [];
-    redis_client.set(key, JSON.stringify(resData));
+    await client.set(key, JSON.stringify(resData));
   },
   updateData: async (key, value, newValue) => {
     const resData = await client.get(key);
@@ -57,23 +45,74 @@ const redisToken = {
     if (!resData.includes(refreshToken)) {
       return false;
     }
-    resData.filter((item) => item !== refreshToken)
+    resData.filter((item) => item !== refreshToken);
     return true;
   },
-  clearCacheInterval: () => {
+  // clearCacheInterval: () => {
+  //   setInterval(async () => {
+  //     const d = new Date();
+  //     const hours = d.getHours();
+  //     if (hours == process.env.REDIS_TIME_CLEAR) {
+  //       await client.set("realtime", "[]");
+  //       await client.set("statistic", "[]");
+  //     }
+  //   }, 1000 * 60 * 60);
+  // },
+  trackToTask: () => {
     setInterval(() => {
-      const d = new Date();
-      let isRemoved = true;
-      if (
-        d.getHours() == process.env.REDIS_TIME_CLEAR &&
-        d.getMinutes() == 0 &&
-        isRemoved
-      ) {
-        redisToken.clearData("warning");
-        redisToken.clearData("do-alarm");
-        isRemoved = false;
-      }
-    }, 1000 * 60 * 60 * 24);
+      client
+        .get("statistic")
+        .then(async(data) => {
+          const resData = JSON.parse(data);
+          const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+          const localISOTime = new Date(Date.now() - tzoffset).toISOString()
+          var itemsDelete = [];
+          var itemsDeleteIdx = [];
+          for (let idx = 0; idx < resData.length; idx++) {
+            const timeOut =
+              (new Date(localISOTime)).getTime() - (new Date(resData[idx].createAt)).getTime(); // milisecond
+            if (
+              !resData[idx].isAction && (resData[idx].action ?? "null").toLowerCase() != "null" &&
+              (timeOut > (parseInt(resData[idx].timeout * 60000) ?? 60000 * process.env.REDIS_TIMEOUT) ||
+                resData[idx].total >= (parseInt(resData[idx].count) ?? process.env.REDIS_COUNT_WARNING))
+            ) {
+              // write to DB
+              const record = {
+                type: resData[idx]?.type,
+                system: resData[idx]?.system,
+                priority: resData[idx]?.priority,
+                parameter: resData[idx]?.parameter,
+                status: resData[idx]?.status,
+                action: resData[idx]?.action,
+                total: resData[idx]?.total,
+                userCheck: "",
+                userDone: "",
+                doneTime: localISOTime,
+                createdAt: resData[idx].createAt ?? localISOTime,
+                updatedAt: resData[idx].updateAt ?? localISOTime,
+              };
+              itemsDelete.push(record);
+              itemsDeleteIdx.push(idx);
+              // StatisticModel.create(record);
+            }
+          }
+          // delete item
+          if (itemsDelete.length > 0) {
+            console.log("info: ", itemsDelete)
+            db.GS_Statistic.bulkCreate(itemsDelete)
+            .then(() => logger.log("info", "Insert DB thanh cong"))
+            .catch((error) => logger.log("error", "Co loi xay ra voi DB: " + error))
+
+            itemsDeleteIdx.forEach((ele) => {
+              resData.splice(ele, 1);
+            });
+            client.set("statistic", JSON.stringify(resData));
+            global.io.sockets.emit("statistic", resData);
+          }
+          // send to email, skype, telegram,...
+        })
+        .catch((err) => console.log(err));
+    }, 1000 * 60);
   },
 };
 

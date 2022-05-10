@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 31
+    },
+    "auditLog": "E:\\Nodejs\\IFC_DataMonitoring\\logs\\request-realtime\\.4aa475a4e56023e4ee0b3161e352ff1a0b3b10af-audit.json",
+    "files": [
+        {
+            "date": 1651741411056,
+            "name": "E:\\Nodejs\\IFC_DataMonitoring\\logs\\request-realtime\\request_2022-05-05.log",
+            "hash": "171cb10c47c6d4228b291471fa6ec0f1"
+        }
+    ],
+    "hashType": "md5"
+}

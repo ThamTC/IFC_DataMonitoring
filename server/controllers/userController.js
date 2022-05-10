@@ -1,8 +1,9 @@
-const UserModel = require("../models/user")
+const db = require("../models/index")
+const logger = require("../services/logger")("statistic", "db_error")
 
 const user = {
     getAll: async() => {
-        return await UserModel.find()
+        return await db.GS_UserIFC.findAll()
     }
 }
 

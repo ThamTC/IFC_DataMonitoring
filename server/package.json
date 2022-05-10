@@ -18,16 +18,24 @@
         "cors": "^2.8.5",
         "dotenv": "^16.0.0",
         "ejs": "^3.1.6",
+        "email-existence": "^0.1.6",
         "express": "^4.17.3",
         "express-ejs-layouts": "^2.5.1",
         "express-rate-limit": "^6.3.0",
         "jsonwebtoken": "^8.5.1",
+        "jwt-decode": "^3.1.2",
         "mongodb": "^4.5.0",
         "mongoose": "^6.2.10",
-        "mysql2": "^2.3.3",
+        "mssql": "^8.1.0",
+        "nodemailer": "^6.7.3",
         "redis": "^3.1.2",
+        "sequelize": "^6.19.0",
+        "sequelize-cli": "^6.4.1",
         "socket.io": "^4.4.1",
-        "sound-play": "^1.1.0"
+        "tedious": "^14.5.0",
+        "web-push": "^3.4.5",
+        "winston": "^3.7.2",
+        "winston-daily-rotate-file": "^4.6.1"
     },
     "devDependencies": {
         "nodemon": "^2.0.15"
