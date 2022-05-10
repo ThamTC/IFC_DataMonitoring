@@ -52,7 +52,11 @@
 
                                     <div class="mt-4 mb-0">
                                         <div class="d-grid">
-                                            <button class="btn btn-primary btn-block" type="submit">Create Account</button>
+                                            <button v-if="isRegister" class="btn btn-primary btn-block" type="submit">Create Account</button>
+                                            <button v-else class="btn btn-primary" type="button" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Chờ tí...
+                                        </button>
                                         </div>
                                     </div>
                                 </Form>
@@ -108,6 +112,7 @@ export default {
                 pwdConfirmation: "",
             },
             messageErr: "",
+            isRegister: true
         };
     },
     created() {
@@ -115,12 +120,15 @@ export default {
     },
     methods: {
         submit() {
+            this.isRegister = false
             authRequest
                 .register(this.user)
                 .then((res) => {
+                    this.isRegister = true
                     this.$router.push("/login");
                 })
                 .catch((err) => {
+                    this.isRegister = true
                     this.messageErr = err.response.data;
                 });
         },
