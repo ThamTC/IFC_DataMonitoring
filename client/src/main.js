@@ -19,7 +19,7 @@ const app = createApp(App);
 app.use(
   new VueSocketIO({
     debug: true,
-    connection: io("http://113.160.233.28:8000"),
+    connection: io(process.env.VUE_APP_ROOT_API || "http://localhost:3000"),
   })
 );
 app.use(VueCookies);

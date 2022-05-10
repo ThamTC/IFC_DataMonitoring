@@ -5,7 +5,7 @@ module.exports = {
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://113.160.233.28:8000'
+                target: process.env.VUE_APP_ROOT_API || 'http://localhost:3000'
             }
         }
     },

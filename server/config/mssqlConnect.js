@@ -20,9 +20,9 @@ const { Sequelize } = require('sequelize');
 
 
 // Option 3: Passing parameters separately (other dialects)
-const sequelize = new Sequelize('CORE', 'sa', 'IFC@123', {
-    host: "101.99.52.38",
-    port: 1434,
+const sequelize = new Sequelize(process.env.MSSQL_DATABASE || 'MYDB', process.env.MSSQL_USER || "sa", process.env.MSSQL_PASSWORD || 'admin', {
+    host: process.env.MSSQL_SERVERNAME || "localhost",
+    port: process.env.MSSQL_PORT,
     dialect: 'mssql',
     dialectOptions: {
       // Observe the need for this nested `options` field for MSSQL
