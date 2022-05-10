@@ -6,7 +6,10 @@ const apiRequest = {
     try {
       const res = await axios.post("api/auth/login", user);
       // save to vuex
-      const loadTableName = res.data.permissions[0].split('-')[1]
+      var loadTableName = ""
+      if (res.data.permissions[0]) {
+        loadTableName = res.data.permissions[0].split('-')[1]
+      }
       store.commit("setUser", res.data);
       store.commit("setIsLoggin", true);
       store.commit("setLoadTable", loadTableName)

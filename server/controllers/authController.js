@@ -68,6 +68,7 @@ const authController = {
                 accessToken
             })
         } catch (err) {
+            console.log("err: ", err)
             return res.status(500).json(err)
         }
     },
@@ -75,17 +76,18 @@ const authController = {
         try {
             const username = req.body.username
             const email = req.body.email
+            
             //check exist email on cloud
             const isEmailExist = await emailExistence.check(email)
             if (!isEmailExist) {
-                return res.status(404).json('Email không tồn tại');
+                return res.status(404).json('Email không tồn tại trên Cloud');
             }
             const conn = await connectDB()
             var user;
             if (conn?.success) {
                 user = await db.GS_UserIFC.findOne({ where: { email: email }, raw: true })
-                if (!user) {
-                    return res.status(404).json("Email không tồn tại")
+                if (user) {
+                    return res.status(404).json("Email đã được đăng ký")
                 }
             } else {
                 return res.status(401).json("Mất kết nối tới DB")
@@ -104,7 +106,8 @@ const authController = {
             const newUser = {
                 username: username,
                 email: email,
-                password: hashPassword
+                password: hashPassword,
+                role: 'user'
             };
             const createUser = await db.GS_UserIFC.create(newUser)
             if (!createUser) {

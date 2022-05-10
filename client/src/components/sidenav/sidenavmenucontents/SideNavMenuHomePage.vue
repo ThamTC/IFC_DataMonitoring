@@ -61,7 +61,9 @@ export default {
     },
     mounted() {
         let tableName = store.getters.getLoadTable
-        this.$refs[tableName].classList.add("highlight")
+        if (this.$refs[tableName]) {
+            this.$refs[tableName].classList.add("highlight")
+        }
     },
 };
 </script>
