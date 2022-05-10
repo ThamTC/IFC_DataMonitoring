@@ -10,17 +10,23 @@
     "logging": false
   },
   "test": {
-    "username": "root",
-    "password": null,
-    "database": "database_test",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "sa",
+    "password": "IFC@123",
+    "database": "CORE",
+    "host": "101.99.52.38",
+    "port": 1434,
+    "dialect": "mssql",
+    "encrypt": false,
+    "logging": false
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
+    "username": "sa",
+    "password": "IFC@123",
+    "database": "CORE",
+    "host": "101.99.52.38",
+    "port": 1434,
+    "dialect": "mssql",
+    "encrypt": false,
+    "logging": false
   }
 }
