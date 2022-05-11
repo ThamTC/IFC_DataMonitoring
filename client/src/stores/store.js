@@ -14,6 +14,7 @@ const store = createStore({
     currentData: {},
     managerUser: {},
     managerUsers: [],
+    usersLogin: []
   },
   getters: {
     checkLoggin(state) {
@@ -57,6 +58,9 @@ const store = createStore({
     },
     getManagerUsers(state) {
       return state.managerUsers
+    },
+    getUsersLogin(state) {
+      return state.usersLogin
     }
   },
   mutations: {
@@ -102,6 +106,9 @@ const store = createStore({
     },
     setManagerUsers(state, users) {
       state.managerUsers = users
+    },
+    setUsersLogin(state, users) {
+      state.usersLogin = users
     }
   },
   actions: {

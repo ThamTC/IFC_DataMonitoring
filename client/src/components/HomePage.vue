@@ -24,7 +24,8 @@ export default {
         SideNav
     },
     mounted() {
-        console.log(JSON.parse(this.$cookies.get("refreshToken")))
+        const username = JSON.parse(localStorage.getItem("user")).username
+        this.$socket.emit("login", {username: username})
     },
 
 };

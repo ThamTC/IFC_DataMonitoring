@@ -7,7 +7,23 @@ const logger = require("./services/logger")("statistic", "db_error")
 client.on("error", function (err) {
     throw err;
 });
-
+var users = []
+const socket = (io) => {
+    io.on("connection", function(socket) {
+        socket.on("disconnect", function(data) {
+            console.log(users[socket.id] + " da ngat ket noi")
+            delete users[socket.id];
+        })
+        socket.on("deleteRealtime", socketIO.deleteRealtime)
+        socket.on("doneSelectionTask", socketIO.doneSelectionTask)
+        socket.on("doneTask", socketIO.doneTask)
+        socket.on("login", function (data) {
+            socket.emit("usersLogin", users)
+            users[socket.id] = data.username;
+            console.log(data.username + " da ket noi")
+        })
+    })
+}
 const socketIO = {
     deleteRealtime: async (data) => {
         const hour = data.hour
@@ -113,6 +129,9 @@ const socketIO = {
                             type: resData[idx].type,
                             system: resData[idx].system,
                             parameter: resData[idx].parameter,
+                            value: resData[idx].value,
+                            unit: resData[idx].unit,
+                            contact: resData[idx].contact,
                             status: resData[idx].status,
                             total: resData[idx].total,
                             priority: resData[idx].priority,
@@ -157,4 +176,4 @@ const socketIO = {
         }
     }
 }
-module.exports = socketIO
+module.exports = socket

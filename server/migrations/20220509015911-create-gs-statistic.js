@@ -17,7 +17,16 @@ module.exports = {
       parameter: {
         type: Sequelize.STRING
       },
+      value: {
+        type: Sequelize.STRING
+      },
+      unit: {
+        type: Sequelize.STRING
+      },
       priority: {
+        type: Sequelize.STRING
+      },
+      contact: {
         type: Sequelize.STRING
       },
       status: {

@@ -40,6 +40,9 @@ export default {
             if (data.error == null) {
                 store.commit("setDataStatistic", data.data);
             }
+        },
+        usersLogin: function (data) {
+            store.commit("setUsersLogin", data.data)
         }
     }
 };

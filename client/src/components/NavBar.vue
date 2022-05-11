@@ -16,6 +16,7 @@
         </div>
     </form>
     <NotiIcon v-if="isLoggin"></NotiIcon>
+    <OnlineIcon v-if="isLoggin"></OnlineIcon>
 
     <!-- Navbar-->
     <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4 navbar-expand">
@@ -47,11 +48,13 @@
 import store from '../stores/store'
 import authRequest from '../apis/authRequest'
 import NotiIcon from './icons/Notification.vue'
+import OnlineIcon from './icons/OnlineIcon.vue'
 export default {
 
     name: "NavBar",
     components: {
-        NotiIcon
+        NotiIcon,
+        OnlineIcon
     },
     data() {
         return {}
