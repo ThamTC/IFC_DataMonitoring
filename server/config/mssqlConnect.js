@@ -46,7 +46,7 @@ const sequelize = new Sequelize(process.env.MSSQL_DATABASE || 'MYDB', process.en
 const connectDB = async function() {
     try {
         await sequelize.authenticate();
-        console.log('Connection has been established successfully.');
+        // console.log('Connection has been established successfully.');
         return {success: "connect successfully"}
     } catch (error) {
         return {error: error}
