@@ -50,8 +50,8 @@
                                     <td>{{ user.role }}</td>
                                     <td><span class="status text-success">&bull;</span> Active</td>
                                     <td>
-                                        <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i :id="idx" @click="setting" class="fas fa-cog"></i></a>
-                                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i class="fas fa-user-times"></i></a>
+                                        <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i :id="idx" @click="settingUser" class="fas fa-cog"></i></a>
+                                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i :id="idx" @click="deleteUser" class="fas fa-user-times"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -61,19 +61,22 @@
             </div>
         </div>
     </div>
-    <ModalManagerUser :modal="modal"></ModalManagerUser>
+    <ModalSettingUser :modal="modal"></ModalSettingUser>
+    <ModalDeleteUser :modal="modal"></ModalDeleteUser>
 </main>
 </template>
 
 <script>
 import dbRequest from '../../apis/dbRequest'
-import ModalManagerUser from '../modals/ModalManagerUser.vue'
+import ModalSettingUser from '../modals/ModalSettingUser.vue'
+import ModalDeleteUser from '../modals/ModalDeleteUser.vue'
 import store from '../../stores/store';
 
 export default {
     name: "ManagerUsers",
     components: {
-        ModalManagerUser
+        ModalSettingUser,
+        ModalDeleteUser
     },
     data() {
         return {
@@ -101,21 +104,28 @@ export default {
     mounted() {
     },
     methods: {
-        setting(e) {
+        settingUser(e) {
             const id = e.target.id
-            // console.log(this.users[id])
             const users = store.getters.getManagerUsers
             var modalUsername = document.getElementById("inputUsernameModal")
             modalUsername.value = users[id].username
             var modalSelection = document.querySelectorAll(".role")
             const role = this.role.findIndex((ele) => ele == users[id].role)
             modalSelection[role].setAttribute("selected", "selected")
-            var myModal = new bootstrap.Modal(document.getElementById('modal'))
+            var myModal = new bootstrap.Modal(document.getElementById('settingUserModal'))
             store.commit("setManagerUserInfo", users[id])
             this.modal = myModal
             // if(store.getters.getDataRealtime.length > 0) {
             myModal.show()
             // }
+        },
+        deleteUser(e) {
+            const id = e.target.id
+            const users = store.getters.getManagerUsers
+            var myModal = new bootstrap.Modal(document.getElementById('deleteUserModal'))
+            store.commit("setManagerUserInfo", users[id])
+            this.modal = myModal
+            myModal.show()
         }
     },
 };

@@ -108,10 +108,15 @@ const store = createStore({
     handleSetLoadTable(context, tabelName) {
       context.commit("setLoadTable", tabelName);
     },
-    updateManagerUsers({commit, state}, user) {
+    updateManagerUsers({ commit, state }, user) {
       const managerUsers = state.managerUsers.map(ele => ele.email !== user.email ? ele : user)
       commit("setManagerUsers", managerUsers)
-  }
+    },
+    deleteUserFromManager({ commit, state }, user) {
+      const managerUsers = state.managerUsers.filter(ele => ele.email !== user.email)
+      commit("setManagerUsers", managerUsers)
+      commit("setManagerUserInfo", {})
+    }
   },
 });
 

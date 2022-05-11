@@ -50,6 +50,14 @@ const dbController = {
     } catch (error) {
       return res.status(400).json(error)
     }
+  },
+  delete: async (req, res) => {
+    try {
+      const resData = await db.GS_UserIFC.destroy({where: {email: req.body.user.email}})
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
   }
 };
 

@@ -26,6 +26,16 @@ const dbRequest = {
         } catch (error) {
             return error
         }
+    },
+    deleteUser: async(user) => {
+        try {
+            const resData = await axios.post("/api/db/user/delete", {
+                user: user
+            })
+            return resData
+        } catch (error) {
+            return error
+        }
     }
 }
 export default dbRequest
