@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     action: DataTypes.STRING,
     userCheck: DataTypes.STRING,
     userDone: DataTypes.STRING,
-    doneTime: DataTypes.STRING
+    doneTime: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'GS_Statistic',

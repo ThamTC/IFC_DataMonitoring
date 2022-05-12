@@ -122,7 +122,8 @@ export default {
             inputQuerys: ["name"],
             titles: ["Hệ thống"],
             isFilter: false,
-            dataFilter: []
+            dataFilter: [],
+            preFilter: ""
         }
     },
     computed: {
@@ -214,11 +215,17 @@ export default {
             }
         },
         filterPriority(e) {
-            this.isFilter = true
-            const priority = convert.colorToId(e.target.id)
-            const resData = store.getters.getDataRealtime
-            this.dataFilter = resData.filter(ele => ele.priority == priority)
-            store.commit("setDataRealtimeFilter", this.dataFilter)
+            if(this.preFilter !== e.target.id) {
+                this.preFilter = e.target.id
+                this.isFilter = true
+                const priority = convert.colorToId(e.target.id)
+                const resData = store.getters.getDataRealtime
+                this.dataFilter = resData.filter(ele => ele.priority == priority)
+                store.commit("setDataRealtimeFilter", this.dataFilter)
+            }else {
+                this.isFilter = false
+                this.preFilter = ""
+            }
         }
     },
 }
