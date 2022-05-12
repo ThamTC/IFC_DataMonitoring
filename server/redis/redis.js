@@ -45,8 +45,15 @@ const redisToken = {
     if (!resData.includes(refreshToken)) {
       return false;
     }
-    resData.filter((item) => item !== refreshToken);
+    const refreshTokenFilter = resData.filter(item => item !== refreshToken);
+    await client.set("refreshToken", JSON.stringify(refreshTokenFilter))
     return true;
+  },
+  clearAccessToken: async (accessToken) => {
+    var resData = await client.get("accessToken")
+    resData = JSON.parse(resData)
+    const accessTokenFilter = resData.filter(item => item !== accessToken);
+    await client.set("accessToken", JSON.stringify(accessTokenFilter))
   },
   // clearCacheInterval: () => {
   //   setInterval(async () => {

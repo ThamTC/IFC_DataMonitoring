@@ -30,9 +30,9 @@ const apiRequest = {
   },
   logout: async () => {
     try {
-      const res = await axios.post("api/auth/logout", {
-        withCredentials: true,
-      });
+      const user = localStorage.getItem("user")
+      const token = JSON.parse(user)
+      const res = await axios.post("api/auth/logout", {accessToken: token.accessToken});
       store.commit("setUser", {});
       store.commit("setIsLoggin", false);
       localStorage.clear()

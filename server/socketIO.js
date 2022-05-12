@@ -125,8 +125,8 @@ const socketIO = {
                     if (id == idx) {
                         const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
                         const localISOTime = new Date(Date.now() - tzoffset).toISOString();
-                        resData[idx]["userCheck"] = userCheck
-                        resData[idx]["userDone"] = userDone
+                        resData[idx].userCheck = userCheck
+                        resData[idx].userDone = userDone
                         const doAlarm = formatPayload.doneTaskPayload(resData, localISOTime)
                         contentStatistic = resData[idx].type + resData[idx].system + resData[idx].parameter
                         try {

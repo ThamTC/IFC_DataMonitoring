@@ -134,6 +134,8 @@ const authController = {
     },
 
     logout: (req, res) => {
+        const accessToken = req.body.accessToken
+        redisToken.clearAccessToken(accessToken)
         var refreshToken = req.cookies?.refreshToken
         if (!redisToken.isExistToken(refreshToken)) {
             return res.status(403).json("Refresh Token is not existed")
