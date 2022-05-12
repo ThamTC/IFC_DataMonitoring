@@ -1,7 +1,8 @@
 
 const asyncRedis = require("async-redis");
 const client = asyncRedis.createClient();
-const db = require("./models/index")
+const db = require("./models/index");
+const formatPayload = require("./utils/formatPayload");
 const logger = require("./services/logger")("statistic", "db_error")
 
 client.on("error", function (err) {
@@ -104,7 +105,7 @@ const socketIO = {
                 })
             global.io.sockets.emit("updateStatistic", { error: null, data: resData })
         } catch (error) {
-            logger.log("error", "Co loi xay ra: " + error)
+            logger.log("error", "Co loi xay ra: " + error + ", path:" + __filename + ", func: doneSelectionTask")
             global.io.sockets.emit("updateStatistic", { error: error, data: [] })
         }
     },
@@ -124,23 +125,9 @@ const socketIO = {
                     if (id == idx) {
                         const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
                         const localISOTime = new Date(Date.now() - tzoffset).toISOString();
-
-                        const doAlarm = {
-                            type: resData[idx].type,
-                            system: resData[idx].system,
-                            parameter: resData[idx].parameter,
-                            value: resData[idx].value,
-                            unit: resData[idx].unit,
-                            contact: resData[idx].contact,
-                            status: resData[idx].status,
-                            total: resData[idx].total,
-                            priority: resData[idx].priority,
-                            userCheck: userCheck,
-                            userDone: userDone,
-                            doneTime: localISOTime,
-                            createdAt: resData[idx].createAt ?? localISOTime,
-                            updatedAt: resData[idx].updateAt ?? localISOTime,
-                        };
+                        resData[idx]["userCheck"] = userCheck
+                        resData[idx]["userDone"] = userDone
+                        const doAlarm = formatPayload.doneTaskPayload(resData, localISOTime)
                         contentStatistic = resData[idx].type + resData[idx].system + resData[idx].parameter
                         try {
                             resData.splice(idx, 1);
@@ -150,7 +137,7 @@ const socketIO = {
                         db.GS_Statistic.bulkCreate([doAlarm])
                             .then((data) => logger.log("info", "Insert DB thanh cong: " + data))
                             .catch((error) => {
-                                logger.log("error", "Co loi trong qua trinh thao tac DB: " + error)
+                                logger.log("error", "Co loi trong qua trinh thao tac DB: " + error + ", path:" + __filename + ", func: doneTask")
                                 global.io.sockets.emit("updateStatistic", { error: "Co loi trong qua trinh thao tac DB", data: [] })
                             })
                         break;
@@ -171,7 +158,7 @@ const socketIO = {
             await client.set("realtime", JSON.stringify(resData))
             global.io.sockets.emit("updateRealtime", { error: null, data: resData })
         } catch (error) {
-            logger.log("error", "Co loi xay ra: " + error)
+            logger.log("error", "Co loi xay ra: " + error + ", path:" + __filename + ", func: doneTask")
             global.io.sockets.emit("updateStatistic", { error: error, data: [] })
         }
     }

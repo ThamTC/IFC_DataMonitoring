@@ -10,7 +10,7 @@ client.on("error", function (err) {
 // webpushController.config();
 
 const meterController = {
-  
+
   realtime: async (req, res) => {
     // nhan data tu cac request -> luu xuong realtime -> lay data tu realtime -> chen data theo thu tu -> luu xuong realtime -> socket sang client hien thi
     if (Object.keys(req.body).length == 0) {
@@ -23,7 +23,7 @@ const meterController = {
     }
     // nhan data tu cac request
     const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-    const localISOTime = new Date(Date.now()-tzoffset).toISOString()
+    const localISOTime = new Date(Date.now() - tzoffset).toISOString()
     const payload = formatPayload.payload(req.body, localISOTime)
     // gui data sang client de hien thi realtime theo thu tu uu tien
     global.io.sockets.emit("realtime", payload);
@@ -32,27 +32,27 @@ const meterController = {
       .get("realtime")
       .then((data) => {
         // value la string nen can parse sang object
-        var resParser = [];
-        if (data !== "[]") {
-          resParser = JSON.parse(data);
-          // sau khi parse ta duoc array chua cac object
-          // chen data theo thu tu
-          for (let idx = 0; idx < resParser.length; idx++) {
-            if (
-              resParser[idx].priority == 0 ||
-              (payload.priority > 0 &&
-                payload.priority <= resParser[idx].priority)
-            ) {
-              resParser.splice(idx, 0, payload);
-              break;
-            } else if (idx == resParser.length - 1) {
-              resParser.push(payload);
-              break;
-            }
-          }
-        } else {
-          resParser.push(payload);
-        }
+        var resParser = JSON.parse(data);
+        // if (data !== "[]") {
+        // resParser = JSON.parse(data);
+        // sau khi parse ta duoc array chua cac object
+        // chen data theo thu tu
+        //   for (let idx = 0; idx < resParser.length; idx++) {
+        //     if (
+        //       resParser[idx].priority == 0 ||
+        //       (payload.priority > 0 &&
+        //         payload.priority <= resParser[idx].priority)
+        //     ) {
+        //       resParser.splice(idx, 0, payload);
+        //       break;
+        //     } else if (idx == resParser.length - 1) {
+        //       resParser.push(payload);
+        //       break;
+        //     }
+        //   }
+        // } else {
+        resParser.unshift(payload);
+        // }
         // luu xuong sorted_realtime
         return client.set("realtime", JSON.stringify(resParser));
       })
@@ -89,10 +89,10 @@ const meterController = {
                 var newIdx = idx
                 while (newIdx > posPriorityFirst) {
                   // doi vi tri neu total moi lon hon hoac bang total truoc do
-                  if (resData[idx].total >= resData[newIdx-1].total) {
+                  if (resData[idx].total >= resData[newIdx - 1].total) {
                     const t = resData[newIdx]
-                    resData[newIdx] = resData[newIdx-1]
-                    resData[newIdx-1] = t
+                    resData[newIdx] = resData[newIdx - 1]
+                    resData[newIdx - 1] = t
                   }
                   newIdx--
                 }
@@ -100,7 +100,7 @@ const meterController = {
               }
             }
           }
-          if(idx == resData.length) {
+          if (idx == resData.length) {
             var priority
             if (isFoundPriority) {
               priority = prioPayload
@@ -117,7 +117,7 @@ const meterController = {
             // neu tim thay thi insert tai vi tri duoc tim thay
             if (idxFound >= 0) {
               resData.splice(idxFound, 0, statisticPayload)
-            }else{
+            } else {
               resData.push(statisticPayload)
             }
           }

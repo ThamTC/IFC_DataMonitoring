@@ -14,7 +14,7 @@
                         <button type="button" class="btn btn-primary mb-1" id="add-column" data-bs-toggle="modal" data-bs-target="#addColumnModal">Thêm cột</button>
                     </div> -->
                     <div class="d-flex">
-                        <button type="button" :class="'btn btn-' + countColor[0]+' mbr-2'" v-for="(countColor, idx) in countColors" :key="idx">{{countColor[1]}}</button>
+                        <button type="button" :class="'btn btn-' + countColor[0]+' mbr-2'" v-for="(countColor, idx) in countColors" :key="idx" :id="countColor[0]" @click="filterPriority">{{countColor[1]}}</button>
                         <button type="button" :class="'btn btn-' + currentData.color+' mbr-2 mx-5 flex-grow-1'" disabled>{{currentData.msg}}</button>
                         <button v-if="dataItems.length > 0" @click="removeTask" type="button" class="btn btn-primary mbr-2">Remove Data</button>
                     </div>
@@ -106,6 +106,7 @@ import redisRequest from '../../apis/redisRequest'
 import store from '../../stores/store'
 import storeController from '../../controllers/storeController'
 import ModalRealtime from '../modals/ModalRealtime.vue'
+import convert from '../../untils/convert'
 
 export default {
     name: "Realtime",
@@ -120,10 +121,15 @@ export default {
             inputShows: ["Hệ thống"],
             inputQuerys: ["name"],
             titles: ["Hệ thống"],
+            isFilter: false,
+            dataFilter: []
         }
     },
     computed: {
         dataItems() {
+            if (this.isFilter) {
+                return store.getters.getDataRealtimeFilter
+            }
             return store.getters.getDataRealtime
         },
         countColors() {
@@ -206,6 +212,13 @@ export default {
             if(store.getters.getDataRealtime.length > 0) {
                 myModal.show()
             }
+        },
+        filterPriority(e) {
+            this.isFilter = true
+            const priority = convert.colorToId(e.target.id)
+            const resData = store.getters.getDataRealtime
+            this.dataFilter = resData.filter(ele => ele.priority == priority)
+            store.commit("setDataRealtimeFilter", this.dataFilter)
         }
     },
 }

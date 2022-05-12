@@ -103,8 +103,8 @@ const redisToken = {
           if (itemsDelete.length > 0) {
             console.log("info: ", itemsDelete)
             db.GS_Statistic.bulkCreate(itemsDelete)
-            .then(() => logger.log("info", "Insert DB thanh cong"))
-            .catch((error) => logger.log("error", "Co loi xay ra voi DB: " + error))
+            .then(() => logger.log("info", "Insert DB thanh cong" + ", path:" + __filename + ", func: trackToTask"))
+            .catch((error) => logger.log("error", "Co loi xay ra voi DB: " + error + ", path:" + __filename + ", func: trackToTask"))
 
             itemsDeleteIdx.forEach((ele) => {
               resData.splice(ele, 1);

@@ -9,23 +9,24 @@ const storeController = {
   },
   realtimeStore: (data) => {
     var resParser = store.getters.getDataRealtime;
-    if (resParser.length > 0) {
-      // chen data theo thu tu
-      for (let idx = 0; idx < resParser.length; idx++) {
-        if (
-          resParser[idx].priority == 0 ||
-          (data.priority > 0 && data.priority <= resParser[idx].priority)
-        ) {
-          resParser.splice(idx, 0, data);
-          break;
-        } else if (idx == resParser.length - 1) {
-          resParser.push(data);
-          break;
-        }
-      }
-    } else {
-      resParser.push(data);
-    }
+    resParser.unshift(data)
+    // if (resParser.length > 0) {
+    //   // chen data theo thu tu
+    //   for (let idx = 0; idx < resParser.length; idx++) {
+    //     if (
+    //       resParser[idx].priority == 0 ||
+    //       (data.priority > 0 && data.priority <= resParser[idx].priority)
+    //     ) {
+    //       resParser.splice(idx, 0, data);
+    //       break;
+    //     } else if (idx == resParser.length - 1) {
+    //       resParser.push(data);
+    //       break;
+    //     }
+    //   }
+    // } else {
+    //   resParser.push(data);
+    // }
     store.commit("setDataRealtime", resParser);
   },
   redisRealtimeStore: (data) => {

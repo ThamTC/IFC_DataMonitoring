@@ -14,7 +14,8 @@ const store = createStore({
     currentData: {},
     managerUser: {},
     managerUsers: [],
-    usersLogin: []
+    usersLogin: [],
+    dataRealtimeFilter: [],
   },
   getters: {
     checkLoggin(state) {
@@ -61,6 +62,9 @@ const store = createStore({
     },
     getUsersLogin(state) {
       return state.usersLogin
+    },
+    getDataRealtimeFilter(state) {
+      return state.dataRealtimeFilter
     }
   },
   mutations: {
@@ -109,6 +113,9 @@ const store = createStore({
     },
     setUsersLogin(state, users) {
       state.usersLogin = users
+    },
+    setDataRealtimeFilter(state, data) {
+      state.dataRealtimeFilter = data
     }
   },
   actions: {

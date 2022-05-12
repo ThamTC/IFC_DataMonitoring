@@ -36,5 +36,24 @@ const formatPayload = {
       updateAt: localISOTime,
     };
   },
+  doneTaskPayload: (payload, localISOTime) => {
+    return {
+      type: payload.type,
+      system: payload.system,
+      parameter: payload.parameter,
+      value: payload.value,
+      unit: payload.unit,
+      contact: payload.contact,
+      status: payload.status,
+      total: payload.total,
+      priority: payload.priority,
+      action: payload.action,
+      userCheck: userCheck,
+      userDone: userDone,
+      doneTime: localISOTime,
+      createdAt: payload.createAt ?? localISOTime,
+      updatedAt: payload.updateAt ?? localISOTime,
+    }
+  }
 };
 module.exports = formatPayload;
