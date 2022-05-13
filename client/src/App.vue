@@ -7,6 +7,8 @@ import store from './stores/store'
 import sound from './services/howl'
 import checkPermission from './untils/checkPermission'
 import storeController from './controllers/storeController'
+import myToast from './untils/myToast'
+
 export default {
     name: "App",
     sockets: {
@@ -42,7 +44,30 @@ export default {
             }
         },
         usersLogin: function (data) {
-            store.commit("setUsersLogin", data.data)
+            console.log("usersLogin: ", data)
+            const owner = store.getters.getUser
+            const userLogin = data.currentLogin
+            if (userLogin != owner.username) {
+                myToast({
+                    title: "Signin",
+                    message: userLogin + " đã truy cập web giám sát",
+                    type: "signin",
+                    duration: 5000
+                })
+            }
+            store.commit("setUsersLogin", data.usersLogin)
+        },
+        userLogout: function (data) {
+            const currentLogout = data.currentLogout
+            const usersLogin = data.usersLogin
+            console.log("usersLogout: ", data)
+            myToast({
+                title: "Signout",
+                message: currentLogout + " đã rời khỏi web giám sát",
+                type: "signout",
+                duration: 5000
+            })
+            store.commit("setUsersLogin", usersLogin)
         }
     }
 };

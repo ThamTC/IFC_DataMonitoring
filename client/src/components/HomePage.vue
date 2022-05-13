@@ -2,12 +2,15 @@
 <div>
     <NavBar></NavBar>
     <SideNav />
+    <div id="myToast"></div>
 </div>
 </template>
 
 <script>
 import NavBar from "./NavBar.vue";
 import SideNav from './SideNav.vue'
+import jwtDecode from 'jwt-decode'
+import myToast from '../untils/myToast'
 
 export default {
     name: "HomePage",
@@ -24,8 +27,11 @@ export default {
         SideNav
     },
     mounted() {
-        const username = JSON.parse(localStorage.getItem("user")).username
-        this.$socket.emit("login", {username: username})
+        const accessToken = localStorage.getItem("accessToken")
+        const user = jwtDecode(accessToken)
+        this.$socket.emit("login", {
+            username: user.username
+        })
     },
 
 };

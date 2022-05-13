@@ -11,14 +11,18 @@ const authController = {
         return jwt.sign({
             _id: user._id,
             username: user.username,
-            email: user.email
+            email: user.email,
+            role: user.role,
+            permissions: user.permissions
         }, process.env.ACCESS_TOKEN, { expiresIn: "1d" })
     },
     generateRefreshToken: (user) => {
         return jwt.sign({
             _id: user._id,
             username: user.username,
-            email: user.email
+            email: user.email,
+            role: user.role,
+            permissions: user.permissions
         }, process.env.REFRESH_TOKEN, { expiresIn: "365d" })
     },
     login: async (req, res) => {
@@ -49,6 +53,7 @@ const authController = {
                 logger.log("info", "Sai mật khẩu")
                 return res.status(404).json("Sai mật khẩu")
             }
+            user.permissions = permissions
             const accessToken = authController.generateAccessToken(user)
             const refreshToken = authController.generateRefreshToken(user)
             redisToken.storeToken("accessToken", accessToken)
@@ -66,7 +71,7 @@ const authController = {
             const email = user.email
             const username = user.username
             const role = user.role
-            logger.log("info", "Đăng nhập thành công")
+            logger.log("info", user.username + " đăng nhập thành công")
             return res.status(200).json({
                 email, username, role,
                 permissions,

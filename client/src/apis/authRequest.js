@@ -1,19 +1,22 @@
 import axios from "axios";
 import store from "../stores/store";
+import jwtDecode from "jwt-decode";
 axios.defaults.withCredentials = true;
 const apiRequest = {
   login: async (user) => {
     try {
       const res = await axios.post("api/auth/login", user);
+      const jwtDecoded = jwtDecode(res.data.accessToken)
       // save to vuex
       var loadTableName = ""
-      if (res.data.permissions[0]) {
-        loadTableName = res.data.permissions[0].split('-')[1]
+      if (jwtDecoded.permissions[0]) {
+        loadTableName = jwtDecoded.permissions[0].split('-')[1]
       }
-      store.commit("setUser", res.data);
+      store.commit("setUser", jwtDecoded);
       store.commit("setIsLoggin", true);
       store.commit("setLoadTable", loadTableName)
-      localStorage.setItem("user", JSON.stringify(res.data));
+      // localStorage.setItem("user", JSON.stringify(res.data));
+      localStorage.setItem("accessToken", JSON.stringify(res.data.accessToken));
       return res;
     } catch (error) {
       throw error;
@@ -30,9 +33,9 @@ const apiRequest = {
   },
   logout: async () => {
     try {
-      const user = localStorage.getItem("user")
-      const token = JSON.parse(user)
-      const res = await axios.post("api/auth/logout", {accessToken: token.accessToken});
+      const accessToken = localStorage.getItem("accessToken")
+      const token = JSON.parse(accessToken)
+      const res = await axios.post("api/auth/logout", {accessToken: token});
       store.commit("setUser", {});
       store.commit("setIsLoggin", false);
       localStorage.clear()
@@ -65,11 +68,12 @@ const apiRequest = {
   },
   isLogged: async () => {
     try {
-      const user = localStorage.getItem("user") ?? {};
+      const accessToken = localStorage.getItem("accessToken") ?? "";
+      const user = jwtDecode(accessToken)
       const res = await axios.post(
         "/api/auth/isLogged",
         {
-          user: JSON.parse(user),
+          user: user,
         },
         {
           withCredentials: true,

@@ -12,16 +12,25 @@ var users = []
 const socket = (io) => {
     io.on("connection", function(socket) {
         socket.on("disconnect", function(data) {
-            console.log(users[socket.id] + " da ngat ket noi")
+            const username = users[socket.id]
             delete users[socket.id];
+            console.log(users)
+            const usersLogin = Object.values(users)
+            const userfound = usersLogin.findIndex(ele => ele === username)
+            if (userfound < 0) {
+                console.log(username + " da thoat khoi trinh duyet")
+                io.emit("userLogout", {currentLogout: username, usersLogin: usersLogin})
+            }
         })
         socket.on("deleteRealtime", socketIO.deleteRealtime)
         socket.on("doneSelectionTask", socketIO.doneSelectionTask)
         socket.on("doneTask", socketIO.doneTask)
         socket.on("login", function (data) {
-            socket.emit("usersLogin", users)
             users[socket.id] = data.username;
-            console.log(data.username + " da ket noi")
+            const usernames = Object.values(users)
+            const usersLogin = usernames.filter((item, idx) => usernames.indexOf(item) === idx)
+            io.emit("usersLogin", {currentLogin: data.username, usersLogin: usersLogin})
+            console.log(usersLogin + " dang online")
         })
     })
 }
