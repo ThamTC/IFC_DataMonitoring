@@ -14,7 +14,7 @@ export default {
         ...mapGetters(["getUser"])
     },
     methods: {
-        ...mapMutations(["setUsersLogin", "setDataStatistic", "setCurrentData"]),
+        ...mapMutations(["setUsersLogin", "setDataStatistic", "setCurrentData", "setDataRealtime"]),
         ...mapActions(["realtimeStore", "currentDataStore", "counterColorStore"]),
     },
     sockets: {
@@ -38,7 +38,6 @@ export default {
                 if (data.data.length == 0) {
                     this.setCurrentData({})
                 }
-                this.setDataRealtime(data.data)
                 this.setDataRealtime(data.data);
                 this.counterColorStore()
             }
@@ -71,6 +70,10 @@ export default {
                 duration: 5000
             })
             this.setUsersLogin(usersLogin)
+        },
+        refreshPage: function () {
+            console.log("asdfsdgss")
+            this.$route.go()
         }
     }
 };
