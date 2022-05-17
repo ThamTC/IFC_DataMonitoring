@@ -8,7 +8,7 @@
 <script>
 import SideNavMenuHomePage from './sidenavmenucontents/SideNavMenuHomePage.vue'
 import SideNavMenuAccount from './sidenavmenucontents/SideNavMenuAccount.vue'
-import store from '../../stores/store'
+import { mapGetters } from 'vuex'
 export default {
     name: "SideNavMenu",
     components: {
@@ -16,8 +16,9 @@ export default {
         SideNavMenuAccount
     },
     computed: {
+        ...mapGetters(["getSideNavContent"]),
         canShow() {
-            return store.getters.getSideNavContent
+            return this.getSideNavContent
         }
     }
 };

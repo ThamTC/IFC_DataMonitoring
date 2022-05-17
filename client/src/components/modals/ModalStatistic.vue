@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import store from "../../stores/store";
+import { mapGetters } from "vuex";
 
 export default {
     name: "ModalStatistic",
@@ -49,8 +49,11 @@ export default {
             checkerName: "",
         }
     },
+    computed: {
+        ...mapGetters(["getLoginName"])
+    },
     mounted() {
-        this.checkerName = store.getters.getLoginName
+        this.checkerName = this.getLoginName
     },
     methods: {
         async deleteAll() {

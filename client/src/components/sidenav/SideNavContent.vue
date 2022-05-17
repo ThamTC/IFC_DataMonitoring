@@ -5,7 +5,7 @@
 
 <script>
 // import BreadCrumbs from './BreadCrumbs.vue'
-import store from '../../stores/store'
+import { mapGetters } from 'vuex'
 import SideNavContentHomePage from './sidenavcontents/SideNavContentHomePage.vue'
 import SideNavContentAccount from './sidenavcontents/SideNavContentAccount.vue'
 
@@ -16,8 +16,9 @@ export default {
         SideNavContentAccount
     },
     computed: {
+        ...mapGetters(["getSideNavContent"]),
         canShow() {
-            return store.getters.getSideNavContent
+            return this.getSideNavContent
         }
     }
 }

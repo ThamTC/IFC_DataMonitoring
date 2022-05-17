@@ -3,49 +3,53 @@
 </template>
 
 <script>
-import store from './stores/store'
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import sound from './services/howl'
 import checkPermission from './untils/checkPermission'
-import storeController from './controllers/storeController'
 import myToast from './untils/myToast'
 
 export default {
     name: "App",
+    computed: {
+        ...mapGetters(["getUser"])
+    },
+    methods: {
+        ...mapMutations(["setUsersLogin", "setDataStatistic", "setCurrentData"]),
+        ...mapActions(["realtimeStore", "currentDataStore", "counterColorStore"]),
+    },
     sockets: {
         realtime: function (data) {
-            const isCanView = checkPermission(store.getters.getUser, ["view-realtime"])
+            const isCanView = checkPermission(this.getUser, ["view-realtime"])
             if (isCanView) {
                 sound.play()
-                storeController.currentDataStore(data)
-                storeController.realtimeStore(data)
-                storeController.counterColorStore()
-                // store.commit("setDataRealtime", data)
-                // store.commit("setCountColors", data)
+                this.currentDataStore(data)
+                this.realtimeStore(data)
+                this.counterColorStore()
             }
         },
         statistic: function (data) {
-            const isCanView = checkPermission(store.getters.getUser, ["view-statistic"])
+            const isCanView = checkPermission(this.getUser, ["view-statistic"])
             if (isCanView) {
-                store.commit("setDataStatistic", data)
+                this.setDataStatistic(data)
             }
         },
         updateRealtime: function (data) {
             if (data.error == null) {
                 if (data.data.length == 0) {
-                    store.commit("setCurrentData", {})
+                    this.setCurrentData({})
                 }
-                storeController.redisRealtimeStore(data.data)
-                storeController.counterColorStore()
+                this.setDataRealtime(data.data)
+                this.setDataRealtime(data.data);
+                this.counterColorStore()
             }
         },
         updateStatistic: function (data) {
             if (data.error == null) {
-                store.commit("setDataStatistic", data.data);
+                this.setDataStatistic(data.data);
             }
         },
         usersLogin: function (data) {
-            console.log("usersLogin: ", data)
-            const owner = store.getters.getUser
+            const owner = this.getUser
             const userLogin = data.currentLogin
             if (userLogin != owner.username) {
                 myToast({
@@ -55,19 +59,18 @@ export default {
                     duration: 5000
                 })
             }
-            store.commit("setUsersLogin", data.usersLogin)
+            this.setUsersLogin(data.usersLogin)
         },
         userLogout: function (data) {
             const currentLogout = data.currentLogout
             const usersLogin = data.usersLogin
-            console.log("usersLogout: ", data)
             myToast({
                 title: "Signout",
                 message: currentLogout + " đã rời khỏi web giám sát",
                 type: "signout",
                 duration: 5000
             })
-            store.commit("setUsersLogin", usersLogin)
+            this.setUsersLogin(usersLogin)
         }
     }
 };

@@ -68,13 +68,8 @@ const authController = {
             //     password,
             //     ...others
             // } = user._doc
-            const email = user.email
-            const username = user.username
-            const role = user.role
             logger.log("info", user.username + " đăng nhập thành công")
             return res.status(200).json({
-                email, username, role,
-                permissions,
                 accessToken
             })
         } catch (err) {
@@ -183,7 +178,6 @@ const authController = {
     },
     isLogged: (req, res) => {
         const refreshToken = req.cookies?.refreshToken
-        const userReq = req.body?.user
         if (!refreshToken) {
             return res.status(401).json("Token is not valid")
         }
@@ -196,7 +190,7 @@ const authController = {
                     return res.status(403).json(err.message)
                 }
                 return res.status(200).json(
-                    userReq
+                    refreshToken
                 )
             })
         } catch (err) {

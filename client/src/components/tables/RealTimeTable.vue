@@ -103,7 +103,7 @@
 
 <script>
 import redisRequest from '../../apis/redisRequest'
-import store from '../../stores/store'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import storeController from '../../controllers/storeController'
 import ModalRealtime from '../modals/ModalRealtime.vue'
 import convert from '../../untils/convert'
@@ -127,23 +127,24 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(["getDataRealtimeFilter", "getDataRealtime", "getCountColors", "getCurrentData"]),
         dataItems() {
             if (this.isFilter) {
-                return store.getters.getDataRealtimeFilter
+                return this.getDataRealtimeFilter
             }
-            return store.getters.getDataRealtime
+            return this.getDataRealtime
         },
         countColors() {
-            return store.getters.getCountColors
+            return this.getCountColors
         },
         currentData() {
-            return store.getters.getCurrentData
+            return this.getCurrentData
         }
     },
     created() {
-        redisRequest.getIndexStore("realtime").then((data) => {
-                storeController.redisRealtimeStore(data)
-                storeController.counterColorStore()
+        this.getRealtimeStore("realtime").then((data) => {
+                this.setDataRealtime(data)
+                this.counterColorStore()
                 this.isLoading = false
             }).catch((err) => {
                 console.log(err)
@@ -157,6 +158,8 @@ export default {
 
     },
     methods: {
+        ...mapMutations(["setDataRealtimeFilter", "setDataRealtime"]),
+        ...mapActions(["getRealtimeStore", "counterColorStore"]),
         convertColorName() {
 
         },
@@ -210,7 +213,7 @@ export default {
         },
         removeTask() {
             var myModal = new bootstrap.Modal(document.getElementById('modal'))
-            if(store.getters.getDataRealtime.length > 0) {
+            if(this.getDataRealtime.length > 0) {
                 myModal.show()
             }
         },
@@ -219,9 +222,9 @@ export default {
                 this.preFilter = e.target.id
                 this.isFilter = true
                 const priority = convert.colorToId(e.target.id)
-                const resData = store.getters.getDataRealtime
+                const resData = this.getDataRealtime
                 this.dataFilter = resData.filter(ele => ele.priority == priority)
-                store.commit("setDataRealtimeFilter", this.dataFilter)
+                commit("setDataRealtimeFilter", this.dataFilter)
             }else {
                 this.isFilter = false
                 this.preFilter = ""

@@ -15,7 +15,7 @@
             </button>
         </div>
     </form>
-    <NotiIcon v-if="isLoggin"></NotiIcon>
+    <NotiIcon v-if="canShow"></NotiIcon>
     <OnlineIcon v-if="isLoggin"></OnlineIcon>
 
     <!-- Navbar-->
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import store from '../stores/store'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import authRequest from '../apis/authRequest'
 import NotiIcon from './icons/Notification.vue'
 import OnlineIcon from './icons/OnlineIcon.vue'
@@ -60,13 +60,21 @@ export default {
         return {}
     },
     computed: {
+        ...mapGetters(["checkLoggin", "getUser"]),
+        canShow() {
+            return this.checkLoggin && this.getUser.role === "manager"
+        },
         isLoggin() {
-            return store.getters.checkLoggin
+            return this.checkLoggin
         }
     },
     methods: {
+        ...mapMutations(["setUser", "setIsLoggin"]),
+        ...mapActions(["signout"]),
         logout() {
-            authRequest.logout().then((data) => {
+            this.signout().then((data) => {
+                this.setUser({});
+                this.setIsLoggin(false);
                 this.$router.push({
                     name: "dashboard"
                 })

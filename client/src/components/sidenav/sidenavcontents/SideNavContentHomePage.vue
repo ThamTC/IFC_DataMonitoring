@@ -10,7 +10,7 @@
 
 <script>
 // import BreadCrumbs from './BreadCrumbs.vue'
-import store from '../../../stores/store'
+import { mapGetters } from 'vuex'
 import Footer from '../../Footer.vue'
 import RealTime from '../../tables/RealTimeTable.vue'
 import Statistic from '../../tables/StatisticTable.vue'
@@ -27,13 +27,7 @@ export default {
         ManagerRoles
     },
     computed: {
-        canShow() {
-            return store.getters.getSideNavContent
-        },
-        loadTable() {
-            return store.getters.getLoadTable
-        },
-        
+        ...mapGetters({loadTable: "getLoadTable"}),        
     }
 }
 </script>

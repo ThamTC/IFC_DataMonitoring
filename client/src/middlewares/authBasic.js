@@ -1,6 +1,5 @@
 import authRequest from "../apis/authRequest";
-import store from '../stores/store'
-
+import store from "../store";
 export const authUser = async (to, from, next) => {
   if (from.name === "login") {
     next();

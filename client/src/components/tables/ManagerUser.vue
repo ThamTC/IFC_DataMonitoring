@@ -70,7 +70,7 @@
 import dbRequest from '../../apis/dbRequest'
 import ModalSettingUser from '../modals/ModalSettingUser.vue'
 import ModalDeleteUser from '../modals/ModalDeleteUser.vue'
-import store from '../../stores/store';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
     name: "ManagerUsers",
@@ -86,15 +86,13 @@ export default {
         };
     },
     computed: {
-        getUsers() {
-            return store.getters.getManagerUsers
-        }
+        ...mapGetters({getUsers: "getManagerUsers", users: "getManagerUsers"}),
     },
     created() {
         document.title = "Quản lý User"
         // get all user from DB
         dbRequest.getAllUsers().then((data) => {
-                store.commit("setManagerUsers", data.data)
+                this.setManagerUsers(data.data)
                 this.isLoading = false
             })
             .catch((err) => {
@@ -104,16 +102,17 @@ export default {
     mounted() {
     },
     methods: {
+        ...mapMutations(["setManagerUserInfo", "setManagerUsers"]),
         settingUser(e) {
             const id = e.target.id
-            const users = store.getters.getManagerUsers
+            const users = this.users
             var modalUsername = document.getElementById("inputUsernameModal")
             modalUsername.value = users[id].username
             var modalSelection = document.querySelectorAll(".role")
             const role = this.role.findIndex((ele) => ele == users[id].role)
             modalSelection[role].setAttribute("selected", "selected")
             var myModal = new bootstrap.Modal(document.getElementById('settingUserModal'))
-            store.commit("setManagerUserInfo", users[id])
+            this.setManagerUserInfo(users[id])
             this.modal = myModal
             // if(store.getters.getDataRealtime.length > 0) {
             myModal.show()
@@ -121,9 +120,9 @@ export default {
         },
         deleteUser(e) {
             const id = e.target.id
-            const users = store.getters.getManagerUsers
+            const users = this.users
             var myModal = new bootstrap.Modal(document.getElementById('deleteUserModal'))
-            store.commit("setManagerUserInfo", users[id])
+            this.setManagerUserInfo(users[id])
             this.modal = myModal
             myModal.show()
         }

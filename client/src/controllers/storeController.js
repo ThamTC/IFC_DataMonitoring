@@ -1,4 +1,4 @@
-import store from "../stores/store";
+
 import convert from "../untils/convert";
 
 const storeController = {

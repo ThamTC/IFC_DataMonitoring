@@ -29,28 +29,30 @@
 </template>
 
 <script>
-import store from '../../../stores/store'
+import { mapActions, mapGetters } from 'vuex'
 import checkPermission from '../../../untils/checkPermission'
 
 export default {
     name: "SideNavMeneHomePage",
     computed: {
+        ...mapGetters(["getUser", "getLoadTable"]),
         canShowRealTime() {
-            return checkPermission(store.getters.getUser, ["view-realtime"])
+            return checkPermission(this.getUser, ["view-realtime"])
         },
         canShowStatistic() {
-            return checkPermission(store.getters.getUser, ["view-statistic"])
+            return checkPermission(this.getUser, ["view-statistic"])
         },
         canShowManagerUser() {
-            return checkPermission(store.getters.getUser, ["view-managerUser"])
+            return checkPermission(this.getUser, ["view-managerUser"])
         },
         canShowManagerRole() {
-            return checkPermission(store.getters.getUser, ["view-managerRole"])
+            return checkPermission(this.getUser, ["view-managerRole"])
         }
     },
     methods: {
+        ...mapActions(["handleSetLoadTable"]),
         setLoadTable(name) {
-            store.dispatch("handleSetLoadTable", name);
+            this.handleSetLoadTable(name);
             Object.keys(this.$refs).forEach(el => {
                 if (name !== el) {
                     this.$refs[el].classList.remove("highlight")
@@ -60,7 +62,13 @@ export default {
         },
     },
     mounted() {
-        let tableName = store.getters.getLoadTable
+        this.$forceUpdate(() => {
+            
+            });
+    },
+    updated() {
+        
+        let tableName = this.getLoadTable
         if (this.$refs[tableName]) {
             this.$refs[tableName].classList.add("highlight")
         }

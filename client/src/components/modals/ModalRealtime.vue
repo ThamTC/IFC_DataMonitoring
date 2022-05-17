@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import store from "../../stores/store";
+import { mapGetters } from "vuex";
 
 export default {
     name: "ModalRealtime",
@@ -62,8 +62,11 @@ export default {
             hourRemove: 0,
         }
     },
+    computed: {
+        ...mapGetters(["getLoginName"])
+    },
     mounted() {
-        this.checkerName = store.getters.getLoginName
+        this.checkerName = this.getLoginName
     },
     methods: {
         async deleteAll() {

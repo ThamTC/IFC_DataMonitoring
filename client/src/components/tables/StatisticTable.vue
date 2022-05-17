@@ -59,7 +59,7 @@
 
 <script>
 import redisRequest from '../../apis/redisRequest'
-import store from '../../stores/store'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import ModalStatistic from '../modals/ModalStatistic.vue'
 export default {
     name: "Statistic",
@@ -73,19 +73,19 @@ export default {
         };
     },
     mounted() {
-        this.checkerName = store.getters.getLoginName
+        this.checkerName = this.getLoginName
     },
     computed: {
+        ...mapGetters(["getLoginName", "getDataStatistic"]),
         dataItems() {
-            return store.getters.getDataStatistic
+            return this.getDataStatistic
         },
         enableDone() {
-            return store.getters.getDataStatistic.length ? "" : "disable"
+            return this.getDataStatistic.length ? "" : "disable"
         }
     },
     created() {
-        redisRequest.getIndexStore("statistic").then((data) => {
-                store.commit("setDataStatistic", data)
+        this.getStatisticStore("statistic").then((data) => {
                 this.isLoading = false
             }).catch((err) => {
                 console.log(err)
@@ -93,13 +93,11 @@ export default {
             document.title = "Thống kê"
     },
     methods: {
+        ...mapMutations(["setDataStatistic"]),
+        ...mapActions(["getStatisticStore", "selectTask"]),
         check(e) {
             console.log(e.target.checked)
-            redisRequest.selectTask(e, this.checkerName, "statistic")
-                .then((data) => {
-                    store.commit("setDataStatistic", data);
-                })
-                .catch((err) => console.log(err))
+            this.selectTask(e, this.checkerName, "statistic")
         },
         async doneTask(e) {
             console.log(e.target.id)
@@ -113,7 +111,7 @@ export default {
         },
         done() {
             var myModal = new bootstrap.Modal(document.getElementById('modal'))
-            if(store.getters.getDataStatistic.length > 0) {
+            if(this.getDataStatistic().length > 0) {
                 myModal.show()
             }
         }

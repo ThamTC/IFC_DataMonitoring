@@ -73,7 +73,6 @@ export default {
         .then((data) => {
             this.isLoading = false
             this.roles = data.data
-            console.log(data.data)
         })
         .catch((error) => console.log(error))
     },
