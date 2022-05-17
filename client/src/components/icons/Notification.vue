@@ -3,7 +3,7 @@
     <div class="position-relative">
         <i class="fas fa-bell noti circle-icon"></i>
         <span class="position-absolute top-1 start-100 translate-right badge rounded-pill bg-warning">
-            99+
+            0
             <span class="visually-hidden">unread messages</span>
         </span>
     </div>

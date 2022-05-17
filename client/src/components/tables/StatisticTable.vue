@@ -111,7 +111,7 @@ export default {
         },
         done() {
             var myModal = new bootstrap.Modal(document.getElementById('modal'))
-            if(this.getDataStatistic().length > 0) {
+            if(this.getDataStatistic.length > 0) {
                 myModal.show()
             }
         }
