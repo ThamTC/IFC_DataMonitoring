@@ -97,7 +97,7 @@ export default {
         ...mapActions(["getStatisticStore", "selectTask"]),
         check(e) {
             console.log(e.target.checked)
-            this.selectTask(e, this.checkerName, "statistic")
+            this.selectTask({e: e, checkerName: this.checkerName, key: "statistic"})
         },
         async doneTask(e) {
             console.log(e.target.id)
