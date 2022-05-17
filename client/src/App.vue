@@ -50,7 +50,7 @@ export default {
         },
         usersLogin: function (data) {
             const owner = this.getUser
-            const userLogin = data.currentLogin
+            const userLogin = data.currentLogin ?? ""
             if (userLogin != owner.username) {
                 myToast({
                     title: "Signin",
@@ -62,7 +62,7 @@ export default {
             this.setUsersLogin(data.usersLogin)
         },
         userLogout: function (data) {
-            const currentLogout = data.currentLogout
+            const currentLogout = data.currentLogout ?? ""
             const usersLogin = data.usersLogin
             myToast({
                 title: "Signout",
