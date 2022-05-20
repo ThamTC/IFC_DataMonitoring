@@ -1,5 +1,6 @@
-const asyncRedis = require("async-redis");
+const asyncRedis = require("redis");
 const client = asyncRedis.createClient();
+client.connect()
 // const webpushController = require("./webpushController");
 const formatPayload = require("../utils/formatPayload")
 const logger = require("../services/logger")("request-realtime", "request")

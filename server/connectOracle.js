@@ -36,22 +36,8 @@
 //     console.log(error)
 // })
 
-const asyncRedis = require("async-redis");
-const client = asyncRedis.createClient();
+const redis = require('redis');
+const client = redis.createClient()
+client.connect().then(data => console.log(data))
 
-client.on("error", function (err) {
-  console.log("Error " + err);
-});
-
-client.get("realtime")
-.then(data => {
-  const resData = JSON.parse(data)
-  const dataSorted = resData.sort((ele1, ele2) => ele1.time - ele2.time)
-  return dataSorted
-
-})
-.then(data => {
-  console.log((data.filter(ele => ele.priority == 5)).length)
-  client.set("realtime", JSON.stringify(data))
-})
-.catch(error => console.log(error))
+client.publish("channel", "hello")

@@ -1,6 +1,7 @@
 
-const asyncRedis = require("async-redis");
+const asyncRedis = require("redis");
 const client = asyncRedis.createClient();
+client.connect()
 const db = require("../models/index")
 const logger = require("../services/logger")("statistic", "db_error")
 
