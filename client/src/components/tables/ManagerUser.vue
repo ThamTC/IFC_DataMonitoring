@@ -50,8 +50,8 @@
                                     <td>{{ user.role }}</td>
                                     <td><span class="status text-success">&bull;</span> Active</td>
                                     <td>
-                                        <a href="#" class="settings" title="Settings" data-toggle="tooltip"><i :id="idx" @click="settingUser" class="fas fa-cog"></i></a>
-                                        <a href="#" class="delete" title="Delete" data-toggle="tooltip"><i :id="idx" @click="deleteUser" class="fas fa-user-times"></i></a>
+                                        <a href="#" :class='"settings " + isDisabled(user.username)' title="Settings" data-toggle="tooltip"><i :id="idx" @click="settingUser" class="fas fa-cog"></i></a>
+                                        <a href="#" :class='"delete " + isDisabled(user.username) ' title="Delete" data-toggle="tooltip"><i :id="idx" @click="deleteUser" class="fas fa-user-times"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -86,7 +86,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters({getUsers: "getManagerUsers", users: "getManagerUsers"}),
+        ...mapGetters({getUsers: "getManagerUsers", users: "getManagerUsers", userAuth: "getUser"}),
     },
     created() {
         document.title = "Quản lý User"
@@ -103,6 +103,9 @@ export default {
     },
     methods: {
         ...mapMutations(["setManagerUserInfo", "setManagerUsers"]),
+        isDisabled(name) {
+            return name === this.userAuth.username ? "" : (name === "thamtc.ifc" ? "disabled" : "")
+        },
         settingUser(e) {
             const id = e.target.id
             const users = this.users
