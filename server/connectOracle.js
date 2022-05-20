@@ -40,4 +40,4 @@ const redis = require('redis');
 const client = redis.createClient()
 client.connect().then(data => console.log(data))
 
-client.publish("channel", "hello")
+client.get("realtime").then(data => console.log(data))
