@@ -5,13 +5,18 @@ import DashBoard from './components/DashBoard.vue'
 import { authUser } from './middlewares/authBasic'
 import authRouter from './routers/authRouter'
 import AccountSetting from './components/AccountSetting.vue'
+import NavBar from './components/NavBar.vue'
+import homepage_children from './route_children/homepage_children'
+import account_children from './route_children/account_children'
 
 const routers = [
     {
         path: '/',
         name: "home",
-        component: HomePage,
+        components: {default: HomePage, "navbar": NavBar},
         beforeEnter: authUser,
+        redirect: {name: "realtime_table"},
+        children: homepage_children
     },
     {
         path: '/dashboard',
@@ -22,8 +27,10 @@ const routers = [
     {
         path: "/account",
         name: "account",
-        component: AccountSetting,
-        beforeEnter: authUser
+        beforeEnter: authUser,
+        components: {default: AccountSetting, "navbar": NavBar},
+        redirect: {name: "general"},
+        children: account_children
     },
     {
         path: '/:pathMatch(.*)*',
@@ -33,7 +40,8 @@ const routers = [
 
 const router = createRouter({
     routes: routers,
-    history: createWebHistory()
+    history: createWebHistory(),
+    linkExactActiveClass: "active",
 })
 
 export default router

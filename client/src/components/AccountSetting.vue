@@ -1,22 +1,31 @@
 <template>
 <div>
-    <NavBar></NavBar>
     <SideNav />
 </div>
 </template>
 
 <script>
-import NavBar from "./NavBar.vue";
 import SideNav from './SideNav.vue'
+import { mapMutations } from 'vuex'
+import jwtDecode from 'jwt-decode'
 
 export default {
     name: "AccountSetting",
     components: {
-        NavBar,
         SideNav
     },
     created() {
         document.title = "Account Setting"
+    },
+    methods: {
+        ...mapMutations(["setUser", "setIsLoggin","setSideNavMenu"])
+    },
+    mounted() {
+        const accessToken = localStorage.getItem("accessToken")
+        const user = jwtDecode(accessToken)
+        this.setUser(user);
+        this.setIsLoggin(true);
+        this.setSideNavMenu("account")
     },
     
 }

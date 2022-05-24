@@ -1,15 +1,30 @@
 <template>
-<router-view></router-view>
+<div>
+    <router-view name="navbar"></router-view>
+    <router-view></router-view>
+    <!-- <Footer></Footer> -->
+    <div id="myToast"></div>
+</div>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import {
+    mapActions,
+    mapGetters,
+    mapMutations
+} from "vuex";
 import sound from './services/howl'
 import checkPermission from './untils/checkPermission'
 import myToast from './untils/myToast'
+import NavBar from './components/NavBar.vue'
+import Footer from './components/Footer.vue'
 
 export default {
     name: "App",
+    components: {
+        NavBar,
+        Footer
+    },
     computed: {
         ...mapGetters(["getUser"])
     },

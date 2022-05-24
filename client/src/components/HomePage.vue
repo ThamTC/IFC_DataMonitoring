@@ -1,8 +1,6 @@
 <template>
 <div>
-    <NavBar></NavBar>
     <SideNav />
-    <div id="myToast"></div>
 </div>
 </template>
 
@@ -28,15 +26,15 @@ export default {
         document.title = 'Trang chủ'
     },
     methods: {
-        ...mapMutations(["setUser", "setIsLoggin", "setLoadTable", "setSideNavContent"]),
+        ...mapMutations(["setUser", "setIsLoggin", "setLoadTable", "setSideNavMenu"]),
     },
     mounted() {
         const accessToken = localStorage.getItem("accessToken")
         const user = jwtDecode(accessToken)
-        const loadTableName = user.permissions[0].split('-')[1]
         this.setUser(user);
         this.setIsLoggin(true);
-        this.setLoadTable(loadTableName)
+        // this.setLoadTable(loadTableName)
+        this.setSideNavMenu("homepage")
         this.$socket.emit("login", {
             username: user.username
         })
