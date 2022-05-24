@@ -1,26 +1,19 @@
 <template>
-<SideNavContentHomePage v-if="canShow == 'home'"></SideNavContentHomePage>
-<SideNavContentAccount v-else-if="canShow == 'account'"></SideNavContentAccount>
+<div id="layoutSidenav_content">
+    <router-view></router-view>
+    <Footer></Footer>
+</div>
 </template>
 
 <script>
 // import BreadCrumbs from './BreadCrumbs.vue'
-import { mapGetters } from 'vuex'
-import SideNavContentHomePage from './sidenavcontents/SideNavContentHomePage.vue'
-import SideNavContentAccount from './sidenavcontents/SideNavContentAccount.vue'
+import Footer from '../Footer.vue'
 
 export default {
     name: "SideNavContent",
     components: {
-        SideNavContentHomePage,
-        SideNavContentAccount
+        Footer
     },
-    computed: {
-        ...mapGetters(["getSideNavContent"]),
-        canShow() {
-            return this.getSideNavContent
-        }
-    }
 }
 </script>
 

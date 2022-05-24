@@ -3,14 +3,14 @@ import auth from './modules/auth'
 import realtime from './modules/realtime'
 import statistics from './modules/statistics'
 import loadtables from './modules/loadtables'
-import redirectSideNav from './modules/redirectSideNav'
+import sideNavMenu from './modules/sideNavMenu'
 const store = new Vuex.Store({
     modules: {
         auth,
         realtime,
         statistics,
         loadtables,
-        redirectSideNav
+        sideNavMenu
     },
     state: {},
     mutations: {},

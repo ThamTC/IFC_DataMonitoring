@@ -1,14 +1,16 @@
 <template>
 <div class="sb-sidenav-menu">
-        <SideNavMenuHomePage v-if="canShow == 'home'"></SideNavMenuHomePage>
+    <div class="nav">
+        <SideNavMenuHomePage v-if="canShow == 'homepage'"></SideNavMenuHomePage>
         <SideNavMenuAccount v-else-if="canShow == 'account'"></SideNavMenuAccount>
+    </div>
 </div>
 </template>
 
 <script>
-import SideNavMenuHomePage from './sidenavmenucontents/SideNavMenuHomePage.vue'
-import SideNavMenuAccount from './sidenavmenucontents/SideNavMenuAccount.vue'
-import { mapGetters } from 'vuex'
+import SideNavMenuHomePage from './sidenavmenus/SideNavMenuHomePage.vue'
+import SideNavMenuAccount from './sidenavmenus/SideNavMenuAccount.vue'
+import { mapGetters } from "vuex";
 export default {
     name: "SideNavMenu",
     components: {
@@ -16,9 +18,9 @@ export default {
         SideNavMenuAccount
     },
     computed: {
-        ...mapGetters(["getSideNavContent"]),
+        ...mapGetters(["getSideNavMenu"]),
         canShow() {
-            return this.getSideNavContent
+            return this.getSideNavMenu
         }
     }
 };
