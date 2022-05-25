@@ -23,5 +23,15 @@ export default [
         path: "managerRole",
         name: "managerRole_table",
         component: ManagerRole
+    },
+    {
+        path: "solar/realtime",
+        name: "solar_realtime",
+        component: RealTime
+    },
+    {
+        path: "solar/statistic",
+        name: "solar_statistic",
+        component: Statistic
     }
 ]

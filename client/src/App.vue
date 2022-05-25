@@ -48,6 +48,23 @@ export default {
                 this.setDataStatistic(data)
             }
         },
+        solar_realtime: function (data) {
+            // const isCanView = checkPermission(this.getUser, ["view-realtime"])
+            // if (isCanView) {
+                sound.play()
+                // this.currentDataStore(data)
+                // this.realtimeStore(data)
+                // this.counterColorStore()
+            // }
+            console.log("solar_realtime: ", data)
+        },
+        solar_statistic: function (data) {
+            // const isCanView = checkPermission(this.getUser, ["view-statistic"])
+            // if (isCanView) {
+            //     this.setDataStatistic(data)
+            // }
+            console.log("solar_statistic: ", data)
+        },
         updateRealtime: function (data) {
             if (data.error == null) {
                 if (data.data.length == 0) {

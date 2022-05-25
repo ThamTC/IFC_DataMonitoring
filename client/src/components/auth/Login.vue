@@ -100,36 +100,15 @@ export default {
     },
     methods: {
         ...mapActions(["signin"]),
-        ...mapMutations(["setSideNavContent", "setLoadTable"]),
         submit() {
             this.isLogged = false
             this.signin(this.user).then(resData => {
-                var loadTableName = ""
-                if (resData.permissions[0]) {
-                    loadTableName = resData.permissions[0].split('-')[1]
-                }
                 this.isLogged = true
-                this.setLoadTable(loadTableName)
                 const redirectPath = this.$route.query.redirect
-                this.setSideNavContent(redirectPath ?? "home")
                 this.$router.push({
                     name: redirectPath ?? "home"
                 });
             })
-            // .login(this.user)
-            // .then((res) => {
-            //     this.isLogged = true
-            //     const redirectPath = this.$route.query.redirect
-            //     commit("setSideNavContent", redirectPath ?? "home")
-            //     this.$router.push({
-            //         name: redirectPath ?? "home"
-            //     });
-            // })
-            // .catch((err) => {
-            //     console.log(err)
-            //     this.isLogged = true
-            //     this.message = err.response.data;
-            // });
         },
     },
 };

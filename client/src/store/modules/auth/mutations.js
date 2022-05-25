@@ -21,4 +21,7 @@ export default {
     setUsersLogin(state, users) {
         state.usersLogin = users
     },
+    setPermissions(state, permissions) {
+        state.permissions = permissions
+    }
 }

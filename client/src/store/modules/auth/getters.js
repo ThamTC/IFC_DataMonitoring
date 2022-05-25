@@ -23,4 +23,7 @@ export default {
     getUsersLogin(state) {
         return state.usersLogin
     },
+    getPermissions(state) {
+        return state.permissions
+    }
 }

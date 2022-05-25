@@ -8,10 +8,6 @@ export default {
             const res = await axios.post("api/auth/login", user);
             const jwtDecoded = jwtDecode(res.data.accessToken)
             // save to vuex
-            var loadTableName = ""
-            if (jwtDecoded.permissions[0]) {
-                loadTableName = jwtDecoded.permissions[0].split('-')[1]
-            }
             commit("setUser", jwtDecoded);
             commit("setIsLoggin", true);
             // store.methods.setLoadTable(loadTableName)
