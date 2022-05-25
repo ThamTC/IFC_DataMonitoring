@@ -11,57 +11,52 @@ client.on("error", function (err) {
 // webpushController.config();
 
 const meterController = {
-
-  realtime: async (req, res) => {
+  realtime: async (req, res, next) => {
+    const apiName = req.originalUrl
+    var realtimeName
+    var statisticName
+    if (apiName.search("solar") >=0) {
+      realtimeName = "solar_realtime"
+      statisticName = "solar_statistic"
+    } else {
+      realtimeName = "realtime"
+      statisticName = "statistic"
+    }
     // nhan data tu cac request -> luu xuong realtime -> lay data tu realtime -> chen data theo thu tu -> luu xuong realtime -> socket sang client hien thi
     if (Object.keys(req.body).length == 0) {
       logger.log("error", req.body)
       return res.status(500).json("Please check frame data");
     }
     logger.log("info", req.body)
-    if (req.body?.mode) {
-      return res.status(200).json("success");
-    }
+    // if (req.body?.mode) {
+    //   return res.status(200).json("success");
+    // }
     // nhan data tu cac request
     const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
     const localISOTime = new Date(Date.now() - tzoffset).toISOString()
     const payload = formatPayload.payload(req.body, localISOTime)
     // gui data sang client de hien thi realtime theo thu tu uu tien
-    global.io.sockets.emit("realtime", payload);
+    global.io.sockets.emit(realtimeName, payload);
     // luu xuong realtime theo id la so phan tu co trong key real_realtime
     client
-      .get("realtime")
+      .get(realtimeName)
       .then((data) => {
+        if (data == null) {
+          data = "[]"
+        }
         // value la string nen can parse sang object
         var resParser = JSON.parse(data);
-        // if (data !== "[]") {
-        // resParser = JSON.parse(data);
-        // sau khi parse ta duoc array chua cac object
-        // chen data theo thu tu
-        //   for (let idx = 0; idx < resParser.length; idx++) {
-        //     if (
-        //       resParser[idx].priority == 0 ||
-        //       (payload.priority > 0 &&
-        //         payload.priority <= resParser[idx].priority)
-        //     ) {
-        //       resParser.splice(idx, 0, payload);
-        //       break;
-        //     } else if (idx == resParser.length - 1) {
-        //       resParser.push(payload);
-        //       break;
-        //     }
-        //   }
-        // } else {
         resParser.unshift(payload);
-        // }
-        // luu xuong sorted_realtime
-        return client.set("realtime", JSON.stringify(resParser));
+        return client.set(realtimeName, JSON.stringify(resParser));
       })
       .then(() => {
         // lay data tu statistic
-        return client.get("statistic");
+        return client.get(statisticName);
       })
       .then((data) => {
+        if (data == null) {
+          data = "[]"
+        }
         var resData = JSON.parse(data);
         const statisticPayload = formatPayload.statisticPayload(payload, localISOTime)
         if (resData.length > 0) {
@@ -125,8 +120,8 @@ const meterController = {
         } else {
           resData.push(statisticPayload);
         }
-        global.io.sockets.emit("statistic", resData)
-        return client.set("statistic", JSON.stringify(resData));
+        global.io.sockets.emit(statisticName, resData)
+        return client.set(statisticName, JSON.stringify(resData));
       })
       .catch((error) => {
         return res.status(500).json("Please check frame data");

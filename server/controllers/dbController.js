@@ -58,6 +58,24 @@ const dbController = {
     } catch (error) {
       return res.status(400).json(error)
     }
+  },
+  getAllPermissions: async (req, res) => {
+    try {
+      const resData = await db.Permissions.findAll({raw: true})
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
+  },
+  createRole: async (req, res) => {
+    const roleName = req.body.roleName
+    const permission = req.body.permission
+    try {
+      const resData = await db.GS_RolePermission.create({name: roleName, permission: permission})
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
   }
 };
 

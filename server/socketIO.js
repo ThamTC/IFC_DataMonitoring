@@ -20,7 +20,9 @@ const socket = (io) => {
             const userfound = usersLogin.findIndex(ele => ele === username)
             if (userfound < 0) {
                 console.log(username + " da thoat khoi trinh duyet")
-                io.emit("userLogout", {currentLogout: username, usersLogin: usersLogin})
+                if (username != undefined) {
+                    io.emit("userLogout", {currentLogout: username, usersLogin: usersLogin})
+                }
             }
         })
         socket.on("deleteRealtime", socketIO.deleteRealtime)
@@ -32,6 +34,9 @@ const socket = (io) => {
             const usersLogin = usernames.filter((item, idx) => usernames.indexOf(item) === idx)
             io.emit("usersLogin", {currentLogin: data.username, usersLogin: usersLogin})
             console.log(usersLogin + " dang online")
+        })
+        socket.on("incoming_call", function(data) {
+            console.log(data)
         })
     })
 }

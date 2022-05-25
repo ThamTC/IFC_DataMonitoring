@@ -1,7 +1,8 @@
 import axios from 'axios'
 axios.defaults.withCredentials = true;
-const dbRequest = {
-    getAllUsers: async() => {
+
+export default {
+    getAllUsers: async () => {
         try {
             const resData = await axios.get("/api/db/user/index")
             return resData
@@ -9,7 +10,7 @@ const dbRequest = {
             return error
         }
     },
-    updateUserInfo: async(user) => {
+    updateUserInfo: async (user) => {
         try {
             const resData = await axios.post("/api/db/user/update", {
                 user: user
@@ -19,15 +20,7 @@ const dbRequest = {
             return error
         }
     },
-    getAllRoles: async() => {
-        try {
-            const resData = await axios.get("/api/db/role/index")
-            return resData
-        } catch (error) {
-            return error
-        }
-    },
-    deleteUser: async(user) => {
+    deleteUser: async (user) => {
         try {
             const resData = await axios.post("/api/db/user/delete", {
                 user: user
@@ -38,4 +31,3 @@ const dbRequest = {
         }
     }
 }
-export default dbRequest

@@ -51,7 +51,7 @@
                                     <td><span class="status text-success">&bull;</span> Active</td>
                                     <td>
                                         <a href="#" :class='"settings " + isDisabled(user.username)' title="Settings" data-toggle="tooltip"><i :id="idx" @click="settingUser" class="fas fa-cog"></i></a>
-                                        <a href="#" :class='"delete " + isDisabled(user.username) ' title="Delete" data-toggle="tooltip"><i :id="idx" @click="deleteUser" class="fas fa-user-times"></i></a>
+                                        <a href="#" :class='"text-danger delete " + isDisabled(user.username) ' title="Delete" data-toggle="tooltip"><i :id="idx" @click="deleteUser" class="fas fa-user-times"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -82,7 +82,7 @@ export default {
         return {
             isLoading: true,
             modal: "",
-            role: ["manager", "admin", "user", "callcenter"]
+            roles: []
         };
     },
     computed: {
@@ -94,6 +94,12 @@ export default {
         dbRequest.getAllUsers().then((data) => {
                 this.setManagerUsers(data.data)
                 this.isLoading = false
+                return dbRequest.getAllRoles()
+            })
+            .then((data) => {
+                data.data.forEach(ele => {
+                    this.roles.push(ele.name)
+                });
             })
             .catch((err) => {
                 console.log(err)
@@ -112,7 +118,7 @@ export default {
             var modalUsername = document.getElementById("inputUsernameModal")
             modalUsername.value = users[id].username
             var modalSelection = document.querySelectorAll(".role")
-            const role = this.role.findIndex((ele) => ele == users[id].role)
+            const role = this.roles.findIndex((ele) => ele == users[id].role)
             modalSelection[role].setAttribute("selected", "selected")
             var myModal = new bootstrap.Modal(document.getElementById('settingUserModal'))
             this.setManagerUserInfo(users[id])

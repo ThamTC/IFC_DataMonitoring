@@ -6,7 +6,6 @@ export const authUser = async (to, from, next) => {
   }else{
       const isLogged = await authRequest.isLogged();
       if (isLogged?.status === 200) {
-        store.commit("setSideNavContent", to.name)
         next();
       } else {
         next({ name: "login", query:{redirect: to.name}});

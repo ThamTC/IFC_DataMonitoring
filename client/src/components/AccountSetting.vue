@@ -18,7 +18,7 @@ export default {
         document.title = "Account Setting"
     },
     methods: {
-        ...mapMutations(["setUser", "setIsLoggin","setSideNavMenu"])
+        ...mapMutations(["setUser", "setIsLoggin", "setSideNavMenu"])
     },
     mounted() {
         const accessToken = localStorage.getItem("accessToken")
