@@ -7,7 +7,7 @@ export default {
             const resData = await axios.get("/api/db/permissions/index")
             return resData
         } catch (error) {
-            return error
+            throw error
         }
     },
     

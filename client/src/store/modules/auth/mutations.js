@@ -23,5 +23,14 @@ export default {
     },
     setPermissions(state, permissions) {
         state.permissions = permissions
-    }
+    },
+    setRoles(state, roles) {
+        state.roles = roles
+    },
+    insertRole(state, role) {
+        state.roles.push(role)
+    },
+    setPermissionDetails(state, permissionDetails) {
+        state.permissionDetails = permissionDetails
+    },
 }

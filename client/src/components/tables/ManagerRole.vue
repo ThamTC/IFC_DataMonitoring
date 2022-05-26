@@ -25,14 +25,14 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(role, idx) in roles" :key="idx">
+                                <tr v-for="(role, idx) in getRoles" :key="idx">
                                     <td>{{role.name}}</td>
-                                    <td class="fw-bold" v-for="(detail, i) in permissionDetails" :key="i">
+                                    <td class="fw-bold" v-for="(permission, i) in getPermissions" :key="i">
                                         {{convertIdToName(permissionDetails[idx][i])}}
                                     </td>
                                     <td>
-                                        <a href="#" title="Settings" data-toggle="tooltip"><i :id="idx" @click="settingUser" class="fas fa-cog"></i></a>
-                                        <a href="#" class="text-danger" title="Delete" data-toggle="tooltip"><i :id="idx" @click="deleteUser" class="fas fa-user-times"></i></a>
+                                        <a href="#" :class="addDisabledClass(role.name)" title="Settings" data-toggle="tooltip"><i :id="role.id" @click="settingRole" class="fas fa-cog"></i></a>
+                                        <a href="#" :class="'ms-2 text-danger ' + addDisabledClass(role.name)" title="Delete" data-toggle="tooltip"><i :id="role.id" @click="deleteRole" class="fas fa-user-times"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -42,44 +42,53 @@
             </div>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <button v-if="roles.length > 0" type="button" class="btn btn-primary" @click="addRole">Add Role</button>
+            <button v-if="getRoles.length > 0" type="button" class="btn btn-primary" @click="addRole">Add Role</button>
         </div>
     </div>
+    <modal-setting-role :modal="modal"/>
     <modal-add-role aria-modal="modal" />
+    <modal-delete-role :modal="modal"/>
 </main>
 </template>
 
 <script>
 import dbRequest from '../../apis/dbRequest'
 import ModalAddRole from '../modals/ModalAddRole.vue'
+import ModalDeleteRole from '../modals/ModalDeleteRole.vue'
 import { mapGetters, mapMutations } from 'vuex'
 import convert from '../../untils/convert'
+import ModalSettingRole from '../modals/ModalSettingRole.vue'
 
 export default {
     name: "ManagerRole",
     components: {
-        ModalAddRole
+        ModalAddRole,
+        ModalDeleteRole,
+        ModalSettingRole
     },
     data() {
         return {
             isLoading: true,
-            roles: [],
-            modal: "",
+            modal: {
+                name: "",
+                data: {}
+            },
             permissionDetails: []
         }
     },
     computed: {
-        ...mapGetters(["getPermissions"])
+        ...mapGetters(["getUser","getPermissions", "getRoles", "getPermissionDetails"])
     },
     created() {
         document.title = "Quản lý Role"
         dbRequest.getAllRoles()
             .then((data) => {
                 this.isLoading = false
-                this.roles = data.data
-                this.roles.forEach(ele => {
+                this.setRoles(data.data)
+                data.data.forEach(ele => {
                     this.permissionDetails.push(JSON.parse(ele.permission))
                 });
+                this.setPermissionDetails(this.permissionDetails)
                 return dbRequest.getAllPermissions()
             })
             .then((data) => {
@@ -88,17 +97,39 @@ export default {
             .catch((error) => console.log(error))
     },
     methods: {
-        ...mapMutations(["setPermissions"]),
-        
+        ...mapMutations(["setPermissions", "setRoles", "setPermissionDetails"]),
+        addDisabledClass(roleName) {
+            const user = this.getUser
+            const username = user.username
+            return (roleName == "manager" && username != "thamtc.ifc") ? 'disabled' : ''
+        },
         addRole() {
             var myModal = new bootstrap.Modal(document.getElementById('addRoleModal'))
-            this.modal = myModal
+            this.modal.name = myModal
             // if(store.getters.getDataRealtime.length > 0) {
             myModal.show()
         },
         convertIdToName(id){
             // console.log(convert.idToName(id.value))
             return convert.idToName(id.value)
+        },
+        settingRole(e){
+            const id = e.target.id
+            const roles = this.getRoles
+            const elementFound = roles.find(ele => ele.id == id)
+            var myModal = new bootstrap.Modal(document.getElementById('settingRoleModal'))
+            this.modal.name = myModal
+            this.modal.data = {roleEle: elementFound}
+            myModal.show()
+        },
+        deleteRole(e){
+            const id = e.target.id
+            const roles = this.getRoles
+            const elementFound = roles.find(ele => ele.id == id)
+            var myModal = new bootstrap.Modal(document.getElementById('deleteRoleModal'))
+            this.modal.name = myModal
+            this.modal.data = {id: id, name: elementFound.name}
+            myModal.show()
         }
     },
 }

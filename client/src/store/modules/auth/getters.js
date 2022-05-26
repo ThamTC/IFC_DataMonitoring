@@ -25,5 +25,11 @@ export default {
     },
     getPermissions(state) {
         return state.permissions
-    }
+    },
+    getPermissionDetails(state) {
+        return state.permissionDetails
+    },
+    getRoles(state) {
+        return state.roles
+    },
 }

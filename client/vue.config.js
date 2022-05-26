@@ -9,5 +9,11 @@ module.exports = {
             }
         }
     },
-    lintOnSave: false
+    lintOnSave: false,
+    configureWebpack: {
+        performance: {
+            maxEntrypointSize: 1024000,
+            maxAssetSize: 1024000
+        }
+    }
 }

@@ -5,5 +5,7 @@ export default {
     managerUser: {},
     managerUsers: [],
     usersLogin: [],
-    permissions: []
+    permissions: [],
+    permissionDetails: [],
+    roles: []
 }
