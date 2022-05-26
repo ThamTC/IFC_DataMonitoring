@@ -41,4 +41,36 @@ export default {
         commit("setManagerUsers", managerUsers);
         commit("setManagerUserInfo", {});
     },
+    deleteRolesManager: ({commit, state}, role) => {
+        const rolesFilter = state.roles.filter(ele => ele.name != role)
+        commit("setRoles", rolesFilter)
+    },
+    deleteRoleManager: ({commit, state}, roleName) => {
+        const roleFiltered = state.roles.filter(ele => ele.name != roleName)
+        commit("setRoles", roleFiltered)
+    },
+    updateRoles({commit, state}, role) {
+        const roles = state.roles
+        roles.forEach((ele, idx) => {
+            if (ele.id == role.id) {
+                roles[idx] = role
+            }
+        });
+        commit("setRoles", roles)
+    },
+    updatePermissionDetails({commit, state}, permission) {
+        const roles = state.roles
+        const permissionDetails = state.permissionDetails
+        roles.forEach((ele, idx) => {
+            if (ele.name == permission.name) {
+                permissionDetails[idx] = permission.data
+            }
+        })
+        commit("setPermissionDetails", permissionDetails)
+    },
+    insertPermissionDetails({commit, state}, permission) {
+        const permissionDetails = state.permissionDetails
+        permissionDetails.push(permission)
+        commit("setPermissionDetails", permissionDetails)
+    }
 };

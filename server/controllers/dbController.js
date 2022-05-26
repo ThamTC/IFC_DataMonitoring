@@ -76,6 +76,25 @@ const dbController = {
     } catch (error) {
       return res.status(400).json(error)
     }
+  },
+  deleteRole: async (req, res) => {
+    const id = req.body.id
+    try {
+      const resData = await db.GS_RolePermission.destroy({where: {id: id}})
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
+  },
+  updateRole: async (req, res) => {
+    const id = req.body.id
+    const data = req.body.data
+    try {
+      const resData = await db.GS_RolePermission.update({permission: data},{where: {id: id}})
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
   }
 };
 

@@ -7,7 +7,7 @@ export default {
             const resData = await axios.get("/api/db/user/index")
             return resData
         } catch (error) {
-            return error
+            throw error
         }
     },
     updateUserInfo: async (user) => {
@@ -17,7 +17,7 @@ export default {
             })
             return resData
         } catch (error) {
-            return error
+            throw error
         }
     },
     deleteUser: async (user) => {
@@ -27,7 +27,7 @@ export default {
             })
             return resData
         } catch (error) {
-            return error
+            throw error
         }
     }
 }

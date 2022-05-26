@@ -14,10 +14,10 @@
                         <label for="inputUsernameModal">username</label>
                     </div>
                     <select @change="changeSelection" class="form-select" ref="selection" id="selectionRole">
-                        <option class="role" value="manager">manager</option>
-                        <option class="role" value="admin">admin</option>
+                        <option class="role" :value="role" v-for="(role, idx) in getRoles" :key="idx">{{role}}</option>
+                        <!-- <option class="role" value="admin">admin</option>
                         <option class="role" value="user">user</option>
-                        <option class="role" value="callcenter">callcenter</option>
+                        <option class="role" value="callcenter">callcenter</option> -->
                     </select>
                     <!-- <div class=" d-flex align-items-center justify-content-between mt-4 mb-0 ">
                     </div> -->
@@ -57,7 +57,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["getManagerUserInfo"])
+        ...mapGetters(["getManagerUserInfo", "getRoles"])
     },
     updated() {
         this.user = this.getManagerUserInfo

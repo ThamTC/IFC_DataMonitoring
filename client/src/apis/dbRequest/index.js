@@ -9,6 +9,8 @@ const dbRequest = {
     deleteUser: userRequest.deleteUser,
     getAllRoles: roleRequest.getAllRoles,
     createRole: roleRequest.createRole,
+    deleteRole: roleRequest.deleteRole,
+    updateRole: roleRequest.updateRole,
     getAllPermissions: permissionRequest.getAllPermissions
 }
 export default dbRequest
