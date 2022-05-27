@@ -10,18 +10,13 @@ import homepage_children from './route_children/homepage_children'
 import account_children from './route_children/account_children'
 import store from './store'
 
-function redirectName(to) {
-    to.query.routeDefault
-    return to.query.routeDefault
-}
-
 const routers = [
     {
         path: '/',
         name: "home",
         components: {default: HomePage, "navbar": NavBar},
         beforeEnter: authUser,
-        redirect: to => {return {name: redirectName(to)}},
+        redirect: to => {return {name: to.query.routeDefault}},
         children: homepage_children
     },
     {
