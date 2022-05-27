@@ -62,7 +62,7 @@
 <script>
 import Footer from "../Footer.vue";
 import {
-    mapActions, mapMutations
+    mapActions, mapGetters, mapMutations
 } from "vuex";
 import {
     Form,
@@ -95,18 +95,31 @@ export default {
             isLogged: true
         }
     },
+    computed: {
+        ...mapGetters(["getUser"])
+    },
     created() {
         document.title = "Đăng nhập"
     },
     methods: {
         ...mapActions(["signin"]),
+        routeDefault() {
+            const user = this.getUser
+            const permissions = user.permissions
+            const eleFound = permissions.find(ele => ele.value > 0)
+            if (eleFound !== undefined) {
+                return eleFound.name
+            }
+            return "default"
+        },
         submit() {
             this.isLogged = false
             this.signin(this.user).then(resData => {
                 this.isLogged = true
                 const redirectPath = this.$route.query.redirect
                 this.$router.push({
-                    name: redirectPath ?? "home"
+                    name: redirectPath ?? "home",
+                    query: {routeDefault: this.routeDefault()}
                 });
             })
         },

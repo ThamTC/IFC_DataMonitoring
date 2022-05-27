@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, useRoute } from 'vue-router'
 import HomePage from './components/HomePage.vue'
 import Err404 from './components/errors/Err404.vue'
 import DashBoard from './components/DashBoard.vue'
@@ -8,6 +8,12 @@ import AccountSetting from './components/AccountSetting.vue'
 import NavBar from './components/NavBar.vue'
 import homepage_children from './route_children/homepage_children'
 import account_children from './route_children/account_children'
+import store from './store'
+
+function redirectName(to) {
+    to.query.routeDefault
+    return to.query.routeDefault
+}
 
 const routers = [
     {
@@ -15,7 +21,7 @@ const routers = [
         name: "home",
         components: {default: HomePage, "navbar": NavBar},
         beforeEnter: authUser,
-        redirect: {name: "realtime"},
+        redirect: to => {return {name: redirectName(to)}},
         children: homepage_children
     },
     {

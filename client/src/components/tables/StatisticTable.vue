@@ -77,12 +77,20 @@ export default {
         this.checkerName = this.getLoginName
     },
     computed: {
-        ...mapGetters(["getLoginName", "getDataStatistic"]),
+        ...mapGetters(["getLoginName", "getDataStatistic", "getSolarStatistic"]),
         dataItems() {
-            return this.getDataStatistic
+            if (this.routeName == "statistic") {
+                return this.getDataStatistic
+            } else {
+                return this.getSolarStatistic
+            }
         },
         enableDone() {
-            return this.getDataStatistic.length ? "" : "disable"
+            if (this.routeName == "statistic") {
+                return this.getDataStatistic.length ? "" : "disable"
+            } else {
+                return this.getSolarStatistic.length ? "" : "disable"
+            }
         }
     },
     created() {
@@ -98,15 +106,11 @@ export default {
         ...mapMutations(["setDataStatistic"]),
         ...mapActions(["getStatisticStore", "selectTask"]),
         check(e) {
-            console.log(e.target.checked)
-            this.selectTask({e: e, checkerName: this.checkerName, key: "statistic"})
+            this.selectTask({e: e, checkerName: this.checkerName, key: this.routeName})
         },
         async doneTask(e) {
-            console.log(e.target.id)
             let doneName = this.$refs["checkerName_" + e.target.id][0].innerText || this.checkerName
-            this.$socket.emit("doneTask", {checkerName: this.checkerName, doneName: doneName, id: e.target.id, key: "statistic"})
-            // const resData = await redisRequest.doneTask(e.target.id, this.checkerName, doneName, "statistic")
-            // store.commit("setDataStatistic", resData);
+            this.$socket.emit("doneTask", {checkerName: this.checkerName, doneName: doneName, id: e.target.id, key: this.routeName})
         },
         isDisable(name) {
             return this.checkerName !== name && name != ''

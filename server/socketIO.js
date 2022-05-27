@@ -131,6 +131,18 @@ const socketIO = {
         const id = data.id
         const key = data.key
         var contentStatistic;
+        var realtimeKey
+        var updateRealtimeKey
+        var updateStatisticKey
+        if (key == "statistic") {
+            realtimeKey = "realtime"
+            updateRealtimeKey = "updateRealtime"
+            updateStatisticKey = "updateStatistic"
+        } else {
+            realtimeKey = "solar_realtime"
+            updateRealtimeKey = "updateRealtimeSolar"
+            updateStatisticKey = "updateStatisticSolar"
+        }
         try {
             resData = await client.get(key);
             if (resData != null) {
@@ -147,21 +159,21 @@ const socketIO = {
                         try {
                             resData.splice(idx, 1);
                         } catch (error) {
-                            global.io.sockets.emit("updateStatistic", { error: error, data: [] })
+                            global.io.sockets.emit(updateStatisticKey, { error: error, data: [] })
                         }
                         db.GS_Statistic.bulkCreate([doAlarm])
                             .then((data) => logger.log("info", "Insert DB thanh cong: " + data))
                             .catch((error) => {
                                 logger.log("error", "Co loi trong qua trinh thao tac DB: " + error + ", path:" + __filename + ", func: doneTask")
-                                global.io.sockets.emit("updateStatistic", { error: "Co loi trong qua trinh thao tac DB", data: [] })
+                                global.io.sockets.emit(updateStatisticKey, { error: "Co loi trong qua trinh thao tac DB", data: [] })
                             })
                         break;
                     }
                 }
                 await client.set(key, JSON.stringify(resData));
             }
-            global.io.sockets.emit("updateStatistic", { error: null, data: resData })
-            resData = await client.get("realtime");
+            global.io.sockets.emit(updateStatisticKey, { error: null, data: resData })
+            resData = await client.get(realtimeKey);
             if (resData != null) {
                 // chuyen string ve object
                 resData = JSON.parse(resData);
@@ -170,11 +182,11 @@ const socketIO = {
                     return contentStatistic !== contentRealtime
                 })
             }
-            await client.set("realtime", JSON.stringify(resData))
-            global.io.sockets.emit("updateRealtime", { error: null, data: resData })
+            await client.set(realtimeKey, JSON.stringify(resData))
+            global.io.sockets.emit(updateRealtimeKey, { error: null, data: resData })
         } catch (error) {
             logger.log("error", "Co loi xay ra: " + error + ", path:" + __filename + ", func: doneTask")
-            global.io.sockets.emit("updateStatistic", { error: error, data: [] })
+            global.io.sockets.emit(updateStatisticKey, { error: error, data: [] })
         }
     }
 }

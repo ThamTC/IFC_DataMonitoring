@@ -110,13 +110,21 @@ export default {
             myModal.show()
         },
         convertIdToName(id){
-            // console.log(convert.idToName(id.value))
-            return convert.idToName(id.value)
+            return convert.idToName(id?.value ?? 0)
         },
         settingRole(e){
             const id = e.target.id
             const roles = this.getRoles
             const elementFound = roles.find(ele => ele.id == id)
+            const roleOrig = JSON.parse(elementFound.permission)
+            const permissionOrig = roleOrig.map(ele => ele.name)
+            const permissions = this.getPermissions
+            const permissionPadd = permissions.map(ele => ele.name)
+            // filter
+            const permissionFiltered = permissionPadd.filter(ele => !permissionOrig.includes(ele))
+            permissionFiltered.forEach(ele => roleOrig.push({name: ele, value: '0'}))
+            elementFound.permission = JSON.stringify(roleOrig)
+            // merge two array
             var myModal = new bootstrap.Modal(document.getElementById('settingRoleModal'))
             this.modal.name = myModal
             this.modal.data = {roleEle: elementFound}

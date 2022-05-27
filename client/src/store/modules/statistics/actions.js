@@ -1,11 +1,10 @@
-import axios from "axios"
-axios.defaults.withCredentials = true
+import axios from '../../../apis/api'
 
 export default {
     getStatisticStore: async ({commit, state}, key) => {
         try {
             const resData = await axios.post("/api/redis/index", {key: key})
-            commit("setDataStatistic", resData.data)
+            commit("setDataStatistic", {key: key, data: resData.data})
             return resData.data
         } catch (error) {
             return error.response
@@ -20,10 +19,10 @@ export default {
                 username: e.target.checked ? checkerName : "",
                 key: key
             })
-            commit("setDataStatistic", resData.data);
+            commit("setDataStatistic", {key: key, data: resData.data})
             return resData.data
         } catch (error) {
             return error.response
         }
-    }
+    },
 }

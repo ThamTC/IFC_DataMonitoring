@@ -4,8 +4,15 @@ import ManagerUser from '../components/tables/ManagerUser.vue'
 import ManagerRole from '../components/tables/ManagerRole.vue'
 import SolarRealTimeTable from '../components/tables/SolarRealTimeTable.vue'
 import SolarStatisticTable from '../components/tables/SolarStatisticTable.vue'
+import Default from '../components/Default.vue'
+import ManagerPermission from '../components/tables/ManagerPermission.vue'
 
 export default [
+    {
+        path: "default",
+        name: "default",
+        component: Default
+    },
     {
         path: "realtime",
         name: "realtime",
@@ -25,6 +32,11 @@ export default [
         path: "managerRole",
         name: "managerRole",
         component: ManagerRole
+    },
+    {
+        path: "managerPermission",
+        name: "managerPermission",
+        component: ManagerPermission
     },
     {
         path: "solar/realtime",

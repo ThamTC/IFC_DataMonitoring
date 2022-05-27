@@ -14,7 +14,7 @@
                         <button type="button" class="btn btn-primary mb-1" id="add-column" data-bs-toggle="modal" data-bs-target="#addColumnModal">Thêm cột</button>
                     </div> -->
                     <div class="d-flex">
-                        <button type="button" :class="'btn btn-' + countColor[0]+' mbr-2'" v-for="(countColor, idx) in getCountColors" :key="idx" :id="countColor[0]" @click="filterPriority">{{countColor[1]}}</button>
+                        <button type="button" :class="'btn btn-' + countColor[0]+' mbr-2'" v-for="(countColor, idx) in countColors" :key="idx" :id="countColor[0]" @click="filterPriority">{{countColor[1]}}</button>
                         <button type="button" :class="'btn btn-' + currentData.color+' mbr-2 mx-5 flex-grow-1'" disabled>{{currentData.msg}}</button>
                         <button v-if="dataItems.length > 0" @click="removeTask" type="button" class="btn btn-primary mbr-2">Remove Data</button>
                     </div>
@@ -121,26 +121,42 @@ export default {
             titles: ["Hệ thống"],
             isFilter: false,
             dataFilter: [],
-            preFilter: ""
+            preFilter: "",
+            routeName: ""
         }
     },
     computed: {
-        ...mapGetters(["getDataRealtimeFilter", "getDataRealtime", "getCountColors", "getCurrentData"]),
+        ...mapGetters(["getDataRealtimeFilter", "getDataRealtime", "getCountColors", "getCurrentData", "getSolarRealtimeFilter", "getSolarRealtime", "getCurrentSolar", "getCountColorSolars"]),
+        countColors() {
+            if (this.routeName == "solar_realtime") {
+                return this.getCountColorSolars
+            }
+            return this.getCountColors
+        },
         dataItems() {
             if (this.isFilter) {
+                if (this.routeName == "solar_realtime") {
+                    return this.getSolarRealtimeFilter
+                }
                 return this.getDataRealtimeFilter
+            }
+            if (this.routeName == "solar_realtime") {
+                return this.getSolarRealtime
             }
             return this.getDataRealtime
         },
         currentData() {
+            if (this.routeName == "solar_realtime") {
+                return this.getCurrentSolar
+            }
             return this.getCurrentData
         }
     },
     created() {
-        const routeName = this.$route.name
-        this.getRealtimeStore(routeName).then((data) => {
-                this.setDataRealtime(data)
-                this.counterColorStore()
+        this.routeName = this.$route.name
+        this.getRealtimeStore(this.routeName).then((data) => {
+                this.setDataRealtime({key: this.routeName, data: data})
+                this.counterColorStore(this.routeName)
                 this.isLoading = false
             }).catch((err) => {
                 console.log(err)
@@ -218,9 +234,14 @@ export default {
                 this.preFilter = e.target.id
                 this.isFilter = true
                 const priority = convert.colorToId(e.target.id)
-                const resData = this.getDataRealtime
+                var resData
+                if (this.routeName == "realtime") {
+                    resData = this.getDataRealtime
+                } else if (this.routeName == "solar_realtime") {
+                    resData = this.getSolarRealtime
+                }
                 this.dataFilter = resData.filter(ele => ele.priority == priority)
-                this.setDataRealtimeFilter(this.dataFilter)
+                this.setDataRealtimeFilter({kay: this.routeName, data: this.dataFilter})
             }else {
                 this.isFilter = false
                 this.preFilter = ""

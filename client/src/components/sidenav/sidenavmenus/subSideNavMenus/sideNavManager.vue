@@ -7,18 +7,25 @@
     </a>
     <div class="collapse" id="collapseManager" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
         <nav class="sb-sidenav-menu-nested nav">
-            <router-link tag="a" class="nav-link" to="/managerUser" active-class="active">
+            <router-link tag="a" class="nav-link" to="/managerUser" active-class="active" exact>
                 <div class="sb-nav-link-icon">
                     <i class="fas fa-users-cog"></i>
                 </div>
-                Manager Users
+                Users
             </router-link>
 
             <router-link tag="a" class="nav-link" to="/managerRole" active-class="active">
                 <div class="sb-nav-link-icon">
                     <i class="fas fa-user-tag"></i>
                 </div>
-                Manager Roles
+                Roles
+            </router-link>
+
+            <router-link tag="a" class="nav-link" to="/managerPermission" active-class="active">
+                <div class="sb-nav-link-icon">
+                    <i class="fas fa-user-tag"></i>
+                </div>
+                Permissions
             </router-link>
         </nav>
     </div>
@@ -27,7 +34,7 @@
 
 <script>
 export default {
-
+    name: "SideNavManager"
 }
 </script>
 

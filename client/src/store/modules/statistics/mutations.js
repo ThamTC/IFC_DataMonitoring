@@ -1,6 +1,11 @@
 export default {
-    setDataStatistic(state, data) {
-        state.dataStatistic = data;
+    setDataStatistic(state, payload) {
+        console.log(payload)
+        if (payload.key == "statistic") {
+            state.dataStatistic = payload.data;
+        } else {
+            state.solarStatistic = payload.data;
+        }
     },
     insertDataStatistic(state, item) {
         state.dataStatistic.unshift(item);

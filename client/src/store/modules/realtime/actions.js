@@ -10,40 +10,28 @@ export default {
             return error.response
         }
     },
-    counterColorStore: ({ commit, state }) => {
-        const data = state.dataRealtime;
+    counterColorStore: ({ commit, state }, key) => {
+        var data
+        if (key == "realtime") {
+            data = state.dataRealtime;
+        } else {
+            data = state.solarRealtime;
+        }
         var showCountSorted = {};
         data.forEach((ele) => {
             const colorName = convert.idToColor(ele.priority);
             showCountSorted[colorName] = (showCountSorted[colorName] || 0) + 1;
         });
-        commit("setCountColors", Object.entries(showCountSorted));
+        commit("setCountColors", {key: key, data: Object.entries(showCountSorted)});
     },
-    realtimeStore: ({ commit, state }, data) => {
+    realtimeStore: ({ commit, state }, payload) => {
         var resParser = state.dataRealtime;
-        resParser.unshift(data)
-        // if (resParser.length > 0) {
-        //   // chen data theo thu tu
-        //   for (let idx = 0; idx < resParser.length; idx++) {
-        //     if (
-        //       resParser[idx].priority == 0 ||
-        //       (data.priority > 0 && data.priority <= resParser[idx].priority)
-        //     ) {
-        //       resParser.splice(idx, 0, data);
-        //       break;
-        //     } else if (idx == resParser.length - 1) {
-        //       resParser.push(data);
-        //       break;
-        //     }
-        //   }
-        // } else {
-        //   resParser.push(data);
-        // }
-        commit("setDataRealtime", resParser);
+        resParser.unshift(payload.data)
+        commit("setDataRealtime", {key: payload.key, data: resParser});
     },
-    currentDataStore: ({commit, state}, data) => {
-        const message = (data.type ?? "") + " " + (data.system ?? "") + " " + (data.parameter ?? "")
-        const colorName = convert.idToColor(data.priority);
-        commit("setCurrentData", {msg: message, color: colorName})
+    currentDataStore: ({commit, state}, payload) => {
+        const message = (payload.data.type ?? "") + " " + (payload.data.system ?? "") + " " + (payload.data.parameter ?? "")
+        const colorName = convert.idToColor(payload.data.priority);
+        commit("setCurrentData", {key: payload.key, data: {msg: message, color: colorName}})
       },
 }

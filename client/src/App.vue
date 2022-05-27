@@ -46,44 +46,59 @@ export default {
             const isCanView = checkRole(this.getUser, ["admin", "manager"])
             if (isCanView) {
                 sound.play()
-                this.currentDataStore(data)
-                this.realtimeStore(data)
-                this.counterColorStore()
+                this.currentDataStore({key: "realtime", data: data})
+                this.realtimeStore({key: "realtime", data: data})
+                this.counterColorStore("realtime")
             }
         },
         statistic: function (data) {
             const isCanView = checkRole(this.getUser, ["admin", "manager"])
             if (isCanView) {
-                this.setDataStatistic(data)
+                this.setDataStatistic({key: "statistic", data: data})
             }
         },
         solar_realtime: function (data) {
             const isCanView = checkRole(this.getUser, ["solar", "manager"])
             if (isCanView) {
                 sound.play()
-                // this.currentDataStore(data)
-                // this.realtimeStore(data)
-                // this.counterColorStore()
+                this.currentDataStore({key: "solar_realtime", data: data})
+                this.realtimeStore({key: "solar_realtime", data: data})
+                this.counterColorStore("solar_realtime")
             }
         },
         solar_statistic: function (data) {
             const isCanView = checkRole(this.getUser, ["solar", "manager"])
             if (isCanView) {
-            //     this.setDataStatistic(data)
+                this.setDataStatistic({key: "solar_statistic", data: data})
             }
         },
         updateRealtime: function (data) {
             if (data.error == null) {
                 if (data.data.length == 0) {
-                    this.setCurrentData({})
+                    this.setCurrentData({key: "realtime", data: {}})
                 }
-                this.setDataRealtime(data.data);
-                this.counterColorStore()
+                this.setDataRealtime({key: "realtime", data: data.data});
+                this.counterColorStore("realtime")
             }
         },
         updateStatistic: function (data) {
             if (data.error == null) {
-                this.setDataStatistic(data.data);
+                this.setDataStatistic({key: "statistic", data: data.data});
+            }
+        },
+        updateRealtimeSolar: function (data) {
+            if (data.error == null) {
+                if (data.data.length == 0) {
+                    this.setCurrentData({key: "solar_realtime", data: {}})
+                }
+                this.setDataRealtime({key: "solar_realtime", data: data.data});
+                this.counterColorStore("solar_realtime")
+            }
+        },
+        updateStatisticSolar: function (data) {
+            console.log("updatesolar")
+            if (data.error == null) {
+                this.setDataStatistic({key: "solar_statistic", data: data.data});
             }
         },
         usersLogin: function (data) {

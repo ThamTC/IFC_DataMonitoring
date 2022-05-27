@@ -67,6 +67,22 @@ const dbController = {
       return res.status(400).json(error)
     }
   },
+  createPermission: async(req, res) => {
+    const permissioName = req.body.name
+    try {
+      const found = await db.Permissions.findOne({where: {name: permissioName}, raw: true})
+      if (found) {
+        return res.status(201).json("Permission is existed")
+      }
+      const created = await db.Permissions.create({name: permissioName})
+      if (!created) {
+        return res.status(404).json('Có lỗi trong quá trình tạo tài khoản, vui lòng thử lại.');
+      }
+      return res.status(200).json("Create Permission is success!")
+    } catch (error) {
+      return res.status(400).json(error)
+    }
+  },
   createRole: async (req, res) => {
     const roleName = req.body.roleName
     const permission = req.body.permission

@@ -1,6 +1,5 @@
-import axios from "axios";
+import axios from "../../../apis/api";
 import jwtDecode from "jwt-decode";
-axios.defaults.withCredentials = true;
 
 export default {
     signin: async ({ commit, state }, user) => {

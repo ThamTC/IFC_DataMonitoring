@@ -33,4 +33,7 @@ export default {
     setPermissionDetails(state, permissionDetails) {
         state.permissionDetails = permissionDetails
     },
+    insertPermission(state, permission) {
+        state.permissions.push(permission)
+    }
 }

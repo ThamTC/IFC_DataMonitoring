@@ -1,14 +1,13 @@
 <template>
-<!-- <statistic-table /> -->
-<span>do not support</span> 
+<statistic-table />
 </template>
 
 <script>
-// import StatisticTable from './StatisticTable.vue'
+import StatisticTable from './StatisticTable.vue'
 export default {
     name: "SolarStatisticTable",
     components: {
-        // StatisticTable
+        StatisticTable
     },
 }
 </script>
