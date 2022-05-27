@@ -14,7 +14,7 @@
                         <button type="button" class="btn btn-primary mb-1" id="add-column" data-bs-toggle="modal" data-bs-target="#addColumnModal">Thêm cột</button>
                     </div> -->
                     <div class="d-flex">
-                        <button type="button" :class="'btn btn-' + countColor[0]+' mbr-2'" v-for="(countColor, idx) in countColors" :key="idx" :id="countColor[0]" @click="filterPriority">{{countColor[1]}}</button>
+                        <button type="button" :class="'btn btn-' + countColor[0]+' mbr-2'" v-for="(countColor, idx) in getCountColors" :key="idx" :id="countColor[0]" @click="filterPriority">{{countColor[1]}}</button>
                         <button type="button" :class="'btn btn-' + currentData.color+' mbr-2 mx-5 flex-grow-1'" disabled>{{currentData.msg}}</button>
                         <button v-if="dataItems.length > 0" @click="removeTask" type="button" class="btn btn-primary mbr-2">Remove Data</button>
                     </div>
@@ -102,9 +102,7 @@
 </template>
 
 <script>
-import redisRequest from '../../apis/redisRequest'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
-import storeController from '../../controllers/storeController'
 import ModalRealtime from '../modals/ModalRealtime.vue'
 import convert from '../../untils/convert'
 
@@ -133,9 +131,6 @@ export default {
                 return this.getDataRealtimeFilter
             }
             return this.getDataRealtime
-        },
-        countColors() {
-            return this.getCountColors
         },
         currentData() {
             return this.getCurrentData
@@ -225,7 +220,7 @@ export default {
                 const priority = convert.colorToId(e.target.id)
                 const resData = this.getDataRealtime
                 this.dataFilter = resData.filter(ele => ele.priority == priority)
-                commit("setDataRealtimeFilter", this.dataFilter)
+                this.setDataRealtimeFilter(this.dataFilter)
             }else {
                 this.isFilter = false
                 this.preFilter = ""
