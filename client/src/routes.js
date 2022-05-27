@@ -8,7 +8,6 @@ import AccountSetting from './components/AccountSetting.vue'
 import NavBar from './components/NavBar.vue'
 import homepage_children from './route_children/homepage_children'
 import account_children from './route_children/account_children'
-import store from './store'
 
 const routers = [
     {
@@ -16,7 +15,7 @@ const routers = [
         name: "home",
         components: {default: HomePage, "navbar": NavBar},
         beforeEnter: authUser,
-        redirect: to => {return {name: to.query.routeDefault}},
+        redirect: (to) => {return { name: to.query.routeDefault}},
         children: homepage_children
     },
     {
