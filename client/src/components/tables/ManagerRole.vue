@@ -80,7 +80,7 @@ export default {
         ...mapGetters(["getUser","getPermissions", "getRoles", "getPermissionDetails"])
     },
     created() {
-        document.title = "Quản lý Role"
+        document.title = "Role Manager"
         dbRequest.getAllRoles()
             .then((data) => {
                 this.isLoading = false

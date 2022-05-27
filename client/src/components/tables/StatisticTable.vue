@@ -94,13 +94,13 @@ export default {
         }
     },
     created() {
+        document.title = "Statistic"
         this.routeName = this.$route.name
         this.getStatisticStore(this.routeName).then((data) => {
                 this.isLoading = false
             }).catch((err) => {
                 console.log(err)
-            }),
-            document.title = "Thống kê"
+            })
     },
     methods: {
         ...mapMutations(["setDataStatistic"]),

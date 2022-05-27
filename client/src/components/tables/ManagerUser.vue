@@ -89,7 +89,7 @@ export default {
         ...mapGetters({getUsers: "getManagerUsers", users: "getManagerUsers", userAuth: "getUser"}),
     },
     created() {
-        document.title = "Quản lý User"
+        document.title = "User Manager"
         // get all user from DB
         dbRequest.getAllUsers().then((data) => {
                 this.setManagerUsers(data.data)

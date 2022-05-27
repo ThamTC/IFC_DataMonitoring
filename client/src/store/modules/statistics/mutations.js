@@ -1,6 +1,5 @@
 export default {
     setDataStatistic(state, payload) {
-        console.log(payload)
         if (payload.key == "statistic") {
             state.dataStatistic = payload.data;
         } else {

@@ -12,7 +12,6 @@ export default {
     },
     selectTask: async ({commit, state}, {e: e, checkerName: checkerName, key: key}) => {
         try {
-            // console.log("checkerName: ", checkerName)
             const resData = await axios.post("api/redis/update", {
                 id: e.target.value,
                 isAction: e.target.checked,

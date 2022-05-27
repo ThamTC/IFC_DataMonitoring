@@ -96,7 +96,6 @@ export default {
             }
         },
         updateStatisticSolar: function (data) {
-            console.log("updatesolar")
             if (data.error == null) {
                 this.setDataStatistic({key: "solar_statistic", data: data.data});
             }

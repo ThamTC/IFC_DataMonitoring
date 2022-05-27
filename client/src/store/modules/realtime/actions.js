@@ -25,7 +25,12 @@ export default {
         commit("setCountColors", {key: key, data: Object.entries(showCountSorted)});
     },
     realtimeStore: ({ commit, state }, payload) => {
-        var resParser = state.dataRealtime;
+        var resParser
+        if (payload.key == "realtime") {
+            resParser = state.dataRealtime;
+        } else {
+            resParser = state.solarRealtime;
+        }
         resParser.unshift(payload.data)
         commit("setDataRealtime", {key: payload.key, data: resParser});
     },

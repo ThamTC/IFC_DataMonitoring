@@ -153,6 +153,7 @@ export default {
         }
     },
     created() {
+        document.title = "Realtime"
         this.routeName = this.$route.name
         this.getRealtimeStore(this.routeName).then((data) => {
                 this.setDataRealtime({key: this.routeName, data: data})
@@ -160,8 +161,7 @@ export default {
                 this.isLoading = false
             }).catch((err) => {
                 console.log(err)
-            }),
-            document.title = "Trực tuyến"
+            })
     },
     mounted() {
         if (this.inputShows.length == 1) {
@@ -241,7 +241,7 @@ export default {
                     resData = this.getSolarRealtime
                 }
                 this.dataFilter = resData.filter(ele => ele.priority == priority)
-                this.setDataRealtimeFilter({kay: this.routeName, data: this.dataFilter})
+                this.setDataRealtimeFilter({key: this.routeName, data: this.dataFilter})
             }else {
                 this.isFilter = false
                 this.preFilter = ""

@@ -63,6 +63,7 @@ export default
         ...mapGetters(["getPermissions"]),
     },
     created() {
+        document.title = "Permission Manager"
         dbRequest.getAllPermissions()
         .then((data) => {
             this.setPermissions(data.data)
