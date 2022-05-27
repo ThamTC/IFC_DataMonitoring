@@ -15,7 +15,7 @@ const routers = [
         name: "home",
         components: {default: HomePage, "navbar": NavBar},
         beforeEnter: authUser,
-        redirect: (to) => {return { name: to.query.routeDefault}},
+        redirect: { name: "default"},
         children: homepage_children
     },
     {
