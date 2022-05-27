@@ -142,7 +142,8 @@ export default {
         }
     },
     created() {
-        this.getRealtimeStore("realtime").then((data) => {
+        const routeName = this.$route.name
+        this.getRealtimeStore(routeName).then((data) => {
                 this.setDataRealtime(data)
                 this.counterColorStore()
                 this.isLoading = false

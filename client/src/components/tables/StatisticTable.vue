@@ -70,6 +70,7 @@ export default {
         return {
             isLoading: true,
             checkerName: "",
+            routeName: ""
         };
     },
     mounted() {
@@ -85,7 +86,8 @@ export default {
         }
     },
     created() {
-        this.getStatisticStore("statistic").then((data) => {
+        this.routeName = this.$route.name
+        this.getStatisticStore(this.routeName).then((data) => {
                 this.isLoading = false
             }).catch((err) => {
                 console.log(err)

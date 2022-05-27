@@ -15,7 +15,7 @@ const routers = [
         name: "home",
         components: {default: HomePage, "navbar": NavBar},
         beforeEnter: authUser,
-        redirect: {name: "realtime_table"},
+        redirect: {name: "realtime"},
         children: homepage_children
     },
     {

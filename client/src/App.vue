@@ -18,6 +18,7 @@ import checkPermission from './untils/checkPermission'
 import myToast from './untils/myToast'
 import NavBar from './components/NavBar.vue'
 import Footer from './components/Footer.vue'
+import checkRole from './untils/checkRole'
 
 export default {
     name: "App",
@@ -25,8 +26,16 @@ export default {
         NavBar,
         Footer
     },
+    data() {
+        return {
+            
+        }
+    },
     computed: {
         ...mapGetters(["getUser"])
+    },
+    created() {
+        
     },
     methods: {
         ...mapMutations(["setUsersLogin", "setDataStatistic", "setCurrentData", "setDataRealtime"]),
@@ -34,7 +43,7 @@ export default {
     },
     sockets: {
         realtime: function (data) {
-            const isCanView = checkPermission(this.getUser, ["view-realtime"])
+            const isCanView = checkRole(this.getUser, ["admin", "manager"])
             if (isCanView) {
                 sound.play()
                 this.currentDataStore(data)
@@ -43,27 +52,25 @@ export default {
             }
         },
         statistic: function (data) {
-            const isCanView = checkPermission(this.getUser, ["view-statistic"])
+            const isCanView = checkRole(this.getUser, ["admin", "manager"])
             if (isCanView) {
                 this.setDataStatistic(data)
             }
         },
         solar_realtime: function (data) {
-            // const isCanView = checkPermission(this.getUser, ["view-realtime"])
-            // if (isCanView) {
+            const isCanView = checkRole(this.getUser, ["solar", "manager"])
+            if (isCanView) {
                 sound.play()
                 // this.currentDataStore(data)
                 // this.realtimeStore(data)
                 // this.counterColorStore()
-            // }
-            console.log("solar_realtime: ", data)
+            }
         },
         solar_statistic: function (data) {
-            // const isCanView = checkPermission(this.getUser, ["view-statistic"])
-            // if (isCanView) {
+            const isCanView = checkRole(this.getUser, ["solar", "manager"])
+            if (isCanView) {
             //     this.setDataStatistic(data)
-            // }
-            console.log("solar_statistic: ", data)
+            }
         },
         updateRealtime: function (data) {
             if (data.error == null) {
