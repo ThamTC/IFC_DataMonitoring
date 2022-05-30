@@ -13,10 +13,10 @@
                     <!-- <div class="align-items-end">
                         <button type="button" class="btn btn-primary mb-1" id="add-column" data-bs-toggle="modal" data-bs-target="#addColumnModal">Thêm cột</button>
                     </div> -->
-                    <div class="d-flex">
-                        <button type="button" :class="'btn btn-' + countColor[0]+' mbr-2'" v-for="(countColor, idx) in countColors" :key="idx" :id="countColor[0]" @click="filterPriority">{{countColor[1]}}</button>
-                        <button type="button" :class="'btn btn-' + currentData.color+' mbr-2 mx-5 flex-grow-1'" disabled>{{currentData.msg}}</button>
-                        <button v-if="dataItems.length > 0" @click="removeTask" type="button" class="btn btn-primary mbr-2">Remove Data</button>
+                    <div v-if="dataItems.length > 0" class="d-flex">
+                        <button type="button" :class="'btn btn-' + countColor[0]+' me-2 mb-2'" v-for="(countColor, idx) in countColors" :key="idx" :id="countColor[0]" @click="filterPriority">{{countColor[1]}}</button>
+                        <button type="button" :class="'btn btn-' + currentData.color+' me-2 mb-2 mx-5 flex-grow-1'" disabled>{{currentData.msg}}</button>
+                        <button @click="removeTask" type="button" class="btn btn-primary mb-2">Remove Data</button>
                     </div>
                     <div class="table-wrapper">
                         <table class="table-ifc table-dark table-ifc-hover table-bordered" id="dataTable" width="100%" cellspacing="0">

@@ -1,7 +1,7 @@
 <template>
 <div class="noti-icon px-2">
-    <div class="position-relative">
-        <i class="fas fa-bell noti circle-icon"></i>
+    <div class="position-relative ringing-bell">
+        <i class="fas fa-bell noti circle-icon faa-ring animated animated-hover"></i>
         <span class="position-absolute top-1 start-100 translate-right badge rounded-pill bg-warning">
             0
             <span class="visually-hidden">unread messages</span>

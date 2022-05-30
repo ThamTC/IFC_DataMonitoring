@@ -1,7 +1,7 @@
 <template>
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <router-link class="navbar-brand ps-3" to="/">IFC</router-link>
+    <router-link tag="a" class="navbar-brand ps-3" to="/"><i class="fas fa-home me-2"></i>IFC</router-link>
     <!-- Sidebar Toggle-->
     <button v-if="isLoggin" class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" @click="sidebarToggle">
         <i class="fas fa-bars"></i>
@@ -24,7 +24,7 @@
         <router-link v-if="!isLoggin" class="nav-link ps-4" to="/login"> Login </router-link>
         <router-link v-if="!isLoggin" class="nav-link ps-4" to="/register"> Register </router-link>
 
-        <div class="noti-icon px-3">
+        <div v-show="isLoggin" class="noti-icon px-3">
 
             <li class="nav-item dropdown">
                 <router-link class="nav-link px-1" id="navbarDropdown" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -33,10 +33,10 @@
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                     <li><router-link class="dropdown-item" to="/account">Settings</router-link></li>
                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
-                    <li v-show="isLoggin">
+                    <li>
                         <hr class="dropdown-divider" />
                     </li>
-                    <li v-show="isLoggin"><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
+                    <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
                 </ul>
             </li>
         </div>
