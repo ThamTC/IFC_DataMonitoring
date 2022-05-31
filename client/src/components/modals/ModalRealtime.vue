@@ -1,6 +1,6 @@
 <template>
 <!-- Modal -->
-<div ref="modal" class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+<div ref="modal" class="modal fade" id="realtimeModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -49,7 +49,9 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import {
+    mapGetters
+} from "vuex";
 
 export default {
     name: "ModalRealtime",
@@ -62,6 +64,7 @@ export default {
             hourRemove: 0,
         }
     },
+    props: ["modal"],
     computed: {
         ...mapGetters(["getLoginName"])
     },
@@ -73,13 +76,19 @@ export default {
             if (!this.inputDisable) {
                 this.hourRemove = parseInt(this.selection)
             }
-            this.$socket.emit("deleteRealtime", {username: this.checkerName, hour: this.hourRemove})
-            // const resData = await redisRequest.removeTask(this.checkerName, this.hourRemove)
-            // if (resData.length == 0) {
-            //     store.commit("setCurrentData", {})
-            // }
-            // storeController.redisRealtimeStore(resData)
-            // storeController.counterColorStore()
+            const deleteChannel = this.modal
+            var updateChannel
+            if (this.modal == "realtime") {
+                updateChannel = "updateRealtime"
+            } else {
+                updateChannel = "updateRealtimeSolar"
+            }
+            this.$socket.emit("deleteRealtime", {
+                deleteChannel: deleteChannel,
+                updateChannel: updateChannel,
+                username: this.checkerName,
+                hour: this.hourRemove
+            })
         },
         isNaN(x) {
             x = Number(x);

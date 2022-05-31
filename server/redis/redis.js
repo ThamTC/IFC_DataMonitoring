@@ -1,13 +1,49 @@
 const redis = require("redis");
 const client = redis.createClient();
 client.connect()
-const db = require("../models/index")
+const db = require("../models/index");
+const formatPayload = require("../utils/formatPayload");
 const logger = require("../services/logger")("statistic", "db_error")
 
 client.on("error", function (err) {
   console.log("Error " + err);
 });
+function handleTask(data, channel) {
+  if (data.length > 10) {
+    const resData = JSON.parse(data);
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+    const localISOTime = new Date(Date.now() - tzoffset).toISOString()
+    var itemsDelete = [];
+    var itemsDeleteIdx = [];
+    for (let idx = 0; idx < resData.length; idx++) {
+      const timeOut =
+        (new Date(localISOTime)).getTime() - (new Date(resData[idx].createAt)).getTime(); // milisecond
+      if (
+        !resData[idx].isAction && (resData[idx].action ?? "null").toLowerCase() != "null" &&
+        (timeOut > (parseInt(resData[idx].timeout * 60000) ?? 60000 * process.env.REDIS_TIMEOUT) ||
+          resData[idx].total >= (parseInt(resData[idx].count) ?? process.env.REDIS_COUNT_WARNING))
+      ) {
+        // write to DB
+        const record = formatPayload.payloadNoCheck(resData[idx], localISOTime)
+        itemsDelete.push(record);
+        itemsDeleteIdx.push(idx);
+        // StatisticModel.create(record);
+      }
+    }
+    // delete item
+    if (itemsDelete.length > 0) {
+      db.GS_Statistic.bulkCreate(itemsDelete)
+        .then(() => logger.log("info", "Insert DB thanh cong" + ", path:" + __filename + ", func: trackToTask"))
+        .catch((error) => logger.log("error", "Co loi xay ra voi DB: " + error + ", path:" + __filename + ", func: trackToTask"))
 
+      itemsDeleteIdx.forEach((ele) => {
+        resData.splice(ele, 1);
+      });
+      client.set(channel, JSON.stringify(resData));
+      global.io.sockets.emit(channel, resData);
+    }
+  }
+}
 const redisToken = {
   clearData: async (key) => {
     const resData = [];
@@ -56,71 +92,16 @@ const redisToken = {
     const accessTokenFilter = resData.filter(item => item !== accessToken);
     await client.set("accessToken", JSON.stringify(accessTokenFilter))
   },
-  // clearCacheInterval: () => {
-  //   setInterval(async () => {
-  //     const d = new Date();
-  //     const hours = d.getHours();
-  //     if (hours == process.env.REDIS_TIME_CLEAR) {
-  //       await client.set("realtime", "[]");
-  //       await client.set("statistic", "[]");
-  //     }
-  //   }, 1000 * 60 * 60);
-  // },
   trackToTask: () => {
     setInterval(() => {
       client
         .get("statistic")
-        .then(async(data) => {
-          const resData = JSON.parse(data);
-          const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
-          const localISOTime = new Date(Date.now() - tzoffset).toISOString()
-          var itemsDelete = [];
-          var itemsDeleteIdx = [];
-          for (let idx = 0; idx < resData.length; idx++) {
-            const timeOut =
-              (new Date(localISOTime)).getTime() - (new Date(resData[idx].createAt)).getTime(); // milisecond
-            if (
-              !resData[idx].isAction && (resData[idx].action ?? "null").toLowerCase() != "null" &&
-              (timeOut > (parseInt(resData[idx].timeout * 60000) ?? 60000 * process.env.REDIS_TIMEOUT) ||
-                resData[idx].total >= (parseInt(resData[idx].count) ?? process.env.REDIS_COUNT_WARNING))
-            ) {
-              // write to DB
-              const record = {
-                type: resData[idx]?.type,
-                system: resData[idx]?.system,
-                priority: resData[idx]?.priority,
-                parameter: resData[idx]?.parameter,
-                value: resData[idx]?.value,
-                unit: resData[idx]?.unit,
-                status: resData[idx]?.status,
-                action: resData[idx]?.action,
-                total: resData[idx]?.total,
-                contact: resData[idx]?.contact,
-                userCheck: "",
-                userDone: "",
-                doneTime: localISOTime,
-                createdAt: resData[idx].createAt ?? localISOTime,
-                updatedAt: resData[idx].updateAt ?? localISOTime,
-              };
-              itemsDelete.push(record);
-              itemsDeleteIdx.push(idx);
-              // StatisticModel.create(record);
-            }
-          }
-          // delete item
-          if (itemsDelete.length > 0) {
-            console.log("info: ", itemsDelete)
-            db.GS_Statistic.bulkCreate(itemsDelete)
-            .then(() => logger.log("info", "Insert DB thanh cong" + ", path:" + __filename + ", func: trackToTask"))
-            .catch((error) => logger.log("error", "Co loi xay ra voi DB: " + error + ", path:" + __filename + ", func: trackToTask"))
-
-            itemsDeleteIdx.forEach((ele) => {
-              resData.splice(ele, 1);
-            });
-            client.set("statistic", JSON.stringify(resData));
-            global.io.sockets.emit("statistic", resData);
-          }
-          // send to email, skype, telegram,...
+        .then(async (data) => {
+          handleTask(data, "statistic")
+          return client.get("solar_statistic")
+        })
+        .then(async (data) => {
+          handleTask(data, "solar_statistic")
         })
         .catch((err) => console.log(err));
     }, 1000 * 60);

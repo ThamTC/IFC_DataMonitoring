@@ -196,6 +196,30 @@ const authController = {
         } catch (err) {
             return res.status(403).json(err.message)
         }
+    },
+    changePassword: async (req, res) => {
+        const email = req.body.email
+        const oldPassword = req.body.oldPassword
+        const newPassword = req.body.newPassword
+        try {
+            const userFound = await db.GS_UserIFC.findOne({where: {email: email}, raw: true})
+            if (!userFound) {
+                return res.status(401).json(`Not Found accout with email ${{email}}`)
+            }
+            const isPass = await bcrypt.compare(oldPassword, userFound.password)
+            if (!isPass) {
+                return res.status(400).json("Mật khẩu cũ không đúng")
+            }
+            const salt = await bcrypt.genSalt(10)
+            const hashPassword = await bcrypt.hash(newPassword, salt);
+            const user = await db.GS_UserIFC.update({password: hashPassword}, {where: {email: email}})
+            if (!user) {
+                return res.status(400).json("Truy vấn DB thất bại")
+            }
+            return res.status(200).json("Thay đổi mật khẩu thành công")
+        } catch (error) {
+            return res.status(401).json(error.message)
+        }
     }
 }
 module.exports = authController

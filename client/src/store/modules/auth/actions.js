@@ -24,7 +24,7 @@ export default {
             localStorage.clear()
             return res.data;
         } catch (error) {
-            return error.response;
+            throw error;
         }
     },
     updateManagerUsers: ({ commit, state }, user) => {

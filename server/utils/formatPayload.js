@@ -54,6 +54,25 @@ const formatPayload = {
       createdAt: payload.createAt ?? localISOTime,
       updatedAt: payload.updateAt ?? localISOTime,
     }
+  },
+  payloadNoCheck: (payload, localISOTime) => {
+    return {
+      type: payload?.type,
+      system: payload?.system,
+      priority: payload?.priority,
+      parameter: payload?.parameter,
+      value: payload?.value,
+      unit: payload?.unit,
+      status: payload?.status,
+      action: payload?.action,
+      total: payload?.total,
+      contact: payload?.contact,
+      userCheck: "",
+      userDone: "",
+      doneTime: localISOTime,
+      createdAt: payload.createAt ?? localISOTime,
+      updatedAt: payload.updateAt ?? localISOTime,
+    }
   }
 };
 module.exports = formatPayload;

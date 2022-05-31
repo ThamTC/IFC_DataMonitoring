@@ -97,12 +97,16 @@
             </div>
         </div>
     </div>
-    <ModalRealtime></ModalRealtime>
+    <ModalRealtime :modal="modal"></ModalRealtime>
 </main>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import {
+    mapActions,
+    mapGetters,
+    mapMutations
+} from 'vuex'
 import ModalRealtime from '../modals/ModalRealtime.vue'
 import convert from '../../untils/convert'
 
@@ -122,7 +126,8 @@ export default {
             isFilter: false,
             dataFilter: [],
             preFilter: "",
-            routeName: ""
+            routeName: "",
+            modal: ""
         }
     },
     computed: {
@@ -156,12 +161,15 @@ export default {
         document.title = "Realtime"
         this.routeName = this.$route.name
         this.getRealtimeStore(this.routeName).then((data) => {
-                this.setDataRealtime({key: this.routeName, data: data})
-                this.counterColorStore(this.routeName)
-                this.isLoading = false
-            }).catch((err) => {
-                console.log(err)
+            this.setDataRealtime({
+                key: this.routeName,
+                data: data
             })
+            this.counterColorStore(this.routeName)
+            this.isLoading = false
+        }).catch((err) => {
+            console.log(err)
+        })
     },
     mounted() {
         if (this.inputShows.length == 1) {
@@ -224,13 +232,21 @@ export default {
             return message
         },
         removeTask() {
-            var myModal = new bootstrap.Modal(document.getElementById('modal'))
-            if(this.getDataRealtime.length > 0) {
-                myModal.show()
+            var myModal = new bootstrap.Modal(document.getElementById('realtimeModal'))
+            this.modal = this.routeName
+            if (this.routeName == "realtime") {
+                if (this.getDataRealtime.length > 0) {
+                    myModal.show()
+                }
+            } else {
+                if (this.getSolarRealtime.length > 0) {
+                    myModal.show()
+                }
             }
+
         },
         filterPriority(e) {
-            if(this.preFilter !== e.target.id) {
+            if (this.preFilter !== e.target.id) {
                 this.preFilter = e.target.id
                 this.isFilter = true
                 const priority = convert.colorToId(e.target.id)
@@ -241,8 +257,11 @@ export default {
                     resData = this.getSolarRealtime
                 }
                 this.dataFilter = resData.filter(ele => ele.priority == priority)
-                this.setDataRealtimeFilter({key: this.routeName, data: this.dataFilter})
-            }else {
+                this.setDataRealtimeFilter({
+                    key: this.routeName,
+                    data: this.dataFilter
+                })
+            } else {
                 this.isFilter = false
                 this.preFilter = ""
             }

@@ -1,10 +1,9 @@
-import axios from "axios";
-axios.defaults.withCredentials = true;
+import axios from "./api";
 const apiRequest = {
   
   register: async (user) => {
     try {
-      const res = await axios.post("api/auth/register", user);
+      const resData = await axios.post("api/auth/register", user);
       // save to vuex
       return "success";
     } catch (error) {
@@ -14,28 +13,28 @@ const apiRequest = {
   refreshToken: async () => {
     // store.state.user?.accessToken
     try {
-      const res = await axios.post("api/auth/refresh", {
+      const resData = await axios.post("api/auth/refresh", {
         withCredentials: true,
       });
-      localStorage.setItem("user", JSON.stringify(res.data));
-      return res.data;
+      localStorage.setItem("user", JSON.stringify(resData.data));
+      return resData.data;
     } catch (error) {
       return error.response;
     }
   },
   resetPassword: async (email) => {
     try {
-      const res = axios.post("/api/auth/reset", {
+      const resData = axios.post("/api/auth/reset", {
         email: email,
       });
-      return res.data;
+      return resData.data;
     } catch (error) {
       return error.response;
     }
   },
   isLogged: async () => {
     try {
-      const res = await axios.post(
+      const resData = await axios.post(
         "/api/auth/isLogged",
         {
           // user: user,
@@ -44,9 +43,21 @@ const apiRequest = {
           withCredentials: true,
         }
       );
-      return res; // return true or false
+      return resData; // return true or false
     } catch (error) {
       return error.response;
+    }
+  },
+  changePassword: async (email, oldPassword, newPassword) => {
+    try {
+      const resData = await axios.post("/api/auth/changePassword", {
+        email: email,
+        oldPassword: oldPassword,
+        newPassword: newPassword
+      })
+      return resData
+    } catch (error) {
+      throw error
     }
   }
 }

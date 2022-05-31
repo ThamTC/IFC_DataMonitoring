@@ -62,7 +62,7 @@
 <script>
 import Footer from "../Footer.vue";
 import {
-    mapActions, mapGetters, mapMutations
+    mapActions, mapGetters
 } from "vuex";
 import {
     Form,
@@ -114,13 +114,18 @@ export default {
         },
         submit() {
             this.isLogged = false
-            this.signin(this.user).then(resData => {
+            this.signin(this.user)
+            .then(resData => {
                 this.isLogged = true
                 const redirectPath = this.$route.query.redirect
                 this.$router.push({
                     name: redirectPath ?? "home",
                     query: {routeDefault: this.routeDefault()}
                 });
+            })
+            .catch((err) => {
+                this.isLogged = true
+                this.message = err.response.data
             })
         },
     },

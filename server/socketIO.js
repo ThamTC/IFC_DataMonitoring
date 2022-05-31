@@ -42,13 +42,15 @@ const socket = (io) => {
 }
 const socketIO = {
     deleteRealtime: async (data) => {
+        const deleteChannel = data.deleteChannel
+        const updateChannel = data.updateChannel
         const hour = data.hour
         const userDone = data.username
         const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
         const localTime = new Date(Date.now() - tzoffset).getTime();
         try {
             const currentTime = localTime - (hour * 60 * 60 * 1000)
-            const data = await client.get("realtime")
+            const data = await client.get(deleteChannel)
             var resData = JSON.parse(data)
             const dataFilter = resData.filter((ele) => {
                 const timeEle = (new Date(ele.time)).getTime()
@@ -58,11 +60,11 @@ const socketIO = {
                 resData.splice(resData.findIndex((ele) => ele.time == f.time), 1)
             })
             // save to redis                                                                                                                                
-            await client.set("realtime", JSON.stringify(resData))
+            await client.set(deleteChannel, JSON.stringify(resData))
             // emit to other clients
-            global.io.sockets.emit("updateRealtime", { error: null, data: resData })
+            global.io.sockets.emit(updateChannel, { error: null, data: resData })
         } catch (error) {
-            global.io.sockets.emit("updateRealtime", { error: error, data: [] })
+            global.io.sockets.emit(updateChannel, { error: error, data: [] })
         }
     },
     doneSelectionTask: async (data) => {
