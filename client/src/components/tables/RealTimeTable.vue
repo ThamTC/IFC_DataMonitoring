@@ -161,6 +161,9 @@ export default {
         document.title = "Realtime"
         this.routeName = this.$route.name
         this.getRealtimeStore(this.routeName).then((data) => {
+            if (data == "") {
+                data = []
+            }
             this.setDataRealtime({
                 key: this.routeName,
                 data: data

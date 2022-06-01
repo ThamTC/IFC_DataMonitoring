@@ -1,6 +1,7 @@
 
 const db = require("../models/index")
 const logger = require("../services/logger")("statistic", "db_error")
+const fs = require("fs")
 
 const dbController = {
   getAllUsers: async (req, res) => {
@@ -45,7 +46,7 @@ const dbController = {
   },
   getAllRoles: async (req, res) => {
     try {
-      const resData = await db.GS_RolePermission.findAll({raw: true})
+      const resData = await db.GS_RolePermission.findAll({ raw: true })
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
@@ -53,7 +54,7 @@ const dbController = {
   },
   delete: async (req, res) => {
     try {
-      const resData = await db.GS_UserIFC.destroy({where: {email: req.body.user.email}})
+      const resData = await db.GS_UserIFC.destroy({ where: { email: req.body.user.email } })
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
@@ -61,20 +62,20 @@ const dbController = {
   },
   getAllPermissions: async (req, res) => {
     try {
-      const resData = await db.Permissions.findAll({raw: true})
+      const resData = await db.Permissions.findAll({ raw: true })
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
     }
   },
-  createPermission: async(req, res) => {
+  createPermission: async (req, res) => {
     const permissioName = req.body.name
     try {
-      const found = await db.Permissions.findOne({where: {name: permissioName}, raw: true})
+      const found = await db.Permissions.findOne({ where: { name: permissioName }, raw: true })
       if (found) {
         return res.status(201).json("Permission is existed")
       }
-      const created = await db.Permissions.create({name: permissioName})
+      const created = await db.Permissions.create({ name: permissioName })
       if (!created) {
         return res.status(404).json('Có lỗi trong quá trình tạo tài khoản, vui lòng thử lại.');
       }
@@ -87,7 +88,7 @@ const dbController = {
     const roleName = req.body.roleName
     const permission = req.body.permission
     try {
-      const resData = await db.GS_RolePermission.create({name: roleName, permission: permission})
+      const resData = await db.GS_RolePermission.create({ name: roleName, permission: permission })
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
@@ -96,7 +97,7 @@ const dbController = {
   deleteRole: async (req, res) => {
     const id = req.body.id
     try {
-      const resData = await db.GS_RolePermission.destroy({where: {id: id}})
+      const resData = await db.GS_RolePermission.destroy({ where: { id: id } })
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
@@ -106,8 +107,31 @@ const dbController = {
     const id = req.body.id
     const data = req.body.data
     try {
-      const resData = await db.GS_RolePermission.update({permission: data},{where: {id: id}})
+      const resData = await db.GS_RolePermission.update({ permission: data }, { where: { id: id } })
       return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
+  },
+  requestRole: async (req, res) => {
+    try {
+      return res.status(200).json("Yêu cầu đã được gử đi, vui lòng chờ xác nhận phía Management")
+    } catch (error) {
+      return res.status(400).json()
+    }
+  },
+  uploadImages: async (req, res) => {
+    const baseImage = req.body.image
+    const fileName = req.body.fileName
+    try {
+      const ext = baseImage.substring(baseImage.indexOf("/") + 1, baseImage.indexOf(";base64"));
+      const fileType = baseImage.substring("data:".length, baseImage.indexOf("/"));
+      //Forming regex to extract base64 data of file.
+      const regex = new RegExp(`^data:${fileType}\/${ext};base64,`, 'gi');
+      //Extract base64 data.
+      const base64Data = baseImage.replace(regex, "");
+      fs.writeFileSync(__dirname + `/../public/assets/images/${fileName}.${ext}`, base64Data, 'base64')
+      return res.status(200).json("upload success")
     } catch (error) {
       return res.status(400).json(error)
     }

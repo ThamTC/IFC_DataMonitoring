@@ -1,6 +1,5 @@
-import axios from 'axios'
+import axios from '../../../apis/api'
 import convert from '../../../untils/convert'
-axios.defaults.withCredentials = true
 export default {
     getRealtimeStore: async ({ commit, state }, key) => {
         try {

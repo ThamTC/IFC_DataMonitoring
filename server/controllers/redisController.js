@@ -23,9 +23,12 @@ const redisController = {
   indexStore: (req, res) => {
     const key = req.body.key;
     try {
-      client.get(key).then((data) => res.status(200).send(JSON.parse(data)));
+      client.get(key)
+      .then((data) => {
+        return res.status(200).send(JSON.parse(data))
+      });
     } catch (error) {
-      return error;
+      return res.status(400).json(error);
     }
   },
   updateStore: (req, res) => {

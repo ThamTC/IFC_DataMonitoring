@@ -1,6 +1,6 @@
 import General from '../components/accountsetting/General.vue'
 import ChangePassword from '../components/accountsetting/ChangePassword.vue'
-import Info from '../components/accountsetting/Info.vue'
+import RequestRole from '../components/accountsetting/RequestRole.vue'
 
 export default [
     {
@@ -14,8 +14,8 @@ export default [
         component: ChangePassword
     },
     {
-        path: "info",
-        name: "info",
-        component: Info
+        path: "request_role",
+        name: "request_role",
+        component: RequestRole
     },
 ]

@@ -9,7 +9,7 @@
         <nav class="sb-sidenav-menu-nested nav">
             <router-link tag="a" class="nav-link" :to="{name: 'general'}" active-class="active" exact>General</router-link>
             <router-link tag="a" class="nav-link" :to="{name: 'change_password'}" active-class="active">Change password</router-link>
-            <router-link tag="a" class="nav-link" :to="{name: 'info'}" active-class="active">Info</router-link>
+            <router-link v-if="getUser.role !== 'manager'" tag="a" class="nav-link" :to="{name: 'request_role'}" active-class="active">Request Role</router-link>
             <!-- <a class="nav-link" href="#">Social links</a>
             <a class="nav-link" href="#">Connections</a>
             <a class="nav-link" href="#">Notifications</a> -->
@@ -19,8 +19,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     name: "Account",
+    computed: {
+        ...mapGetters(["getUser"]),
+    },
     methods: {
         
     },

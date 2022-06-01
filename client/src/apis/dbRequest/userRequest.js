@@ -1,5 +1,4 @@
-import axios from 'axios'
-axios.defaults.withCredentials = true;
+import axios from '../api'
 
 export default {
     getAllUsers: async () => {

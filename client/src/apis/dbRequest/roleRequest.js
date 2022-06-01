@@ -1,5 +1,4 @@
-import axios from 'axios'
-axios.defaults.withCredentials = true;
+import axios from '../api'
 
 export default {
     getAllRoles: async () => {
@@ -36,6 +35,18 @@ export default {
             const resData = await axios.post("api/db/role/update", {
                 id: id,
                 data: data
+            })
+            return resData
+        } catch (error) {
+            throw error
+        }
+    },
+    requestRole: async (email, roleName, content) => {
+        try {
+            const resData = await axios.post("api/db/role/request_role", {
+                email: email,
+                roleName: roleName,
+                content: content
             })
             return resData
         } catch (error) {

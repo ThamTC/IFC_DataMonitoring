@@ -4,12 +4,11 @@
         <div class="card p-3">
 
             <div class="d-flex align-items-center">
-                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="d-block ui-w-80">
+                <img :src="src" alt="Avatar" class="d-block ui-w-80">
                 <div class="media-body mx-3">
-                    <label class="btn btn-outline-primary">
-                        Upload new photo
-                        <input type="file" class="account-settings-fileinput">
-                    </label> &nbsp;
+                    <input type="file" class="account-settings-fileinput" @change="onFileSelected" ref="fileInput">
+                    <button @click="$refs.fileInput.click()" type="button" class="btn btn-primary">Pick File</button>
+
                     <button type="button" class="btn btn-default md-btn-flat">Reset</button>
 
                     <div class="text-light small mt-1">Allowed JPG, GIF or PNG. Max size of 800K</div>
@@ -44,8 +43,42 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import axios from '../../apis/api'
 export default {
-    name: "General"
+    name: "General",
+    data() {
+        return {
+            selectedFile: null,
+            src: null,
+            user: null,
+            fileName: null
+        }
+    },
+    computed: {
+        ...mapGetters(["getUser"]),
+    },
+    created() {
+        this.user = this.getUser
+        this.fileName = this.user.username
+        this.src = `/assets/images/${this.fileName}.png`
+    },
+    methods: {
+        onFileSelected(event) {
+            let reader = new FileReader()
+            reader.readAsDataURL(event.target.files[0])
+            reader.onload = (e) => {
+                axios.post("api/db/upload/images", {
+                    image: this.src,
+                    fileName: this.fileName
+                })
+                .then(res => {
+                    this.src = e.target.result
+                })
+                .catch(err => console.log(err))
+            }
+        }
+    }
 }
 </script>
 

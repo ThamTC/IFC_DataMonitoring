@@ -9,7 +9,9 @@ router.get("/role/index", dbController.getAllRoles)
 router.post("/role/create", dbController.createRole)
 router.post("/role/delete", dbController.deleteRole)
 router.post("/role/update", dbController.updateRole)
+router.post("/role/request_role", dbController.requestRole)
 router.get("/permissions/index", dbController.getAllPermissions)
 router.post("/permission/create", dbController.createPermission)
+router.post("/upload/images", dbController.uploadImages)
 
 module.exports = router
