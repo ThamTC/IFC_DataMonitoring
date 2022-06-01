@@ -74,3 +74,7 @@ module.exports = {
     },
 };
 
+// start nodejs using pm2
+cd ~/project_path/server/
+run: pm2 start index.js --name myapp --watch
+

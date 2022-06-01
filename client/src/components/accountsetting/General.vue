@@ -69,7 +69,7 @@ export default {
             reader.readAsDataURL(event.target.files[0])
             reader.onload = (e) => {
                 axios.post("api/db/upload/images", {
-                    image: this.src,
+                    image: e.target.result,
                     fileName: this.fileName
                 })
                 .then(res => {
