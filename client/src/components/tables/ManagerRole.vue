@@ -10,8 +10,8 @@
             <!-- <div class="card-header">
             <i class="fas fa-table me-1"></i> DataTable Example
             </div> -->
-
-            <div class="card-body">
+            <p v-if="isError" class="text-center">Đã có lỗi xảy ra: {{error}}. Vui lòng liên hệ quản trị viên!</p>
+            <div v-else class="card-body">
                 <div class=" dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns ">
                     <div class="dataTable-top">
                     </div>
@@ -71,7 +71,9 @@ export default {
             isLoading: true,
             modal: {
                 name: "",
-                data: {}
+                data: {},
+                isError: false,
+                error: null
             },
             permissionDetails: []
         }
@@ -94,7 +96,11 @@ export default {
             .then((data) => {
                 this.setPermissions(data.data)
             })
-            .catch((error) => console.log(error))
+            .catch((err) => {
+                this.isLoading = false
+                this.isError = true
+                this.error = err.message
+            })
     },
     methods: {
         ...mapMutations(["setPermissions", "setRoles", "setPermissionDetails"]),

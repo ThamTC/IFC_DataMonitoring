@@ -7,7 +7,7 @@
                 <img :src="src" alt="Avatar" class="d-block ui-w-80">
                 <div class="media-body mx-3">
                     <input type="file" class="account-settings-fileinput" @change="onFileSelected" ref="fileInput">
-                    <button @click="$refs.fileInput.click()" type="button" class="btn btn-primary">Pick File</button>
+                    <button @click="$refs.fileInput.click()" type="button" class="btn btn-primary me-3">Pick File</button>
 
                     <button type="button" class="btn btn-default md-btn-flat">Reset</button>
 

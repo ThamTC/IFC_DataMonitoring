@@ -7,7 +7,8 @@
             </div>
         </div>
         <div class="card mb-4" v-else>
-            <div class="card-body">
+            <p v-if="isError" class="text-center">Đã có lỗi xảy ra: {{error}}. Vui lòng liên hệ quản trị viên!</p>
+            <div v-else class="card-body">
                 <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
                     <div class="dataTable-top"></div>
                     <div class="table-wrapper">
@@ -70,7 +71,9 @@ export default {
         return {
             isLoading: true,
             checkerName: "",
-            routeName: ""
+            routeName: "",
+            isError: false,
+            error: null
         };
     },
     mounted() {
@@ -99,7 +102,9 @@ export default {
         this.getStatisticStore(this.routeName).then((data) => {
                 this.isLoading = false
             }).catch((err) => {
-                console.log(err)
+                this.isLoading = false
+                this.isError = true
+                this.error = err.message
             })
     },
     methods: {

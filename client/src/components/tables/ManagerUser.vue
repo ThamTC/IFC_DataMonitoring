@@ -10,8 +10,8 @@
             <!-- <div class="card-header">
             <i class="fas fa-table me-1"></i> DataTable Example
         </div> -->
-
-            <div class="card-body">
+            <p v-if="isError" class="text-center">Đã có lỗi xảy ra: {{error}}. Vui lòng liên hệ quản trị viên!</p>
+            <div class="card-body" v-else>
                 <div class=" dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns ">
                     <div class="dataTable-top">
                         <!-- <div class="dataTable-dropdown">
@@ -82,7 +82,9 @@ export default {
         return {
             isLoading: true,
             modal: "",
-            roles: []
+            roles: [],
+            isError: false,
+            error: null
         };
     },
     computed: {
@@ -103,7 +105,9 @@ export default {
                 this.setRoles(this.roles)
             })
             .catch((err) => {
-                console.log(err)
+                this.isLoading = false
+                this.isError = true
+                this.error = err.message
             })
     },
     mounted() {
