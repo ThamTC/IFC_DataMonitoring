@@ -45,9 +45,15 @@ const authController = {
             // if (!user) {
             //     return res.status(404).json("Email không tồn tại")
             // }
-            const rolePermission = await db.GS_RolePermission.findOne({ where: { name: user.role }, raw: true }) ?? []
+            const rolePermission = await db.GS_RolePermission.findOne({ where: { userId: user.id }, raw: true }) ?? []
+            // if (rolePermission) {
+                
+                const permissions = JSON.parse(rolePermission?.permission ?? "[]")
+            // }else{
+            //     const Permissions = []
+            // }
             // const rolePermission = await RolePermissionModel.findOne({name: user.role}).exec() ?? []
-            const permissions = JSON.parse(rolePermission.permission)
+            
             const isPass = await bcrypt.compare(req.body.password, user.password)
             if (!isPass) {
                 logger.log("info", "Sai mật khẩu")
@@ -81,7 +87,7 @@ const authController = {
         try {
             const username = req.body.username
             const email = req.body.email
-            
+
             //check exist email on cloud
             const isEmailExist = await emailExistence.check(email)
             if (!isEmailExist) {
@@ -202,9 +208,9 @@ const authController = {
         const oldPassword = req.body.oldPassword
         const newPassword = req.body.newPassword
         try {
-            const userFound = await db.GS_UserIFC.findOne({where: {email: email}, raw: true})
+            const userFound = await db.GS_UserIFC.findOne({ where: { email: email }, raw: true })
             if (!userFound) {
-                return res.status(401).json(`Not Found accout with email ${{email}}`)
+                return res.status(401).json(`Not Found accout with email ${{ email }}`)
             }
             const isPass = await bcrypt.compare(oldPassword, userFound.password)
             if (!isPass) {
@@ -212,7 +218,7 @@ const authController = {
             }
             const salt = await bcrypt.genSalt(10)
             const hashPassword = await bcrypt.hash(newPassword, salt);
-            const user = await db.GS_UserIFC.update({password: hashPassword}, {where: {email: email}})
+            const user = await db.GS_UserIFC.update({ password: hashPassword }, { where: { email: email } })
             if (!user) {
                 return res.status(400).json("Truy vấn DB thất bại")
             }

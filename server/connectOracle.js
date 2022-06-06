@@ -1,17 +1,22 @@
 require("dotenv").config();
 const { connectDB, sequelize } = require("./config/mssqlConnect");
 const db = require("./models/index.js");
-
+const payload = [{ name: 'realtime', value: 0}, {name: 'statistic', value: 0}, {name: 'solar_realtime', value: 0}, {name: 'solar_statistic', value: 0}, {name: 'managerUser', value: 0}, {name: 'managerPermission', value: 0 }]
 connectDB()
   .then(async (data) => {
     if (data?.success) {
       console.log(
-        await db.GS_RolePermission.destroy(
+        await db.GS_RolePermission.create(
           {
-            where: {id : [1,2,3]}
+            userId: 6,
+            permission: JSON.stringify(payload)
           },
-          
         )
+        // await db.GS_RolePermission.destroy(
+        //   {
+        //     where: {id : 3}
+        //   },
+        // )
       );
     } else {
       console.log(data.error);

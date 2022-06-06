@@ -39,18 +39,18 @@
             <button v-if="getPermissions.length > 0" type="button" class="btn btn-primary" @click="addPermission">Add Permission</button>
         </div>
     </div>
-    <modal-permission aria-modal="model"/>
+    <modal-setting-permission aria-modal="model"/>
 </main>
 </template>
 
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import dbRequest from '../../apis/dbRequest'
-import ModalPermission from '../modals/ModalPermission.vue'
+import ModalSettingPermission from '../modals/ModalSettingPermission.vue'
 export default 
   {
     name: "ManagerPermission",
-    components: { ModalPermission },
+    components: { ModalSettingPermission },
     data() {
         return {
             isLoading: true,

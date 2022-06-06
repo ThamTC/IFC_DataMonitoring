@@ -36,9 +36,9 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Date Created</th>
                                     <th>Role</th>
                                     <th>Status</th>
+                                    <th>Date Created</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -46,11 +46,12 @@
                                 <tr v-for="(user, idx) in getUsers" :key="idx">
                                     <td>{{ idx+1 }}</td>
                                     <td>{{ user.username }}</td>
-                                    <td>{{ user.createdAt }}</td>
                                     <td>{{ user.role }}</td>
                                     <td><span class="status text-success">&bull;</span> Active</td>
+                                    <td>{{ user.createdAt }}</td>
                                     <td>
-                                        <a href="#" :class='"settings " + isDisabled(user.username)' title="Settings" data-toggle="tooltip"><i :id="idx" @click="settingUser" class="fas fa-cog"></i></a>
+                                        <a href="#" :class='"settings " + isDisabled(user.username)' title="Setting User" data-toggle="tooltip"><i :id="idx" @click="settingRole" class="fas fa-cog"></i></a>
+                                        <a href="#" :class='"ms-2 settings " + isDisabled(user.username)' title="Setting Permission" data-toggle="tooltip"><i :id="idx" @click="settingPermission" class="fas fa-cog"></i></a>
                                         <a href="#" :class='"ms-2 text-danger delete " + isDisabled(user.username) ' title="Delete" data-toggle="tooltip"><i :id="idx" @click="deleteUser" class="fas fa-user-times"></i></a>
                                     </td>
                                 </tr>
@@ -61,8 +62,9 @@
             </div>
         </div>
     </div>
-    <ModalSettingUser :modal="modal"></ModalSettingUser>
-    <ModalDeleteUser :modal="modal"></ModalDeleteUser>
+    <modal-setting-role :modal="modal" />
+    <!-- <ModalDeleteUser :modal="modal"></ModalDeleteUser> -->
+    <modal-setting-permission :modal="modal" />
 </main>
 </template>
 
@@ -70,39 +72,59 @@
 import dbRequest from '../../apis/dbRequest'
 import ModalSettingUser from '../modals/ModalSettingUser.vue'
 import ModalDeleteUser from '../modals/ModalDeleteUser.vue'
-import { mapGetters, mapMutations } from 'vuex';
+import {
+  mapActions,
+    mapGetters,
+    mapMutations
+} from 'vuex';
+import ModalSettingPermission from '../modals/ModalSettingPermission.vue';
+import ModalSettingRole from '../modals/ModalSettingRole.vue';
 
 export default {
     name: "ManagerUsers",
     components: {
         ModalSettingUser,
-        ModalDeleteUser
+        ModalDeleteUser,
+        ModalSettingPermission,
+        ModalSettingRole
     },
     data() {
         return {
             isLoading: true,
-            modal: "",
+            modal: {
+                name: null,
+                data: null
+            },
             roles: [],
             isError: false,
             error: null
         };
     },
     computed: {
-        ...mapGetters({getUsers: "getManagerUsers", users: "getManagerUsers", userAuth: "getUser"}),
+        ...mapGetters({
+            getUsers: "getManagerUsers",
+            users: "getManagerUsers",
+            userAuth: "getUser",
+            getRoles: "getRoles"
+        }),
     },
     created() {
         document.title = "User Manager"
         // get all user from DB
         dbRequest.getAllUsers().then((data) => {
                 this.setManagerUsers(data.data)
-                this.isLoading = false
                 return dbRequest.getAllRoles()
             })
             .then((data) => {
-                data.data.forEach(ele => {
-                    this.roles.push(ele.name)
+                console.log(data)
+                this.isLoading = false
+                var result = [];
+                data.data.forEach(function (item) {
+                    if (result.indexOf(item.role) < 0) {
+                        result.push(item.role);
+                    }
                 });
-                this.setRoles(this.roles)
+                this.setRoles(result)
             })
             .catch((err) => {
                 this.isLoading = false
@@ -110,27 +132,52 @@ export default {
                 this.error = err.message
             })
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
         ...mapMutations(["setManagerUserInfo", "setManagerUsers", "setRoles"]),
+        ...mapActions(["getPermissionOfUser"]),
         isDisabled(name) {
             return name === this.userAuth.username ? "" : (name === "thamtc.ifc" ? "disabled" : "")
         },
-        settingUser(e) {
+        settingRole(e) {
+            const users = this.getUsers
+            const userId = users[e.target.id].id
             const id = e.target.id
-            const users = this.users
-            var modalUsername = document.getElementById("inputUsernameModal")
-            modalUsername.value = users[id].username
-            var modalSelection = document.querySelectorAll(".role")
-            const role = this.roles.findIndex((ele) => ele == users[id].role)
-            modalSelection[role].setAttribute("selected", "selected")
-            var myModal = new bootstrap.Modal(document.getElementById('settingUserModal'))
-            this.setManagerUserInfo(users[id])
-            this.modal = myModal
+            const user = this.userAuth
+            const roleName = this.getUsers[id].role
+            var myModal = new bootstrap.Modal(document.getElementById('settingRoleModal'))
+            this.modal.name = myModal
+            this.modal.data = {
+                userId: userId,
+                eleId: id,
+                username: user.username,
+                roleName: roleName,
+                roleTotal: this.getRoles
+            }
             // if(store.getters.getDataRealtime.length > 0) {
             myModal.show()
-            // }
+        },
+        settingPermission(e) {
+            const users = this.getUsers
+            const userId = users[e.target.id].id
+            var myModal = new bootstrap.Modal(document.getElementById('settingPermissionModal'))
+            this.modal.name = myModal
+            this.getPermissionOfUser(userId)
+            .then(res => {
+                
+                var permission
+                if (res.data === null) {
+                    permission = this.userAuth.permissions
+                } else {
+                    permission = JSON.parse(res.data.permission)
+                }
+                this.modal.data = {
+                    userId: userId,
+                    permission: permission
+                }
+                myModal.show()
+            })
+            .catch()
         },
         deleteUser(e) {
             const id = e.target.id

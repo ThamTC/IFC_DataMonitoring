@@ -20,7 +20,7 @@ export default {
             throw error
         }
     },
-    deleteRole: async (id) => {
+    delete: async (id) => {
         try {
             const resData = await axios.post("api/db/role/delete", {
                 id: id

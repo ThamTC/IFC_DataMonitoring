@@ -120,12 +120,12 @@ export default {
                 const redirectPath = this.$route.query.redirect
                 this.$router.push({
                     name: redirectPath ?? "home",
-                    query: {routeDefault: this.routeDefault()}
+                    // query: {routeDefault: this.routeDefault()}
                 });
             })
             .catch((err) => {
                 this.isLogged = true
-                this.message = err.response.data
+                this.message = err.response
             })
         },
     },

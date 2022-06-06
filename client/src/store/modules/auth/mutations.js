@@ -35,5 +35,8 @@ export default {
     },
     insertPermission(state, permission) {
         state.permissions.push(permission)
-    }
+    },
+    updatePermissionOfUser: (state, permission) => {
+        state.user.permissions = permission
+    },
 }

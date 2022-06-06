@@ -11,6 +11,7 @@ const dbController = {
       // const resData = await UserModel.find().exec();
       const dataMap = users.map((item) => {
         return {
+          id: item.id,
           username: item.username,
           email: item.email,
           role: item.role,
@@ -28,7 +29,6 @@ const dbController = {
       const username = req.body.user.username
       const role = req.body.user.role
       const userUpdated = await db.GS_UserIFC.update({ username: username, role: role }, { where: { email: email } })
-      console.log("userUpdated: ", userUpdated)
       if (userUpdated) {
         logger.log("info", "update user thanh cong")
         return res.status(200).json({
@@ -44,9 +44,18 @@ const dbController = {
       return res.status(400).json(error)
     }
   },
+  getRole: async (req, res) => {
+    const user = req.params
+    try {
+      const resData = await db.GS_RolePermission.findOne({where: {userId: user.id}, raw: true})
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
+  },
   getAllRoles: async (req, res) => {
     try {
-      const resData = await db.GS_RolePermission.findAll({ raw: true })
+      const resData = await db.GS_UserIFC.findAll({attributes: ["role"]})
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
@@ -84,6 +93,21 @@ const dbController = {
       return res.status(400).json(error)
     }
   },
+  updatePermission: async (req, res) => {
+    const userId = req.body.userId
+    const permission = req.body.permission
+    try {
+      const found  =await db.GS_RolePermission.findOne({where: {userId: userId}})
+      if (found) {
+        const resData = await db.GS_RolePermission.update({permission: permission}, {where: {userId: userId}})
+        return res.status(200).json(resData)
+      }
+      const resData = await db.GS_RolePermission.create({userId: userId, permission: permission})
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
+  },
   createRole: async (req, res) => {
     const roleName = req.body.roleName
     const permission = req.body.permission
@@ -94,10 +118,10 @@ const dbController = {
       return res.status(400).json(error)
     }
   },
-  deleteRole: async (req, res) => {
+  deletePermission: async (req, res) => {
     const id = req.body.id
     try {
-      const resData = await db.GS_RolePermission.destroy({ where: { id: id } })
+      const resData = await db.Permissions.destroy({ where: { id: id } })
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
@@ -107,7 +131,7 @@ const dbController = {
     const id = req.body.id
     const data = req.body.data
     try {
-      const resData = await db.GS_RolePermission.update({ permission: data }, { where: { id: id } })
+      const resData = await db.GS_UserIFC.update({ role: data }, { where: { id: id } })
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)

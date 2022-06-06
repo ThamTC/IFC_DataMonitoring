@@ -9,24 +9,14 @@
             <div class="modal-body">
                 <div class="row justify-content-center mb-2">
                     <div class="col-md-6">
-                        <span>Role Name</span>
-                        <input @input="clearAlert" class="form-control" id="inputRolenameModal" type="text" :value="getRoleName" disabled/>
-                    </div>
-                </div>
-                <div class="row" v-for="(permission, idx) in getPermissions" :key="idx">
-                    <div class="col-md-6">
-                        <span>Permission Name</span>
-                        <input disabled :value="permission.name" class="form-control" id="inputPermissionnameModal" type="text" />
+                        <span>User Name</span>
+                        <input disabled :value="getUserName" class="form-control" id="inputPermissionnameModal" type="text" />
                     </div>
                     <div class="col-md-6">
-                        <!-- <div class="form-floating mb-3"> -->
-                        <span>Select permission</span>
-                        <select :id="permission.name" class="form-select" name="setting_select" @change="clearAlert">
-                            <option value="0" :selected="permission.value == 0">Null(default)</option>
-                            <option value="1" :selected="permission.value == 1">Read</option>
-                            <option value="2" :selected="permission.value == 2">Write</option>
+                        <span>Select Role</span>
+                        <select class="form-select" id="setting_select" @change="clearAlert">
+                            <option v-for="(role, idx) in getTotalRoles" :key="idx" :selected="role == getRoleName">{{role}}</option>
                         </select>
-                        <!-- </div> -->
                     </div>
                 </div>
             </div>
@@ -61,21 +51,21 @@ export default {
             message: "",
             permissions: [],
             rolename: "",
-            permissionName: ""
+            permissionName: "",
+            selectedRole: null
         }
     },
     props: ["modal"],
     computed: {
+        getUserName() {
+            return this.modal.data?.username ?? ""
+        },
+        getTotalRoles() {
+            return this.modal.data?.roleTotal ?? []
+        },
         getRoleName() {
-            return this.modal.data?.roleEle?.name ?? ""
+            return this.modal.data?.roleName ?? ""
         },
-        getPermissions() {
-            const permissions = JSON.parse(this.modal.data?.roleEle?.permission ?? "[]")
-            return permissions
-        },
-        getSelected() {
-
-        }
     },
     methods: {
         ...mapMutations(["setPermissionDetails"]),
@@ -85,16 +75,14 @@ export default {
         },
         updateRole() {
             this.isUpdated = false
-            const roleId = this.modal.data.roleEle.id
-            const roleName = this.modal.data.roleEle.name
-            document.getElementsByName("setting_select").forEach(ele => {
-                this.permissions.push({name: ele.id, value: ele.value})
-            })
-            const permissionStr = JSON.stringify(this.permissions)
-            dbRequest.updateRole(roleId, permissionStr)
+            const eleId = this.modal.data.eleId
+            const userId = this.modal.data.userId
+            const selectionEle = document.getElementById("setting_select")
+            const roleStr = JSON.stringify(selectionEle.value)
+            dbRequest.updateRole(userId, selectionEle.value)
             .then(() => {
-                this.updateRoles({id: roleId, name: roleName, permission: permissionStr})
-                this.updatePermissionDetails({name: roleName, data: this.permissions})
+                this.updateRoles({eleId: eleId, roleName: selectionEle.value})
+                // this.updatePermissionDetails({name: roleName, data: this.permissions})
                 this.permissions = []
                 this.isMessage = true
                 this.type = "success"

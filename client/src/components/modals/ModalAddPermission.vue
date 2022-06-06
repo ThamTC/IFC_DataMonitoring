@@ -58,11 +58,12 @@ export default {
         addPermission() {
             const permissionName = this.permissionName
             dbRequest.createPermission(permissionName)
-                .then(() => {
+                .then((data) => {
+                    console.log(data)
                     this.isMessage = true
                     this.type = "success"
                     this.message = "Thêm Permission thành công"
-                    this.insertPermission(permissionName)
+                    this.insertPermission(data)
                     this.isDisabled = true
                 })
                 .catch((error) => {

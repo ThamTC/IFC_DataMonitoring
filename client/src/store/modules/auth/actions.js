@@ -49,13 +49,10 @@ export default {
         commit("setRoles", roleFiltered)
     },
     updateRoles({commit, state}, role) {
-        const roles = state.roles
-        roles.forEach((ele, idx) => {
-            if (ele.id == role.id) {
-                roles[idx] = role
-            }
-        });
-        commit("setRoles", roles)
+        const users = state.managerUsers
+        users[role.eleId]["role"] = role.roleName
+        console.log(role.roleName)
+        // commit("setRoles", roles)
     },
     updatePermissionDetails({commit, state}, permission) {
         const roles = state.roles
@@ -71,5 +68,13 @@ export default {
         const permissionDetails = state.permissionDetails
         permissionDetails.push(permission)
         commit("setPermissionDetails", permissionDetails)
+    },
+    getPermissionOfUser: async({commit, state}, id) => {
+        try {
+            const resData = await axios.get(`api/db/role/${id}`)
+            return resData
+        } catch (error) {
+            throw error
+        }
     }
 };

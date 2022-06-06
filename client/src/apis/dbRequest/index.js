@@ -12,6 +12,7 @@ const dbRequest = {
     deleteRole: roleRequest.deleteRole,
     updateRole: roleRequest.updateRole,
     getAllPermissions: permissionRequest.getAllPermissions,
-    createPermission: permissionRequest.createPermission
+    createPermission: permissionRequest.createPermission,
+    updatePermission: permissionRequest.updatePermission,
 }
 export default dbRequest
