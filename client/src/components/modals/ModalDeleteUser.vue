@@ -32,13 +32,12 @@
 
 <script>
 import dbRequest from '../../apis/dbRequest'
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 
 export default {
     name: "ModalDeleteUser",
     data() {
         return {
-            user: {},
             isUpdated: true,
             isMessage: false,
             message: "",
@@ -46,12 +45,6 @@ export default {
             password: "",
             isDisabled: false
         }
-    },
-    computed: {
-        ...mapGetters(["getManagerUserInfo"])
-    },
-    updated() {
-        this.user = this.getManagerUserInfo
     },
     props: ["modal"],
     methods: {
@@ -64,13 +57,13 @@ export default {
             const password = this.password
             if (password === process.env.VUE_APP_CONFIR_PWD_DEL_USER ?? "") {
                 // xoa user neu mat khau dung
-                dbRequest.deleteUser(this.user)
+                dbRequest.deleteUser(this.modal.data.userId)
                 .then(() => {
                     this.isMessage = true
                     this.type = "success"
                     this.message = "Xóa User thành công"
                     // update users in managerStore
-                    this.deleteUserFromManager(this.user)
+                    this.deleteUserFromManager(this.modal.data.eleId)
                     this.isDisabled = true
                 })
                 .catch(() => {

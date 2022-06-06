@@ -63,7 +63,7 @@
         </div>
     </div>
     <modal-setting-role :modal="modal" />
-    <!-- <ModalDeleteUser :modal="modal"></ModalDeleteUser> -->
+    <modal-delete-user :modal="modal" />
     <modal-setting-permission :modal="modal" />
 </main>
 </template>
@@ -87,7 +87,7 @@ export default {
         ModalDeleteUser,
         ModalSettingPermission,
         ModalSettingRole
-    },
+        },
     data() {
         return {
             isLoading: true,
@@ -183,8 +183,8 @@ export default {
             const id = e.target.id
             const users = this.users
             var myModal = new bootstrap.Modal(document.getElementById('deleteUserModal'))
-            this.setManagerUserInfo(users[id])
-            this.modal = myModal
+            this.modal.name = myModal
+            this.modal.data = {userId: users[id].id, eleId: id}
             myModal.show()
         }
     },
