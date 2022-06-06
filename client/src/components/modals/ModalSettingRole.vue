@@ -15,7 +15,7 @@
                     <div class="col-md-6">
                         <span>Select Role</span>
                         <select class="form-select" id="setting_select" @change="clearAlert">
-                            <option v-for="(role, idx) in getTotalRoles" :key="idx" :selected="role == getRoleName">{{role}}</option>
+                            <option v-for="(role, idx) in getTotalRoles" :key="idx" :selected="role.name == getRoleName">{{role.name}}</option>
                         </select>
                     </div>
                 </div>

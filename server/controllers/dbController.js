@@ -55,7 +55,7 @@ const dbController = {
   },
   getAllRoles: async (req, res) => {
     try {
-      const resData = await db.GS_UserIFC.findAll({attributes: ["role"]})
+      const resData = await db.GS_Roles.findAll()
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
@@ -110,9 +110,8 @@ const dbController = {
   },
   createRole: async (req, res) => {
     const roleName = req.body.roleName
-    const permission = req.body.permission
     try {
-      const resData = await db.GS_RolePermission.create({ name: roleName, permission: permission })
+      const resData = await db.GS_Roles.create({ name: roleName})
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
@@ -132,6 +131,15 @@ const dbController = {
     const data = req.body.data
     try {
       const resData = await db.GS_UserIFC.update({ role: data }, { where: { id: id } })
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
+  },
+  deleteRole: async (req, res) => {
+    const id = req.body.id
+    try {
+      const resData = await db.GS_Roles.destroy({where: {id: id}})
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)

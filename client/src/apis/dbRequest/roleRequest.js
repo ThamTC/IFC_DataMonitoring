@@ -9,18 +9,17 @@ export default {
             throw error;
         }
     },
-    createRole: async (roleName, permission) => {
+    createRole: async (roleName) => {
         try {
             const resData = await axios.post("/api/db/role/create", {
-                roleName: roleName,
-                permission: permission
+                roleName: roleName
             })
             return resData
         } catch (error) {
             throw error
         }
     },
-    delete: async (id) => {
+    deleteRole: async (id) => {
         try {
             const resData = await axios.post("api/db/role/delete", {
                 id: id

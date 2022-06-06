@@ -13,22 +13,6 @@
                         <input @input="clearAlert" placeholder="exp: user" class="form-control" id="inputRolenameModal" type="text" v-model="rolename" />
                     </div>
                 </div>
-                <div class="row" v-for="(permission, idx) in getPermissions" :key="idx">
-                    <div class="col-md-6">
-                        <span>Permission Name</span>
-                        <input disabled :value="permission.name" class="form-control" id="inputPermissionnameModal" type="text" />
-                    </div>
-                    <div class="col-md-6">
-                        <!-- <div class="form-floating mb-3"> -->
-                        <span>Select permission</span>
-                        <select :id="permission.name" class="form-select" name="permission_select">
-                            <option value="0" selected>Null(default)</option>
-                            <option value="1">Read</option>
-                            <option value="2">Write</option>
-                        </select>
-                        <!-- </div> -->
-                    </div>
-                </div>
             </div>
 
             <div v-if="isMessage" :class='"alert mx-3 alert-" + type' role="alert">
@@ -61,7 +45,7 @@ export default {
             message: "",
             isDisabled: true,
             permissions: [],
-            rolename: "",
+            rolename: null,
             permissionName: ""
         }
     },
@@ -72,7 +56,6 @@ export default {
     updated() {},
     methods: {
         ...mapMutations(["insertRole"]),
-        ...mapActions(["insertPermissionDetails"]),
         clearAlert() {
             if (this.rolename.length > 0) {
                 this.isMessage = false
@@ -85,11 +68,9 @@ export default {
             document.getElementsByName("permission_select").forEach(ele => {
                 this.permissions.push({name: ele.id, value: ele.value})
             })
-            dbRequest.createRole(this.rolename, JSON.stringify(this.permissions))
+            dbRequest.createRole(this.rolename)
             .then((data) => {
                 this.insertRole(data.data)
-                this.insertPermissionDetails(JSON.parse(data.data.permission))
-                this.permissions = []
                 this.isMessage = true
                 this.type = "success"
                 this.message = "Thêm Role thành công"

@@ -42,8 +42,8 @@ export default {
         const rolesFilter = state.roles.filter(ele => ele.name != role)
         commit("setRoles", rolesFilter)
     },
-    deleteRoleManager: ({commit, state}, roleName) => {
-        const roleFiltered = state.roles.filter(ele => ele.name != roleName)
+    deleteRoleManager: ({commit, state}, roleId) => {
+        const roleFiltered = state.roles.filter(ele => ele.id != roleId)
         commit("setRoles", roleFiltered)
     },
     updateRoles({commit, state}, role) {

@@ -119,11 +119,12 @@ export default {
                 console.log(data)
                 this.isLoading = false
                 var result = [];
-                data.data.forEach(function (item) {
-                    if (result.indexOf(item.role) < 0) {
-                        result.push(item.role);
+                result = data.data.map(ele => {
+                    return {
+                        id: ele.id,
+                        name: ele.name
                     }
-                });
+                })
                 this.setRoles(result)
             })
             .catch((err) => {
@@ -143,14 +144,14 @@ export default {
             const users = this.getUsers
             const userId = users[e.target.id].id
             const id = e.target.id
-            const user = this.userAuth
-            const roleName = this.getUsers[id].role
+            const username = users[id].username
+            const roleName = users[id].role
             var myModal = new bootstrap.Modal(document.getElementById('settingRoleModal'))
             this.modal.name = myModal
             this.modal.data = {
                 userId: userId,
                 eleId: id,
-                username: user.username,
+                username: username,
                 roleName: roleName,
                 roleTotal: this.getRoles
             }

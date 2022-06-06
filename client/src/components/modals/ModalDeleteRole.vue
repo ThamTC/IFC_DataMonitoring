@@ -4,7 +4,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Role Setting</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Role Removing</h5>
             </div>
             <div class="modal-body">
                 <span>Vui lòng nhập mật khẩu xác nhận</span>
@@ -51,24 +51,23 @@ export default {
     },
     props: ["modal"],
     methods: {
-        ...mapActions(["deleteRolesManager"]),
+        ...mapActions(["deleteRoleManager"]),
         clearAlert() {
             this.isMessage = false
         },
         deleteRole() {
             const id = this.modal.data.id
-            const name = this.modal.data.name
             // get password from input
             const password = this.password
             if (password === process.env.VUE_APP_CONFIR_PWD_DEL_USER ?? "") {
                 // xoa user neu mat khau dung
                 dbRequest.deleteRole(id)
-                    .then((data) => {
+                    .then(() => {
                         this.isMessage = true
                         this.type = "success"
                         this.message = "Xóa Role thành công"
-                        // delete roels in managerStore
-                        this.deleteRolesManager(name)
+                        // delete roles in managerStore
+                        this.deleteRoleManager(id)
                         this.isDisabled = true
                     })
                     .catch(() => {

@@ -13,7 +13,12 @@
                 </div>
                 Users
             </router-link>
-
+            <router-link tag="a" class="nav-link" to="/managerRole" active-class="active" exact>
+                <div class="sb-nav-link-icon">
+                    <i class="fas fa-users-cog"></i>
+                </div>
+                Roles
+            </router-link>
             <router-link tag="a" class="nav-link" to="/managerPermission" active-class="active">
                 <div class="sb-nav-link-icon">
                     <i class="fas fa-user-tag"></i>
