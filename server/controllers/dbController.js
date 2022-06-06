@@ -82,13 +82,13 @@ const dbController = {
     try {
       const found = await db.Permissions.findOne({ where: { name: permissioName }, raw: true })
       if (found) {
-        return res.status(201).json("Permission is existed")
+        return res.status(404).json("Permission is existed")
       }
       const created = await db.Permissions.create({ name: permissioName })
       if (!created) {
-        return res.status(404).json('Có lỗi trong quá trình tạo tài khoản, vui lòng thử lại.');
+        return res.status(404).json('Đã có lỗi xảy ra, vui lòng thử lại.');
       }
-      return res.status(200).json("Create Permission is success!")
+      return res.status(200).json(created)
     } catch (error) {
       return res.status(400).json(error)
     }
