@@ -27,7 +27,7 @@
                             <tbody>
                                 <tr v-for="(role, idx) in getRoles" :key="idx">
                                     <td>{{idx}}</td>
-                                    <td class="fw-bold">
+                                    <td>
                                         {{role.name}}
                                     </td>
                                     <td>

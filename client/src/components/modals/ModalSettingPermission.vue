@@ -7,11 +7,11 @@
                 <h5 class="modal-title" id="exampleModalLabel">Setting Permission</h5>
             </div>
             <div class="modal-body">
-                
+
                 <div class="row" v-for="(permission, idx) in getPermissions" :key="idx">
                     <div class="col-md-6">
                         <span>Permission Name</span>
-                        <input disabled :value="permission.name" class="form-control" id="inputPermissionnameModal" type="text" />
+                        <input :value="permission.name" class="form-control" id="inputPermissionnameModal" type="text" />
                     </div>
                     <div class="col-md-6">
                         <span>Select permission</span>
@@ -29,7 +29,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
-                <button v-if="isUpdated" type="button" class="btn btn-primary" @click="updatePermission" >Thay đổi</button>
+                <button v-if="isUpdated" type="button" class="btn btn-primary" @click="updatePermission">Thay đổi</button>
                 <button v-else class="btn btn-primary" type="button" disabled>
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                     Chờ tí...
@@ -41,7 +41,10 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import {
+    mapActions,
+    mapMutations
+} from 'vuex'
 import dbRequest from '../../apis/dbRequest/index'
 
 export default {
@@ -61,7 +64,6 @@ export default {
     computed: {
         getPermissions() {
             const permission = this.modal.data?.permission ?? []
-            console.log(permission)
             return permission
         },
         getSelected() {
@@ -76,25 +78,29 @@ export default {
         updatePermission() {
             this.isUpdated = false
             const userId = this.modal.data.userId
+            var permissionArr = []
             document.getElementsByName("setting_select").forEach(ele => {
-                this.permissions.push({name: ele.id, value: ele.value})
+                permissionArr.push({
+                    name: ele.id,
+                    value: ele.value
+                })
             })
-            const permissionStr = JSON.stringify(this.permissions)
+            const permissionStr = JSON.stringify(permissionArr)
             dbRequest.updatePermission(userId, permissionStr)
-            .then(() => {
-                this.updatePermissionOfUser(this.permissions)
-                this.permissions = []
-                this.isMessage = true
-                this.type = "success"
-                this.message = "Update Permission thành công"
-                this.isUpdated = true
-            })
-            .catch((error) => {
-                this.isMessage = true
-                this.type = "danger"
-                this.message = `Có lỗi xảy ra: ${error.message}`
-                this.isUpdated = true
-            })
+                .then(() => {
+                    this.updatePermissionOfUser(this.permissions)
+                    this.permissions = []
+                    this.isMessage = true
+                    this.type = "success"
+                    this.message = "Update Permission thành công"
+                    this.isUpdated = true
+                })
+                .catch((error) => {
+                    this.isMessage = true
+                    this.type = "danger"
+                    this.message = `Có lỗi xảy ra: ${error.message}`
+                    this.isUpdated = true
+                })
         }
     }
 }

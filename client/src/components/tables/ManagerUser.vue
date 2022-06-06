@@ -73,12 +73,13 @@ import dbRequest from '../../apis/dbRequest'
 import ModalSettingUser from '../modals/ModalSettingUser.vue'
 import ModalDeleteUser from '../modals/ModalDeleteUser.vue'
 import {
-  mapActions,
+    mapActions,
     mapGetters,
     mapMutations
 } from 'vuex';
 import ModalSettingPermission from '../modals/ModalSettingPermission.vue';
 import ModalSettingRole from '../modals/ModalSettingRole.vue';
+import permissionRequest from '../../apis/dbRequest/permissionRequest';
 
 export default {
     name: "ManagerUsers",
@@ -87,7 +88,7 @@ export default {
         ModalDeleteUser,
         ModalSettingPermission,
         ModalSettingRole
-        },
+    },
     data() {
         return {
             isLoading: true,
@@ -97,7 +98,7 @@ export default {
             },
             roles: [],
             isError: false,
-            error: null
+            error: null,
         };
     },
     computed: {
@@ -116,7 +117,6 @@ export default {
                 return dbRequest.getAllRoles()
             })
             .then((data) => {
-                console.log(data)
                 this.isLoading = false
                 var result = [];
                 result = data.data.map(ele => {
@@ -163,29 +163,55 @@ export default {
             const userId = users[e.target.id].id
             var myModal = new bootstrap.Modal(document.getElementById('settingPermissionModal'))
             this.modal.name = myModal
+            var permissionUser = []
             this.getPermissionOfUser(userId)
-            .then(res => {
-                
-                var permission
-                if (res.data === null) {
-                    permission = this.userAuth.permissions
-                } else {
-                    permission = JSON.parse(res.data.permission)
-                }
-                this.modal.data = {
-                    userId: userId,
-                    permission: permission
-                }
-                myModal.show()
-            })
-            .catch()
+                .then(res => {
+                    if (res.data === null) {
+                        permissionUser = this.userAuth.permissions
+                    } else {
+                        permissionUser = JSON.parse(res.data.permission)
+                    }
+                    return permissionRequest.getAllPermissions()
+                })
+                .then(res => {
+                    if (res) {
+                        var permissionSetting = []
+                        var permissionTotal = []
+                        permissionTotal = res.data.map(ele => {
+                            return {name: ele.name, value: '0'}
+                        })
+                        permissionTotal.forEach(total => {
+                            var isFound = false
+                            for (let idx = 0; idx < permissionUser.length; idx++) {
+                                if (total.name === permissionUser[idx].name) {
+                                    permissionSetting.push(permissionUser[idx])
+                                    isFound = true
+                                    break
+                                }
+                            }
+                            if (!isFound) {
+                                permissionSetting.push(total)
+                            }
+                        });
+                        this.modal.data = {
+                            userId: userId,
+                            permission: permissionSetting
+                        }
+                    }
+                    myModal.show()
+                })
+                .catch(error => {
+                })
         },
         deleteUser(e) {
             const id = e.target.id
             const users = this.users
             var myModal = new bootstrap.Modal(document.getElementById('deleteUserModal'))
             this.modal.name = myModal
-            this.modal.data = {userId: users[id].id, eleId: id}
+            this.modal.data = {
+                userId: users[id].id,
+                eleId: id
+            }
             myModal.show()
         }
     },
