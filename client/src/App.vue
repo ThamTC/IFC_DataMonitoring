@@ -43,7 +43,7 @@ export default {
     },
     sockets: {
         realtime: function (data) {
-            const isCanView = checkRole(this.getUser, ["admin", "manager"])
+            const isCanView = checkRole(this.getUser, ["realtime"])
             if (isCanView) {
                 sound.play()
                 this.currentDataStore({key: "realtime", data: data})
@@ -52,13 +52,13 @@ export default {
             }
         },
         statistic: function (data) {
-            const isCanView = checkRole(this.getUser, ["admin", "manager"])
+            const isCanView = checkRole(this.getUser, ["statistic"])
             if (isCanView) {
                 this.setDataStatistic({key: "statistic", data: data})
             }
         },
         solar_realtime: function (data) {
-            const isCanView = checkRole(this.getUser, ["solar", "manager"])
+            const isCanView = checkRole(this.getUser, ["solar_realtime"])
             if (isCanView) {
                 sound.play()
                 this.currentDataStore({key: "solar_realtime", data: data})
@@ -67,7 +67,7 @@ export default {
             }
         },
         solar_statistic: function (data) {
-            const isCanView = checkRole(this.getUser, ["solar", "manager"])
+            const isCanView = checkRole(this.getUser, ["solar_statistic"])
             if (isCanView) {
                 this.setDataStatistic({key: "solar_statistic", data: data})
             }

@@ -23,16 +23,16 @@ export default {
     computed: {
         ...mapGetters(["getUser", "getLoadTable"]),
         canShowHome() {
-            return checkRole(this.getUser, ["admin", "manager"])
+            return checkRole(this.getUser, ["realtime", "statistic"])
         },
         canShowManager() {
-            return checkRole(this.getUser, ["manager"])
+            return checkRole(this.getUser, ["managerRole", "managerUser", "managerPermission"])
         },
         canShowSolar() {
-            return checkRole(this.getUser, ["manager", "solar"])
+            return checkRole(this.getUser, ["solar_realtime", "solar_statistic"])
         },
         canShowChart() {
-            return checkRole(this.getUser, ["manager", "admin"])
+            return checkRole(this.getUser, ["asdsd"])
         }
     }
 };
