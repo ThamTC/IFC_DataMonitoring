@@ -88,7 +88,7 @@ export default {
             const permissionStr = JSON.stringify(permissionArr)
             dbRequest.updatePermission(userId, permissionStr)
                 .then(() => {
-                    this.updatePermissionOfUser(this.permissions)
+                    // this.updatePermissionOfUser(this.permissions)
                     this.permissions = []
                     this.isMessage = true
                     this.type = "success"

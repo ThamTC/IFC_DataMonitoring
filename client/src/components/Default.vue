@@ -1,5 +1,5 @@
 <template>
-  <span>Welcome to IFC</span>
+  <span class="text-xxl-center fw-bold">Chào mừng bạn đến Website giám sát hệ thống của Ban điều hành hệ thống IFC.</span>
 </template>
 
 <script>

@@ -42,6 +42,7 @@
         </div>
     </div>
     <modal-add-permission />
+    <modal-delete-permission :modal="modal"/>
 </main>
 </template>
 
@@ -51,12 +52,13 @@ import {
     mapMutations
 } from 'vuex'
 import dbRequest from '../../apis/dbRequest'
-import permissionRequest from '../../apis/dbRequest/permissionRequest'
 import ModalAddPermission from '../modals/ModalAddPermission.vue'
+import ModalDeletePermission from '../modals/ModalDeletePermission.vue'
 export default {
     name: "ManagerPermission",
     components: {
-        ModalAddPermission
+        ModalAddPermission,
+        ModalDeletePermission
     },
     data() {
         return {
@@ -100,18 +102,10 @@ export default {
             myModal.show()
         },
         deletePermission(e) {
-            const permissions = this.getPermissions
-            const permissionId = permissions[e.target.id].id
-            permissionRequest.delete(permissionId)
-            .then(() => {
-                const permRemoved = permissions.filter(ele => ele.id != permissionId)
-                this.setPermissions(permRemoved)
-                this.isError = false
-            })
-            .catch(err => {
-                    this.isError = true
-                    this.error = err.message
-            })
+            var myModal = new bootstrap.Modal(document.getElementById('deletePermissionModal'))
+            this.modal.name = myModal
+            this.modal.data = {id: e.target.id}
+            myModal.show()
         }
     },
 
