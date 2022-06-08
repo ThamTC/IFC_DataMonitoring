@@ -5,6 +5,7 @@
     <side-nav-solar v-if="canShowSolar"/>
     <side-nav-chart v-if="canShowChart"/>
     <side-nav-redmine />
+    <side-nav-bmb v-if="canShowBMB"/>
 </div>
 </template>
 
@@ -13,6 +14,7 @@ import {
     mapGetters
 } from 'vuex'
 import checkRole from '../../../untils/checkRole'
+import SideNavBMB from './subSideNavMenus/sideNavBMB.vue';
 import SideNavChart from './subSideNavMenus/sideNavChart.vue';
 import sideNavHome from './subSideNavMenus/sideNavHome.vue';
 import SideNavManager from './subSideNavMenus/sideNavManager.vue';
@@ -21,7 +23,7 @@ import SideNavSolar from './subSideNavMenus/sideNavSolar.vue';
 
 export default {
     name: "SideNavMeneHomePage",
-    components: { sideNavHome, SideNavManager, SideNavSolar, SideNavChart, SideNavRedmine },
+    components: { sideNavHome, SideNavManager, SideNavSolar, SideNavChart, SideNavRedmine, SideNavBMB },
     computed: {
         ...mapGetters(["getUser", "getLoadTable"]),
         canShowHome() {
@@ -35,6 +37,9 @@ export default {
         },
         canShowChart() {
             return checkRole(this.getUser, ["asdsd"])
+        },
+        canShowBMB() {
+            return checkRole(this.getUser, ["bmb_realtime"])
         }
     }
 };

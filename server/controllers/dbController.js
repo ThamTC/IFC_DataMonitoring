@@ -97,7 +97,7 @@ const dbController = {
     const userId = req.body.userId
     const permission = req.body.permission
     try {
-      const found  =await db.GS_RolePermission.findOne({where: {userId: userId}})
+      const found = await db.GS_RolePermission.findOne({where: {userId: userId}, raw: true})
       if (found) {
         const resData = await db.GS_RolePermission.update({permission: permission}, {where: {userId: userId}})
         return res.status(200).json(resData)
@@ -105,7 +105,7 @@ const dbController = {
       const resData = await db.GS_RolePermission.create({userId: userId, permission: permission})
       return res.status(200).json(resData)
     } catch (error) {
-      return res.status(400).json(error)
+      return res.status(400).json(error?.original.message ?? error)
     }
   },
   createRole: async (req, res) => {
