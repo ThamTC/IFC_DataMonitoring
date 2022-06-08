@@ -6,6 +6,7 @@ import SolarStatisticTable from '../components/tables/SolarStatisticTable.vue'
 import Default from '../components/Default.vue'
 import ManagerPermission from '../components/tables/ManagerPermission.vue'
 import ManagerRole from '../components/tables/ManagerRoles.vue'
+import RedmineIssues from '../components/tables/RedmineIssues.vue'
 
 export default [
     {
@@ -47,5 +48,10 @@ export default [
         path: "solar/statistic",
         name: "solar_statistic",
         component: SolarStatisticTable
+    },
+    {
+        path: "redmine/issues",
+        name: "redmine_issues",
+        component: RedmineIssues
     }
 ]

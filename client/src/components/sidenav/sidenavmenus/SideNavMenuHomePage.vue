@@ -4,6 +4,7 @@
     <side-nav-manager v-if="canShowManager"/>
     <side-nav-solar v-if="canShowSolar"/>
     <side-nav-chart v-if="canShowChart"/>
+    <side-nav-redmine />
 </div>
 </template>
 
@@ -15,11 +16,12 @@ import checkRole from '../../../untils/checkRole'
 import SideNavChart from './subSideNavMenus/sideNavChart.vue';
 import sideNavHome from './subSideNavMenus/sideNavHome.vue';
 import SideNavManager from './subSideNavMenus/sideNavManager.vue';
+import SideNavRedmine from './subSideNavMenus/sideNavRedmine.vue';
 import SideNavSolar from './subSideNavMenus/sideNavSolar.vue';
 
 export default {
     name: "SideNavMeneHomePage",
-    components: { sideNavHome, SideNavManager, SideNavSolar, SideNavChart },
+    components: { sideNavHome, SideNavManager, SideNavSolar, SideNavChart, SideNavRedmine },
     computed: {
         ...mapGetters(["getUser", "getLoadTable"]),
         canShowHome() {
