@@ -52,7 +52,9 @@ export default {
     name: "RedmineIssues",
     data() {
         return {
-            
+            isLoading: false,
+            isError: false,
+            error: null,
             modal: null
         }
     },

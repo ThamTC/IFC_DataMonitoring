@@ -5,20 +5,31 @@ const payload = [{ name: 'realtime', value: 0}, {name: 'statistic', value: 0}, {
 connectDB()
   .then(async (data) => {
     if (data?.success) {
+      const payload = [
+        {name: 1, value: 2},
+        {name: 2, value: 2},
+        {name: 3, value: 2},
+        {name: 4, value: 2},
+        {name: 6, value: 2},
+        {name: 7, value: 2},
+        {name: 23, value: 2},
+        {name: 26, value: 2},
+      ]
       const result =
-        await db.Permissions.create(
-          {
-            // userId: 6,
-            // permission: JSON.stringify(payload)
-            name: "abc"
-          }, 
-        )
+        await db.GS_RolePermission.update({permission: JSON.stringify(payload)},{where: {userId: 16}})
+        // await db.Permissions.create(
+        //   {
+        //     // userId: 6,
+        //     // permission: JSON.stringify(payload)
+        //     name: "abc"
+        //   }, 
+        // )
         // await db.Permissions.destroy(
         //   {
         //     where: {id : 12}
         //   },
         // )
-      console.log(result.dataValues)
+      console.log(result)
     } else {
       console.log(data.error);
     }

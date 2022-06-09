@@ -15,7 +15,7 @@
                     </div>
                     <div class="col-md-6">
                         <span>Select permission</span>
-                        <select :id="permission.name" class="form-select" name="setting_select" @change="clearAlert">
+                        <select :id="permission.id" class="form-select" name="setting_select" @change="clearAlert">
                             <option value="0" :selected="permission.value == 0">Null(default)</option>
                             <option value="1" :selected="permission.value == 1">Read</option>
                             <option value="2" :selected="permission.value == 2">Write</option>

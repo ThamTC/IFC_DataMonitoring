@@ -4,8 +4,8 @@
     <side-nav-manager v-if="canShowManager"/>
     <side-nav-solar v-if="canShowSolar"/>
     <side-nav-chart v-if="canShowChart"/>
-    <side-nav-redmine />
-    <side-nav-bmb v-if="canShowBMB"/>
+    <side-nav-redmine v-if="canShowRedmine"/>
+    <side-nav-bmb v-if="canShowBmb"/>
 </div>
 </template>
 
@@ -14,16 +14,16 @@ import {
     mapGetters
 } from 'vuex'
 import checkRole from '../../../untils/checkRole'
-import SideNavBMB from './subSideNavMenus/sideNavBMB.vue';
+import SideNavBmb from './subSideNavMenus/sideNavBmb.vue';
 import SideNavChart from './subSideNavMenus/sideNavChart.vue';
-import sideNavHome from './subSideNavMenus/sideNavHome.vue';
+import SideNavHome from './subSideNavMenus/sideNavHome.vue';
 import SideNavManager from './subSideNavMenus/sideNavManager.vue';
 import SideNavRedmine from './subSideNavMenus/sideNavRedmine.vue';
 import SideNavSolar from './subSideNavMenus/sideNavSolar.vue';
 
 export default {
     name: "SideNavMeneHomePage",
-    components: { sideNavHome, SideNavManager, SideNavSolar, SideNavChart, SideNavRedmine, SideNavBMB },
+    components: { SideNavHome, SideNavManager, SideNavSolar, SideNavChart, SideNavRedmine, SideNavBmb},
     computed: {
         ...mapGetters(["getUser", "getLoadTable"]),
         canShowHome() {
@@ -38,9 +38,12 @@ export default {
         canShowChart() {
             return checkRole(this.getUser, ["asdsd"])
         },
-        canShowBMB() {
+        canShowRedmine() {
+            return checkRole(this.getUser, ["issues"])
+        },
+        canShowBmb() {
             return checkRole(this.getUser, ["bmb_realtime"])
-        }
+        },
     }
 };
 </script>

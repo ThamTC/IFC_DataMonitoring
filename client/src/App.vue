@@ -19,6 +19,7 @@ import myToast from './untils/myToast'
 import NavBar from './components/NavBar.vue'
 import Footer from './components/Footer.vue'
 import checkRole from './untils/checkRole'
+import permissionRequest from './apis/dbRequest/permissionRequest';
 
 export default {
     name: "App",
@@ -28,17 +29,28 @@ export default {
     },
     data() {
         return {
-            
+
         }
     },
     computed: {
         ...mapGetters(["getUser"])
     },
     created() {
-        
+        permissionRequest.getAllPermissions()
+            .then(res => {
+                this.setPermissionDetails(res.data.map(ele => {
+                    return {
+                        id: ele.id,
+                        name: ele.name
+                    }
+                }))
+            })
+            .catch(error => {
+                console.log(error)
+            })
     },
     methods: {
-        ...mapMutations(["setUsersLogin", "setDataStatistic", "setCurrentData", "setDataRealtime"]),
+        ...mapMutations(["setUsersLogin", "setDataStatistic", "setCurrentData", "setDataRealtime", "setPermissionDetails"]),
         ...mapActions(["realtimeStore", "currentDataStore", "counterColorStore"]),
     },
     sockets: {
@@ -46,58 +58,94 @@ export default {
             const isCanView = checkRole(this.getUser, ["realtime"])
             if (isCanView) {
                 sound.play()
-                this.currentDataStore({key: "realtime", data: data})
-                this.realtimeStore({key: "realtime", data: data})
+                this.currentDataStore({
+                    key: "realtime",
+                    data: data
+                })
+                this.realtimeStore({
+                    key: "realtime",
+                    data: data
+                })
                 this.counterColorStore("realtime")
             }
         },
         statistic: function (data) {
             const isCanView = checkRole(this.getUser, ["statistic"])
             if (isCanView) {
-                this.setDataStatistic({key: "statistic", data: data})
+                this.setDataStatistic({
+                    key: "statistic",
+                    data: data
+                })
             }
         },
         solar_realtime: function (data) {
             const isCanView = checkRole(this.getUser, ["solar_realtime"])
             if (isCanView) {
                 sound.play()
-                this.currentDataStore({key: "solar_realtime", data: data})
-                this.realtimeStore({key: "solar_realtime", data: data})
+                this.currentDataStore({
+                    key: "solar_realtime",
+                    data: data
+                })
+                this.realtimeStore({
+                    key: "solar_realtime",
+                    data: data
+                })
                 this.counterColorStore("solar_realtime")
             }
         },
         solar_statistic: function (data) {
             const isCanView = checkRole(this.getUser, ["solar_statistic"])
             if (isCanView) {
-                this.setDataStatistic({key: "solar_statistic", data: data})
+                this.setDataStatistic({
+                    key: "solar_statistic",
+                    data: data
+                })
             }
         },
         updateRealtime: function (data) {
             if (data.error == null) {
                 if (data.data.length == 0) {
-                    this.setCurrentData({key: "realtime", data: {}})
+                    this.setCurrentData({
+                        key: "realtime",
+                        data: {}
+                    })
                 }
-                this.setDataRealtime({key: "realtime", data: data.data});
+                this.setDataRealtime({
+                    key: "realtime",
+                    data: data.data
+                });
                 this.counterColorStore("realtime")
             }
         },
         updateStatistic: function (data) {
             if (data.error == null) {
-                this.setDataStatistic({key: "statistic", data: data.data});
+                this.setDataStatistic({
+                    key: "statistic",
+                    data: data.data
+                });
             }
         },
         updateRealtimeSolar: function (data) {
             if (data.error == null) {
                 if (data.data.length == 0) {
-                    this.setCurrentData({key: "solar_realtime", data: {}})
+                    this.setCurrentData({
+                        key: "solar_realtime",
+                        data: {}
+                    })
                 }
-                this.setDataRealtime({key: "solar_realtime", data: data.data});
+                this.setDataRealtime({
+                    key: "solar_realtime",
+                    data: data.data
+                });
                 this.counterColorStore("solar_realtime")
             }
         },
         updateStatisticSolar: function (data) {
             if (data.error == null) {
-                this.setDataStatistic({key: "solar_statistic", data: data.data});
+                this.setDataStatistic({
+                    key: "solar_statistic",
+                    data: data.data
+                });
             }
         },
         usersLogin: function (data) {

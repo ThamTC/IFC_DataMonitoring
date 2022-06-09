@@ -80,6 +80,7 @@ import {
 import ModalSettingPermission from '../modals/ModalSettingPermission.vue';
 import ModalSettingRole from '../modals/ModalSettingRole.vue';
 import permissionRequest from '../../apis/dbRequest/permissionRequest';
+import convert from "../../untils/convert";
 
 export default {
     name: "ManagerUsers",
@@ -175,16 +176,17 @@ export default {
                 })
                 .then(res => {
                     if (res) {
+                        const c_permissionUser = convert.convertPermissionUser(permissionUser, res.data)
                         var permissionSetting = []
                         var permissionTotal = []
                         permissionTotal = res.data.map(ele => {
-                            return {name: ele.name, value: '0'}
+                            return {id: ele.id, name: ele.name, value: '0'}
                         })
                         permissionTotal.forEach(total => {
                             var isFound = false
-                            for (let idx = 0; idx < permissionUser.length; idx++) {
-                                if (total.name === permissionUser[idx].name) {
-                                    permissionSetting.push(permissionUser[idx])
+                            for (let idx = 0; idx < c_permissionUser.length; idx++) {
+                                if (total.name === c_permissionUser[idx].name) {
+                                    permissionSetting.push(c_permissionUser[idx])
                                     isFound = true
                                     break
                                 }

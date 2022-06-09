@@ -7,6 +7,7 @@ import Default from '../components/Default.vue'
 import ManagerPermission from '../components/tables/ManagerPermission.vue'
 import ManagerRole from '../components/tables/ManagerRoles.vue'
 import RedmineIssues from '../components/tables/RedmineIssues.vue'
+import BMBRealTimeTable from '../components/tables/BMBRealTimeTable.vue'
 
 export default [
     {
@@ -53,5 +54,10 @@ export default [
         path: "redmine/issues",
         name: "redmine_issues",
         component: RedmineIssues
+    },
+    {
+        path: "bmb_room/realtime",
+        name: "bmb_realtime",
+        component: BMBRealTimeTable
     }
 ]
