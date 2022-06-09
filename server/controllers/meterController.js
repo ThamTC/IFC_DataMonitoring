@@ -15,7 +15,7 @@ const meterController = {
     const apiName = req.originalUrl
     var realtimeName
     var statisticName
-    if (apiName.search("solar") >=0) {
+    if (apiName.search("solar") >= 0) {
       realtimeName = "solar_realtime"
       statisticName = "solar_statistic"
     } else {
@@ -128,6 +128,36 @@ const meterController = {
       });
     return res.status(200).json("success");
   },
+  bmb_realtime: async (req, res) => {
+    // nhan data tu cac request -> luu xuong realtime -> lay data tu realtime -> chen data theo thu tu -> luu xuong realtime -> socket sang client hien thi
+    if (Object.keys(req.body).length == 0) {
+      logger.log("error", req.body)
+      return res.status(500).json("Please check frame data");
+    }
+    logger.log("info", req.body)
+    // nhan data tu cac request
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+    const localISOTime = new Date(Date.now() - tzoffset).toISOString()
+    const payload = formatPayload.payload(req.body, localISOTime)
+    // gui data sang client de hien thi realtime theo thu tu uu tien
+    global.io.sockets.emit("bmb_realtime", payload);
+    // luu xuong realtime theo id la so phan tu co trong key real_realtime
+    client
+      .get("bmb_realtime")
+      .then((data) => {
+        if (data == null) {
+          data = "[]"
+        }
+        // value la string nen can parse sang object
+        var resParser = JSON.parse(data);
+        resParser.unshift(payload);
+        return client.set("bmb_realtime", JSON.stringify(resParser));
+      })
+      .catch((error) => {
+        return res.status(500).json("Please check frame data");
+      });
+    return res.status(200).json("success");
+  }
 };
 
 module.exports = meterController;

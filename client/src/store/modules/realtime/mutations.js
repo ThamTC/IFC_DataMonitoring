@@ -1,6 +1,6 @@
 const key_data = "realtime"
 const key_solar = "solar_realtime"
-
+const key_bmb = "bmb_realtime"
 export default {
     setDataRealtime(state, payload) {
         if (payload.key == key_data) {
@@ -8,7 +8,7 @@ export default {
         } else if (payload.key == key_solar) {
             state.solarRealtime = payload.data;
         } else {
-            // do something
+            state.bmbRealtime = payload.data
         }
     },
     insertDataRealtime(state, key, item) {
@@ -17,7 +17,7 @@ export default {
         } else if (key == key_solar) {
             state.solarRealtime.unshift(item);            
         } else {
-            // do something
+            state.bmbRealtime.unshift(item)
         }
     },
     setCountColors(state, payload) {
@@ -26,7 +26,7 @@ export default {
         } else if (payload.key == key_solar) {
             state.countColorSolars = payload.data
         } else {
-            // do something
+            state.countColorBmbs = payload.data
         }
     },
     setCurrentData(state, payload) {
@@ -35,7 +35,7 @@ export default {
         } else if (payload.key == key_solar) {
             state.currentSolar = payload.data   
         } else {
-            // do something
+            state.currentBmb = payload.data
         }
     },
     setDataRealtimeFilter(state, payload) {
@@ -44,7 +44,7 @@ export default {
         } else if (payload.key == key_solar) {
             state.solarRealtimeFilter = payload.data
         } else {
-            
+            state.bmbRealtimeFilter = payload.data
         }
     }
 }

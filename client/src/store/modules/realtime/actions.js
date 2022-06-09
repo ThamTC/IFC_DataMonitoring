@@ -13,7 +13,10 @@ export default {
         var data
         if (key == "realtime") {
             data = state.dataRealtime;
-        } else {
+        } if (key == "bmb_realtime") {
+            data = state.bmbRealtime
+        }
+        else {
             data = state.solarRealtime;
         }
         var showCountSorted = {};
@@ -27,7 +30,10 @@ export default {
         var resParser
         if (payload.key == "realtime") {
             resParser = state.dataRealtime;
-        } else {
+        } else if (payload.key == "bmb_realtime") {
+            resParser = state.bmbRealtime;
+        }
+        else {
             resParser = state.solarRealtime;
         }
         resParser.unshift(payload.data)

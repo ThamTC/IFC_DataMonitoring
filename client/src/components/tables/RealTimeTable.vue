@@ -79,11 +79,6 @@ export default {
     data() {
         return {
             isLoading: true,
-            shows: [0],
-            querys: [0],
-            inputShows: ["Hệ thống"],
-            inputQuerys: ["name"],
-            titles: ["Hệ thống"],
             isFilter: false,
             dataFilter: [],
             preFilter: "",
@@ -94,10 +89,16 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["getDataRealtimeFilter", "getDataRealtime", "getCountColors", "getCurrentData", "getSolarRealtimeFilter", "getSolarRealtime", "getCurrentSolar", "getCountColorSolars"]),
+        ...mapGetters([
+            "getDataRealtimeFilter", "getDataRealtime", "getCountColors", "getCurrentData",
+            "getSolarRealtimeFilter", "getSolarRealtime", "getCurrentSolar", "getCountColorSolars",
+            "getBmbRealtimeFilter", "getBmbRealtime", "getCountColorBmbs", "getCurrentBmb"
+        ]),
         countColors() {
             if (this.routeName == "solar_realtime") {
                 return this.getCountColorSolars
+            } else if (this.routeName == "bmb_realtime") {
+                return this.getCountColorBmbs
             }
             return this.getCountColors
         },
@@ -105,17 +106,23 @@ export default {
             if (this.isFilter) {
                 if (this.routeName == "solar_realtime") {
                     return this.getSolarRealtimeFilter
+                } else if (this.routeName == "bmb_realtime") {
+                    return this.getBmbRealtimeFilter
                 }
                 return this.getDataRealtimeFilter
             }
             if (this.routeName == "solar_realtime") {
                 return this.getSolarRealtime
+            } else if (this.routeName == "bmb_realtime") {
+                return this.getBmbRealtime
             }
             return this.getDataRealtime
         },
         currentData() {
             if (this.routeName == "solar_realtime") {
                 return this.getCurrentSolar
+            } else if (this.routeName == "bmb_realtime") {
+                return this.getCurrentBmb
             }
             return this.getCurrentData
         }
@@ -123,7 +130,8 @@ export default {
     created() {
         document.title = "Realtime"
         this.routeName = this.$route.name
-        this.getRealtimeStore(this.routeName).then((data) => {
+        this.getRealtimeStore(this.routeName)
+        .then((data) => {
             if (data == "") {
                 data = []
             }
@@ -133,7 +141,8 @@ export default {
             })
             this.counterColorStore(this.routeName)
             this.isLoading = false
-        }).catch((err) => {
+        })
+        .catch((err) => {
             this.isLoading = false
             this.isError = true
             this.error = err.message
@@ -163,7 +172,12 @@ export default {
                 if (this.getDataRealtime.length > 0) {
                     myModal.show()
                 }
-            } else {
+            } else if (this.routeName == "bmb_realtime") {
+                if (this.getBmbRealtime.length > 0) {
+                    myModal.show()
+                }
+            } 
+            else {
                 if (this.getSolarRealtime.length > 0) {
                     myModal.show()
                 }
@@ -180,6 +194,8 @@ export default {
                     resData = this.getDataRealtime
                 } else if (this.routeName == "solar_realtime") {
                     resData = this.getSolarRealtime
+                } else if (this.routeName == "bmb_realtime") {
+                    resData = this.getBmbRealtime
                 }
                 this.dataFilter = resData.filter(ele => ele.priority == priority)
                 this.setDataRealtimeFilter({

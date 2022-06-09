@@ -1,13 +1,15 @@
 <template>
-  <span>BMB Realtime</span>
+  <RealTimeTable/>
 </template>
 
 <script>
+import RealTimeTable from './RealTimeTable.vue'
 export default {
-    name: "BMBRealTimeTable"
+  name: "BMBRealTimeTable",
+  components: {RealTimeTable},
 }
 </script>
 
 <style>
 
-</style>
+</style>>

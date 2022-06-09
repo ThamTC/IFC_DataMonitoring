@@ -31,4 +31,21 @@ export default {
     getCountColorSolars(state) {
         return state.countColorSolars
     },
+    // for bmb
+    getBmbRealtime(state) {
+        return state.bmbRealtime;
+    },
+    getCurrentBmb(state) {
+        const current = state.currentBmb
+        if (isEmpty(current)) {
+            return {color: "", message: ""}
+        }
+        return state.currentBmb
+    },
+    getBmbRealtimeFilter(state) {
+        return state.bmbRealtimeFilter
+    },
+    getCountColorBmbs(state) {
+        return state.countColorBmbs
+    },
 }

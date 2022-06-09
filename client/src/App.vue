@@ -54,6 +54,36 @@ export default {
         ...mapActions(["realtimeStore", "currentDataStore", "counterColorStore"]),
     },
     sockets: {
+        bmb_realtime: function (data) {
+            const isCanView = checkRole(this.getUser, ["bmb_realtime"])
+            if (isCanView) {
+                sound.play()
+                this.currentDataStore({
+                    key: "bmb_realtime",
+                    data: data
+                })
+                this.realtimeStore({
+                    key: "bmb_realtime",
+                    data: data
+                })
+                this.counterColorStore("bmb_realtime")
+            }
+        },
+        updateRealtimeBmb: function (data) {
+            if (data.error == null) {
+                if (data.data.length == 0) {
+                    this.setCurrentData({
+                        key: "bmb_realtime",
+                        data: {}
+                    })
+                }
+                this.setDataRealtime({
+                    key: "bmb_realtime",
+                    data: data.data
+                });
+                this.counterColorStore("bmb_realtime")
+            }
+        },
         realtime: function (data) {
             const isCanView = checkRole(this.getUser, ["realtime"])
             if (isCanView) {

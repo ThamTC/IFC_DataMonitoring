@@ -7,4 +7,5 @@ router.post("/alarm", (req, res) => {
 })
 router.post("/realtime", meterController.realtime)
 router.post("/solar/realtime", meterController.realtime)
+router.post("/bmb/realtime", meterController.bmb_realtime)
 module.exports = router

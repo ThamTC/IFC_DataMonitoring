@@ -80,7 +80,10 @@ export default {
             var updateChannel
             if (this.modal == "realtime") {
                 updateChannel = "updateRealtime"
-            } else {
+            } else if (this.modal == "bmb_realtime") {
+                updateChannel = "updateRealtimeBmb"
+            }
+            else {
                 updateChannel = "updateRealtimeSolar"
             }
             this.$socket.emit("deleteRealtime", {

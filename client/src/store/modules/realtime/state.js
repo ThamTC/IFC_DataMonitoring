@@ -8,4 +8,9 @@ export default {
     solarRealtimeFilter: [],
     countColorSolars: {},
     currentSolar: {},
+    // for bmb
+    bmbRealtime: [],
+    bmbRealtimeFilter: [],
+    countColorBmbs: {},
+    currentBmb: {},
 }
