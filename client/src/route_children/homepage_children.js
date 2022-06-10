@@ -1,5 +1,5 @@
-import RealTime from '../components/tables/RealTimeTable.vue'
-import Statistic from '../components/tables/StatisticTable.vue'
+import BDHRealTime from '../components/tables/BDHRealTimeTable.vue'
+import BDHStatistic from '../components/tables/BDHStatisticTable.vue'
 import ManagerUser from '../components/tables/ManagerUser.vue'
 import SolarRealTimeTable from '../components/tables/SolarRealTimeTable.vue'
 import SolarStatisticTable from '../components/tables/SolarStatisticTable.vue'
@@ -7,7 +7,7 @@ import Default from '../components/Default.vue'
 import ManagerPermission from '../components/tables/ManagerPermission.vue'
 import ManagerRole from '../components/tables/ManagerRoles.vue'
 import RedmineIssues from '../components/tables/RedmineIssues.vue'
-import BMBRealTimeTable from '../components/tables/BMBRealTimeTable.vue'
+import BMBRealTime from '../components/tables/BMBRealTimeTable.vue'
 
 export default [
     {
@@ -18,12 +18,12 @@ export default [
     {
         path: "realtime",
         name: "realtime",
-        component: RealTime
+        component: BDHRealTime
     },
     {
         path: "statistic",
         name: "statistic",
-        component: Statistic
+        component: BDHStatistic
     },
     {
         path: "managerUser",
@@ -58,6 +58,6 @@ export default [
     {
         path: "bmb_room/realtime",
         name: "bmb_realtime",
-        component: BMBRealTimeTable
+        component: BMBRealTime
     }
 ]

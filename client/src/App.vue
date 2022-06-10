@@ -1,10 +1,10 @@
 <template>
-<div>
-    <router-view name="navbar"></router-view>
-    <router-view></router-view>
-    <!-- <Footer></Footer> -->
-    <div id="myToast"></div>
-</div>
+    <div>
+        <router-view name="navbar"></router-view>
+        <router-view></router-view>
+        <!-- <Footer></Footer> -->
+        <div id="myToast"></div>
+    </div>
 </template>
 
 <script>
@@ -13,13 +13,11 @@ import {
     mapGetters,
     mapMutations
 } from "vuex";
-import sound from './services/howl'
-import checkPermission from './untils/checkPermission'
 import myToast from './untils/myToast'
 import NavBar from './components/NavBar.vue'
 import Footer from './components/Footer.vue'
-import checkRole from './untils/checkRole'
 import permissionRequest from './apis/dbRequest/permissionRequest';
+import socketIo from './socket.io';
 
 export default {
     name: "App",
@@ -48,136 +46,21 @@ export default {
             .catch(error => {
                 console.log(error)
             })
+        
     },
     methods: {
         ...mapMutations(["setUsersLogin", "setDataStatistic", "setCurrentData", "setDataRealtime", "setPermissionDetails"]),
-        ...mapActions(["realtimeStore", "currentDataStore", "counterColorStore"]),
+        ...mapActions(["realtimeStore", "currentDataStore", "counterColorStore"])
     },
     sockets: {
-        bmb_realtime: function (data) {
-            const isCanView = checkRole(this.getUser, ["bmb_realtime"])
-            if (isCanView) {
-                sound.play()
-                this.currentDataStore({
-                    key: "bmb_realtime",
-                    data: data
-                })
-                this.realtimeStore({
-                    key: "bmb_realtime",
-                    data: data
-                })
-                this.counterColorStore("bmb_realtime")
-            }
-        },
-        updateRealtimeBmb: function (data) {
-            if (data.error == null) {
-                if (data.data.length == 0) {
-                    this.setCurrentData({
-                        key: "bmb_realtime",
-                        data: {}
-                    })
-                }
-                this.setDataRealtime({
-                    key: "bmb_realtime",
-                    data: data.data
-                });
-                this.counterColorStore("bmb_realtime")
-            }
-        },
-        realtime: function (data) {
-            const isCanView = checkRole(this.getUser, ["realtime"])
-            if (isCanView) {
-                sound.play()
-                this.currentDataStore({
-                    key: "realtime",
-                    data: data
-                })
-                this.realtimeStore({
-                    key: "realtime",
-                    data: data
-                })
-                this.counterColorStore("realtime")
-            }
-        },
-        statistic: function (data) {
-            const isCanView = checkRole(this.getUser, ["statistic"])
-            if (isCanView) {
-                this.setDataStatistic({
-                    key: "statistic",
-                    data: data
-                })
-            }
-        },
-        solar_realtime: function (data) {
-            const isCanView = checkRole(this.getUser, ["solar_realtime"])
-            if (isCanView) {
-                sound.play()
-                this.currentDataStore({
-                    key: "solar_realtime",
-                    data: data
-                })
-                this.realtimeStore({
-                    key: "solar_realtime",
-                    data: data
-                })
-                this.counterColorStore("solar_realtime")
-            }
-        },
-        solar_statistic: function (data) {
-            const isCanView = checkRole(this.getUser, ["solar_statistic"])
-            if (isCanView) {
-                this.setDataStatistic({
-                    key: "solar_statistic",
-                    data: data
-                })
-            }
-        },
-        updateRealtime: function (data) {
-            if (data.error == null) {
-                if (data.data.length == 0) {
-                    this.setCurrentData({
-                        key: "realtime",
-                        data: {}
-                    })
-                }
-                this.setDataRealtime({
-                    key: "realtime",
-                    data: data.data
-                });
-                this.counterColorStore("realtime")
-            }
-        },
-        updateStatistic: function (data) {
-            if (data.error == null) {
-                this.setDataStatistic({
-                    key: "statistic",
-                    data: data.data
-                });
-            }
-        },
-        updateRealtimeSolar: function (data) {
-            if (data.error == null) {
-                if (data.data.length == 0) {
-                    this.setCurrentData({
-                        key: "solar_realtime",
-                        data: {}
-                    })
-                }
-                this.setDataRealtime({
-                    key: "solar_realtime",
-                    data: data.data
-                });
-                this.counterColorStore("solar_realtime")
-            }
-        },
-        updateStatisticSolar: function (data) {
-            if (data.error == null) {
-                this.setDataStatistic({
-                    key: "solar_statistic",
-                    data: data.data
-                });
-            }
-        },
+        realtime: socketIo.realtime,
+        statistic: socketIo.statistic,
+        updateRealtime: socketIo.updateRealtime,
+        updateStatistic: socketIo.updateStatistic,
+        solar_realtime: socketIo.solar_realtime,
+        solar_statistic: socketIo.solar_statistic,
+        updateRealtimeSolar: socketIo.updateRealtimeSolar,
+        updateStatisticSolar: socketIo.updateStatisticSolar,
         usersLogin: function (data) {
             const owner = this.getUser
             const userLogin = data.currentLogin ?? ""
@@ -201,10 +84,6 @@ export default {
                 duration: 5000
             })
             this.setUsersLogin(usersLogin)
-        },
-        refreshPage: function () {
-            console.log("asdfsdgss")
-            this.$route.go()
         }
     }
 };

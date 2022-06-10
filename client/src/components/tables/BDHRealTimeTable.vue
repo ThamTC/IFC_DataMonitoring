@@ -7,7 +7,7 @@ import { mapActions, mapGetters, mapMutations } from 'vuex'
 import convert from '../../untils/convert'
 import RealTimeTable from './RealTimeTable.vue'
 export default {
-    name: "SolarRealTimeTable",
+    name: "BDHRealTimeTable",
     data() {
         return {
             realtimeData: {
@@ -26,16 +26,16 @@ export default {
     },
     computed: {
         ...mapGetters([
-            "getSolarRealtime", "getCountColorSolars", "getCurrentSolar"
+            "getDataRealtime", "getCountColors", "getCurrentData"
         ]),
         countColors() {
-            return this.realtimeData.countColors = this.getCountColorSolars
+            return this.realtimeData.countColors = this.getCountColors
         },
         dataItems() {
-            return this.realtimeData.dataItems = this.getSolarRealtime
+            return this.realtimeData.dataItems = this.getDataRealtime
         },
         currentData() {
-            return this.realtimeData.currentData = this.getCurrentSolar
+            return this.realtimeData.currentData = this.getCurrentData
         }
     },
     watch: {
@@ -47,20 +47,19 @@ export default {
         }
     },
     async created() {
-        document.title = "Solar Realtime"
+        document.title = "BDH Realtime"
         this.realtimeData.routeName = this.$route.name
         this.getRealtimeStore(this.realtimeData.routeName)
         .then((data) => {
             if (data == "") {
                 data = []
             }
-            this.setDataRealtime({key: "solar_realtime", data: data})
+            this.setDataRealtime({key: "realtime", data: data})
             this.counterColorStore(this.realtimeData.routeName)
-            this.realtimeData.currentData = this.getCurrentSolar
+            this.realtimeData.currentData = this.getCurrentData
             this.realtimeData.isLoading = false
             })
         .catch((err) => {
-            console.log(err)
             this.realtimeData.isLoading = false
             this.realtimeData.isError = true
             this.realtimeData.error = err.message

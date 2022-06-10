@@ -11,13 +11,18 @@ export default {
     },
     counterColorStore: ({ commit, state }, key) => {
         var data
-        if (key == "realtime") {
-            data = state.dataRealtime;
-        } if (key == "bmb_realtime") {
-            data = state.bmbRealtime
-        }
-        else {
-            data = state.solarRealtime;
+        switch (key) {
+            case process.env.VUE_APP_CHANNEL_BDH_REALTIME:
+                data = state.dataRealtime;
+                break;
+            case process.env.VUE_APP_CHANNEL_BMB_REALTIME:
+                data = state.bmbRealtime
+                break;
+            case process.env.VUE_APP_CHANNEL_SOLAR_REALTIME:
+                data = state.solarRealtime;
+                break;
+            default:
+                break;
         }
         var showCountSorted = {};
         data.forEach((ele) => {
@@ -28,13 +33,18 @@ export default {
     },
     realtimeStore: ({ commit, state }, payload) => {
         var resParser
-        if (payload.key == "realtime") {
-            resParser = state.dataRealtime;
-        } else if (payload.key == "bmb_realtime") {
-            resParser = state.bmbRealtime;
-        }
-        else {
-            resParser = state.solarRealtime;
+        switch (payload.key) {
+            case process.env.VUE_APP_CHANNEL_BDH_REALTIME:
+                resParser = state.dataRealtime;
+                break;
+            case process.env.VUE_APP_CHANNEL_BMB_REALTIME:
+                resParser = state.bmbRealtime;
+                break
+            case process.env.VUE_APP_CHANNEL_SOLAR_REALTIME:
+                resParser = state.solarRealtime;
+                break
+            default:
+                break;
         }
         resParser.unshift(payload.data)
         commit("setDataRealtime", {key: payload.key, data: resParser});

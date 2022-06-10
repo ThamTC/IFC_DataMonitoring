@@ -6,7 +6,7 @@
 import { mapActions, mapGetters } from 'vuex'
 import StatisticTable from './StatisticTable.vue'
 export default {
-    name: "SolarStatisticTable",
+    name: "BDHStatisticTable",
     components: {
         StatisticTable
     },
@@ -22,16 +22,16 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(["getSolarStatistic"]),
+        ...mapGetters(["getDataStatistic"]),
         getDataItems() {
-            return this.statisticData.dataItems = this.getSolarStatistic
+            return this.statisticData.dataItems = this.getDataStatistic
         }
     },
     watch: {
         getDataItems() {},
     },
     created() {
-        document.title = "Solar Statistic"
+        document.title = "BDH Statistic"
         const routeName = this.$route.name
         this.statisticData.routeName = routeName
         this.getStatisticStore(routeName).then((data) => {

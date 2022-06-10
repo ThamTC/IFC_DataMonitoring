@@ -34,18 +34,21 @@ const redisController = {
   updateStore: (req, res) => {
     var resData = [];
     const key = req.body.key;
+    const id = req.body.id
+    const isAction = req.body.isAction
+    const username = req.body.username
     try {
       client.get(key).then((data) => {
         resData = JSON.parse(data);
         for (let idx = 0; idx < resData.length; idx++) {
-          if (req.body.id == idx) {
-            resData[idx].isAction = req.body.isAction;
-            resData[idx].username = req.body.username;
+          if (id == idx) {
+            resData[idx].isAction = isAction;
+            resData[idx].username = username;
             break;
           }
         }
         client.set(key, JSON.stringify(resData));
-        global.io.sockets.emit(key, resData);
+        // global.io.sockets.emit(key, resData);
         return res.status(200).json(resData);
       });
     } catch (error) {
