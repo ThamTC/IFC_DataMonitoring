@@ -16,7 +16,7 @@
                     </div> -->
                     <div v-if="getDataItems.length > 0" class="d-flex">
                         <button type="button" :class="'btn btn-' + countColor[0]+' me-2 mb-2'" v-for="(countColor, idx) in realtimeData.countColors" :key="idx" :id="countColor[0]" @click="filterPriority">{{countColor[1]}}</button>
-                        <button type="button" :class="'btn btn-' + getCurrentData.color+' me-2 mb-2 mx-5 flex-grow-1'" disabled>{{getCurrentData.msg}}</button>
+                        <button type="button" :class="'btn btn-' + getCurrentData?.color +' me-2 mb-2 mx-5 flex-grow-1'" disabled>{{getCurrentData?.msg}}</button>
                         <button @click="removeTask" type="button" class="btn btn-primary mb-2">Remove Data</button>
                     </div>
                     <div class="table-wrapper">
@@ -89,7 +89,9 @@ export default {
                 routeName: "",
                 countColors: [],
                 dataItems: [],
-                currentData: {}
+                currentData: {
+                   
+                }
             }
         }
     },

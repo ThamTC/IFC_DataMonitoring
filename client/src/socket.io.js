@@ -1,18 +1,27 @@
-// import store from './store'
+
 import sound from "./services/howl";
-export default {
+import checkRole from "./untils/checkRole";
+import myToast from "./untils/myToast";
+var user = null
+const socketIo = {
+    init: function (data) {
+        user = data
+    },
     // for bmb
     bmb_realtime: function (data) {
-        sound.play();
-        this.$store.dispatch("currentDataStore", {
-            key: "bmb_realtime",
-            data: data,
-        });
-        this.$store.dispatch("realtimeStore", {
-            key: "bmb_realtime",
-            data: data,
-        });
-        this.$store.dispatch("counterColorStore", "bmb_realtime");
+        const isCan = checkRole(user, ["bmb_realtime"])
+        if (isCan) {
+            sound.play();
+            this.$store.dispatch("currentDataStore", {
+                key: "bmb_realtime",
+                data: data,
+            });
+            this.$store.dispatch("realtimeStore", {
+                key: "bmb_realtime",
+                data: data,
+            });
+            this.$store.dispatch("counterColorStore", "bmb_realtime");
+        } 
     },
     updateRealtimeBmb: function (data) {
         if (data.error == null) {
@@ -31,16 +40,19 @@ export default {
     },
     // for general
     realtime: function (data) {
-        sound.play();
-        this.$store.dispatch("currentDataStore", {
-            key: "realtime",
-            data: data,
-        });
-        this.$store.dispatch("realtimeStore", {
-            key: "realtime",
-            data: data,
-        });
-        this.$store.dispatch("counterColorStore", "realtime");
+        const isCan = checkRole(user, ["realtime"])
+        if (isCan) {
+            sound.play();
+            this.$store.dispatch("currentDataStore", {
+                key: "realtime",
+                data: data,
+            });
+            this.$store.dispatch("realtimeStore", {
+                key: "realtime",
+                data: data,
+            });
+            this.$store.dispatch("counterColorStore", "realtime");
+        }
     },
     statistic: function (data) {
         this.$store.commit("setDataStatistic", {
@@ -73,16 +85,19 @@ export default {
     },
     // for solor
     solar_realtime: function(data) {
-        sound.play();
-        this.$store.dispatch("currentDataStore", {
-            key: "solar_realtime",
-            data: data,
-        });
-        this.$store.dispatch("realtimeStore", {
-            key: "solar_realtime",
-            data: data,
-        });
-        this.$store.dispatch("counterColorStore", "solar_realtime");
+        const isCan = checkRole(user, ["solar_realtime"])
+        if (isCan) {
+            sound.play();
+            this.$store.dispatch("currentDataStore", {
+                key: "solar_realtime",
+                data: data,
+            });
+            this.$store.dispatch("realtimeStore", {
+                key: "solar_realtime",
+                data: data,
+            });
+            this.$store.dispatch("counterColorStore", "solar_realtime");
+        }
     },
     solar_statistic: function (data) {
         this.$store.commit("setDataStatistic", {
@@ -113,4 +128,29 @@ export default {
             });
         }
     },
+    usersLogin: function (data) {
+        const owner = this.getUser
+        const userLogin = data.currentLogin ?? ""
+        if (userLogin != owner.username) {
+            myToast({
+                title: "Signin",
+                message: userLogin + " đã truy cập web giám sát",
+                type: "signin",
+                duration: 5000
+            })
+        }
+        this.$store.commit("setUsersLogin", data.usersLogin)
+    },
+    userLogout: function (data) {
+        const currentLogout = data.currentLogout ?? ""
+        const usersLogin = data.usersLogin
+        myToast({
+            title: "Signout",
+            message: currentLogout + " đã rời khỏi web giám sát",
+            type: "signout",
+            duration: 5000
+        })
+        this.$store.commit("setUsersLogin", usersLogin)
+    }
 };
+export default socketIo
