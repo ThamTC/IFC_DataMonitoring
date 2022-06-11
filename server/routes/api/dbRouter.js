@@ -16,5 +16,6 @@ router.post("/permission/create", dbController.createPermission)
 router.post("/permission/delete", dbController.deletePermission)
 router.post("/permission/update", dbController.updatePermission)
 router.post("/upload/images", dbController.uploadImages)
+router.get("/issues", dbController.getIssues)
 
 module.exports = router

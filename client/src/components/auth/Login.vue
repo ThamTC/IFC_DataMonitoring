@@ -27,12 +27,12 @@
                                         <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
                                     </div>
                                     <div class="
-                        d-flex
-                        align-items-center
-                        justify-content-between
-                        mt-4
-                        mb-0
-                      ">
+                                            d-flex
+                                            align-items-center
+                                            justify-content-between
+                                            mt-4
+                                            mb-0
+                                        ">
                                         <router-link to="/password">Forgot Password?</router-link>
                                         <button v-if="isLogged" class="btn btn-primary" type="submit">
                                             Login
@@ -62,7 +62,8 @@
 <script>
 import Footer from "../Footer.vue";
 import {
-    mapActions, mapGetters
+    mapActions,
+    mapGetters
 } from "vuex";
 import {
     Form,
@@ -115,18 +116,18 @@ export default {
         submit() {
             this.isLogged = false
             this.signin(this.user)
-            .then(resData => {
-                this.isLogged = true
-                const redirectPath = this.$route.query.redirect
-                this.$router.push({
-                    name: redirectPath ?? "home",
-                    // query: {routeDefault: this.routeDefault()}
-                });
-            })
-            .catch((err) => {
-                this.isLogged = true
-                this.message = err.response
-            })
+                .then(resData => {
+                    this.isLogged = true
+                    const redirectPath = this.$route.query.redirect
+                    this.$router.push({
+                        name: redirectPath ?? "home",
+                        // query: {routeDefault: this.routeDefault()}
+                    });
+                })
+                .catch((err) => {
+                    this.isLogged = true
+                    this.message = err.response
+                })
         },
     },
 };

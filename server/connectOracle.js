@@ -15,8 +15,9 @@ connectDB()
         {name: 23, value: 2},
         {name: 26, value: 2},
       ]
-      const result =
-        await db.GS_RolePermission.update({permission: JSON.stringify(payload)},{where: {userId: 16}})
+      const result = 
+      await db.GS_Issues.findAll()
+        // await db.GS_RolePermission.update({permission: JSON.stringify(payload)},{where: {userId: 16}})
         // await db.Permissions.create(
         //   {
         //     // userId: 6,

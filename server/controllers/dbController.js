@@ -167,6 +167,14 @@ const dbController = {
     } catch (error) {
       return res.status(400).json(error)
     }
+  },
+  getIssues: async (req, res, next) => {
+    try {
+      const resData = await db.GS_Issues.findAll()
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
   }
 };
 
