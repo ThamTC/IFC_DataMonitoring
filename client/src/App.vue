@@ -44,7 +44,6 @@ export default {
             .catch(error => {
                 console.log(error)
             })
-        socketIo.init(this.getUser)
     },
     methods: {
         ...mapMutations(["setPermissionDetails"]),
