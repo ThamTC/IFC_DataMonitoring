@@ -7,41 +7,49 @@
                 <h5 class="modal-title mt_warning" id="modalLabel">Cảnh báo !!!</h5>
             </div>
             <div class="modal-body">
-                Lựa chọn 1 trong các option bên dưới để hoàn thành!
-                <div class="p-3">
-                    <div class="form-check">
-                        <input v-model="selection" class="form-check-input" type="radio" value="1" name="flexRadioDefault" id="flexRadioDefault1" checked :disabled="inputDisable">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                            1 giờ trước
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input v-model="selection" class="form-check-input" type="radio" value="3" name="flexRadioDefault" id="flexRadioDefault2" :disabled="inputDisable">
-                        <label class="form-check-label" for="flexRadioDefault2">
-                            3 giờ trước
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input v-model="selection" class="form-check-input" type="radio" value="6" name="flexRadioDefault" id="flexRadioDefault3" :disabled="inputDisable">
-                        <label class="form-check-label" for="flexRadioDefault3">
-                            6 giờ trước
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input v-model="selection" class="form-check-input" type="radio" value="12" name="flexRadioDefault" id="flexRadioDefault4" :disabled="inputDisable">
-                        <label class="form-check-label" for="flexRadioDefault4">
-                            12 giờ trước
-                        </label>
-                    </div>
-                    <div class="input-group input-group-sm mb-3 mt-1">
-                        <input @keyup="getHour" v-model="inputHour" type="number" class="form-control input-hour" placeholder="2" aria-label="Recipient's username" aria-describedby="basic-addon2" min="0.1" max="99" step="0.1">
-                        <span class="px-2">giờ trước</span>
+                <div v-if="isCanShow">
+                    Lựa chọn 1 trong các option bên dưới để hoàn thành!
+                    <div class="p-3">
+                        <div class="form-check">
+                            <input v-model="selection" class="form-check-input" type="radio" value="1" name="flexRadioDefault" id="flexRadioDefault1" checked :disabled="inputDisable">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                                1 giờ trước
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input v-model="selection" class="form-check-input" type="radio" value="3" name="flexRadioDefault" id="flexRadioDefault2" :disabled="inputDisable">
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                3 giờ trước
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input v-model="selection" class="form-check-input" type="radio" value="6" name="flexRadioDefault" id="flexRadioDefault3" :disabled="inputDisable">
+                            <label class="form-check-label" for="flexRadioDefault3">
+                                6 giờ trước
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input v-model="selection" class="form-check-input" type="radio" value="12" name="flexRadioDefault" id="flexRadioDefault4" :disabled="inputDisable">
+                            <label class="form-check-label" for="flexRadioDefault4">
+                                12 giờ trước
+                            </label>
+                        </div>
+                        <div class="input-group input-group-sm mb-3 mt-1">
+                            <input @keyup="getHour" v-model="inputHour" type="number" class="form-control input-hour" placeholder="2" aria-label="Recipient's username" aria-describedby="basic-addon2" min="0.1" max="99" step="0.1">
+                            <span class="px-2">giờ trước</span>
+                        </div>
                     </div>
                 </div>
+                <div v-else>
+                    Bạn không có quyền để sử dụng chức năng này. Vui lòng liên hệ quản trị viên.
+                </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" v-if="isCanShow" >
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Không</button>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="deleteAll">Có</button>
+            </div>
+            <div class="modal-footer" v-else>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
             </div>
         </div>
     </div>
@@ -66,7 +74,10 @@ export default {
     },
     props: ["modal"],
     computed: {
-        ...mapGetters(["getLoginName"])
+        ...mapGetters(["getLoginName"]),
+        isCanShow() {
+            return this.modal.isCan
+        }
     },
     mounted() {
         this.checkerName = this.getLoginName
@@ -76,7 +87,7 @@ export default {
             if (!this.inputDisable) {
                 this.hourRemove = parseInt(this.selection)
             }
-            const deleteChannel = this.modal
+            const deleteChannel = this.modal.name
             var updateChannel
             if (this.modal == "realtime") {
                 updateChannel = "updateRealtime"

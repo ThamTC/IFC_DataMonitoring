@@ -45,7 +45,7 @@
                                     </td>
                                     <!-- <td>{{ dataItem?.contact }}</td> -->
                                     <td :ref="'checkerName_' + idx">{{ dataItem.username }}</td>
-                                    <td><i @click="doneOneTask" :id="idx" class="fas fa-trash" style="color:white;"></i></td>
+                                    <td><i @click="doneOneTask" :id="idx" :class='"fas fa-trash " + isAllow' style="color:white;"></i></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -55,16 +55,21 @@
         </div>
     </div>
     <modal-statistic/>
+    <modal-error-role/>
 </main>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import checkRole from '../../untils/checkRole';
+import ConstString from '../../untils/constString';
+import ModalErrorRole from '../modals/ModalErrorRole.vue';
 import ModalStatistic from '../modals/ModalStatistic.vue'
 export default {
     name: "Statistic",
     components: {
-        ModalStatistic
+        ModalStatistic,
+        ModalErrorRole
     },
     data() {
         return {
@@ -87,12 +92,19 @@ export default {
         this.checkerName = this.getLoginName
     },
     computed: {
-        ...mapGetters(["getLoginName", "getDataStatistic", "getSolarStatistic"]),
+        ...mapGetters(["getLoginName", "getDataStatistic", "getSolarStatistic", "getUser"]),
         getDataItems() {
             return this.statisticData.dataItems
         },
         enableDone() {
             return this.statisticData.dataItems.length ? "" : "disable"
+        },
+        isAllow() {
+            const isCan = checkRole(this.getUser, [this.statisticData.routeName], ConstString.WRITE)
+            if (!isCan) {
+                return "isAllowed"
+            }
+            return ""
         }
     },
     
@@ -102,20 +114,38 @@ export default {
             this.selectTask({e: e, checkerName: this.checkerName, key: this.statisticData.routeName})
         },
         async doneOneTask(e) {
-            let doneName = this.$refs["checkerName_" + e.target.id][0].innerText || this.checkerName
-            this.$socket.emit("doneTask", {checkerName: this.checkerName, doneName: doneName, id: e.target.id, key: this.statisticData.routeName})
+            const isCan = checkRole(this.getUser, [this.statisticData.routeName], ConstString.WRITE)
+            if (!isCan) {
+                var errorModal = new bootstrap.Modal(document.getElementById('errorRoleModal'))
+                errorModal.show()
+            } else {
+                let doneName = this.$refs["checkerName_" + e.target.id][0].innerText || this.checkerName
+                this.$socket.emit("doneTask", {checkerName: this.checkerName, doneName: doneName, id: e.target.id, key: this.statisticData.routeName})
+            }
         },
         isDisable(name) {
+            const isCan = checkRole(this.getUser, [this.statisticData.routeName], ConstString.WRITE)
+            if (!isCan) {
+                return true
+            }
             return this.checkerName !== name && name != ''
         },
         doneTaskSelections() {
-            var myModal = new bootstrap.Modal(document.getElementById('statisticModal'))
-            myModal.show()
+            const isCan = checkRole(this.getUser, [this.statisticData.routeName], ConstString.WRITE)
+            if (!isCan) {
+                var errorModal = new bootstrap.Modal(document.getElementById('errorRoleModal'))
+                errorModal.show()
+            } else {
+                var myModal = new bootstrap.Modal(document.getElementById('statisticModal'))
+                myModal.show()
+            }
         }
     },
 }
 </script>
 
 <style>
-
+.isAllowed {
+  cursor: not-allowed !important;
+}
 </style>

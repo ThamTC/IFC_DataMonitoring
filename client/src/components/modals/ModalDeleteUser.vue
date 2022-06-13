@@ -57,7 +57,7 @@ export default {
             const password = this.password
             if (password === process.env.VUE_APP_CONFIR_PWD_DEL_USER ?? "") {
                 // xoa user neu mat khau dung
-                dbRequest.deleteUser(this.modal.data.userId)
+                dbRequest.deleteUser(this.modal.data.user)
                 .then(() => {
                     this.isMessage = true
                     this.type = "success"
@@ -66,10 +66,11 @@ export default {
                     this.deleteUserFromManager(this.modal.data.eleId)
                     this.isDisabled = true
                 })
-                .catch(() => {
+                .catch((error) => {
                     this.isMessage = true
                     this.type = "danger"
-                    this.message = "Thất bại trong quá trình tương tác với DB"
+                    // this.message = "Thất bại trong quá trình tương tác với DB"
+                    this.message = error
                 })
             }
             else {

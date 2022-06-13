@@ -65,6 +65,9 @@
 <script>
 import ModalRealtime from '../modals/ModalRealtime.vue'
 import convert from '../../untils/convert'
+import checkRole from '../../untils/checkRole'
+import { mapGetters } from 'vuex'
+import ConstString from '../../untils/constString'
 
 export default {
     name: "Realtime",
@@ -73,10 +76,14 @@ export default {
     },
     data() {
         return {
+            user: null,
             isFilter: false,
             dataFilter: [],
             preFilter: "",
-            modal: null
+            modal: {
+                name: null,
+                isCan: true
+            }
         }
     },
     props: {
@@ -96,6 +103,7 @@ export default {
         }
     },
     computed: {
+        ...mapGetters(["getUser"]),
         getDataItems() {
             if (this.isFilter) {
                 return this.dataFilter
@@ -106,7 +114,9 @@ export default {
             return this.realtimeData.currentData
         }
     },
-    
+    created() {
+        this.user = this.getUser
+    },
     methods: {
         collapContact(contacts) {
             const phoneNums = contacts.split(',')
@@ -123,8 +133,14 @@ export default {
             return message
         },
         removeTask() {
+            const isCan = checkRole(this.user, [this.realtimeData.routeName], ConstString.WRITE)
+            if (!isCan) {
+                this.modal.isCan = false
+            } else {
+                this.modal.isCan = true
+            }
             var myModal = new bootstrap.Modal(document.getElementById('realtimeModal'))
-            this.modal = this.realtimeData.routeName
+            this.modal.name = this.realtimeData.routeName
             myModal.show()
         },
         filterPriority(e) {

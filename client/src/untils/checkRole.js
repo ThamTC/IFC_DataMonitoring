@@ -1,5 +1,6 @@
 import store from '../store'
-export default (user, comparePermissions) => {
+import ConstString from './constString'
+export default (user, comparePermissions, status=ConstString.NONE) => {
     const permissionAll = store.getters.getPermissionDetails
     let permissions = []
     permissions = user?.permissions ?? []
@@ -16,7 +17,7 @@ export default (user, comparePermissions) => {
     persMap = persMap.filter(ele => ele != undefined)
     if (persMap.length > 0) {
         comparePermissions.forEach(ele => {
-            const found = persMap.find(pers => pers.name == ele && pers.value > 0)
+            const found = persMap.find(pers => pers.name == ele && pers.value >= status)
             if (found) {
                 result = true
                 return false

@@ -34,7 +34,7 @@ export default {
         commit("setManagerUsers", managerUsers);
     },
     deleteUserFromManager: ({ commit, state }, eleId) => {
-        const managerUsers = state.managerUsers.splice(eleId, 1);
+        const managerUsers = state.managerUsers.filter(ele => ele.id != eleId);
         commit("setManagerUsers", managerUsers);
         commit("setManagerUserInfo", {});
     },

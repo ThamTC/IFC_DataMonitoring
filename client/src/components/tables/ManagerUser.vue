@@ -211,7 +211,7 @@ export default {
             var myModal = new bootstrap.Modal(document.getElementById('deleteUserModal'))
             this.modal.name = myModal
             this.modal.data = {
-                userId: users[id].id,
+                user: users[id],
                 eleId: id
             }
             myModal.show()

@@ -2,11 +2,12 @@
 import sound from "./services/howl";
 import checkRole from "./untils/checkRole";
 import myToast from "./untils/myToast";
+import ConstString from "./untils/constString";
 const socketIo = {
     // for bmb
     bmb_realtime: function (data) {
         const user = this.$store.getters.getUser
-        const isCan = checkRole(user, ["bmb_realtime"])
+        const isCan = checkRole(user, ["bmb_realtime"], ConstString.READ)
         if (isCan) {
             sound.play();
             this.$store.dispatch("currentDataStore", {
@@ -38,7 +39,7 @@ const socketIo = {
     // for general
     realtime: function (data) {
         const user = this.$store.getters.getUser
-        const isCan = checkRole(user, ["realtime"])
+        const isCan = checkRole(user, ["realtime"], ConstString.READ)
         if (isCan) {
             sound.play();
             this.$store.dispatch("currentDataStore", {
@@ -84,7 +85,7 @@ const socketIo = {
     // for solor
     solar_realtime: function(data) {
         const user = this.$store.getters.getUser
-        const isCan = checkRole(user, ["solar_realtime"])
+        const isCan = checkRole(user, ["solar_realtime"], ConstString.READ)
         if (isCan) {
             sound.play();
             this.$store.dispatch("currentDataStore", {

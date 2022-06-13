@@ -14,6 +14,7 @@ import {
     mapGetters
 } from 'vuex'
 import checkRole from '../../../untils/checkRole'
+import ConstString from '../../../untils/constString';
 import SideNavBmb from './subSideNavMenus/sideNavBmb.vue';
 import SideNavChart from './subSideNavMenus/sideNavChart.vue';
 import SideNavHome from './subSideNavMenus/sideNavHome.vue';
@@ -27,22 +28,22 @@ export default {
     computed: {
         ...mapGetters(["getUser", "getLoadTable"]),
         canShowHome() {
-            return checkRole(this.getUser, ["realtime", "statistic"])
+            return checkRole(this.getUser, ["realtime", "statistic"], ConstString.READ)
         },
         canShowManager() {
-            return checkRole(this.getUser, ["managerRole", "managerUser", "managerPermission"])
+            return checkRole(this.getUser, ["managerRole", "managerUser", "managerPermission"], ConstString.READ)
         },
         canShowSolar() {
-            return checkRole(this.getUser, ["solar_realtime", "solar_statistic"])
+            return checkRole(this.getUser, ["solar_realtime", "solar_statistic"], ConstString.READ)
         },
         canShowChart() {
-            return checkRole(this.getUser, ["asdsd"])
+            return checkRole(this.getUser, ["asdsd"], ConstString.READ)
         },
         canShowRedmine() {
-            return checkRole(this.getUser, ["issues"])
+            return checkRole(this.getUser, ["issues"], ConstString.READ)
         },
         canShowBmb() {
-            return checkRole(this.getUser, ["bmb_realtime"])
+            return checkRole(this.getUser, ["bmb_realtime"], ConstString.READ)
         },
     }
 };
