@@ -15,7 +15,7 @@
                         </div>
                         <div class="flex-grow-1 mx-3">
                             <div class="subject">{{issue.subject}}</div>
-                            <div class="author">Added By {{issue.addedBy}} ago</div>
+                            <div class="author">Added By {{issue.addedBy}}</div>
                         </div>
                         <div class="small">
                             <nav style="--bs-breadcrumb-divider: '|';" aria-label="breadcrumb">

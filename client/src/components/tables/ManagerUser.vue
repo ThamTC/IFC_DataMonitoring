@@ -166,20 +166,24 @@ export default {
             this.modal.name = myModal
             var permissionUser = []
             this.getPermissionOfUser(userId)
-                .then(res => {
-                    if (res.data === null) {
+                .then(result => {
+                    if (result.data === null) {
                         permissionUser = this.userAuth.permissions
                     } else {
-                        permissionUser = JSON.parse(res.data.permission)
+                        if (result.data.permission === null) {
+                            permissionUser = this.userAuth.permissions
+                        } else {
+                            permissionUser = JSON.parse(result.data.permission)
+                        }
                     }
                     return permissionRequest.getAllPermissions()
                 })
-                .then(res => {
-                    if (res) {
-                        const c_permissionUser = convert.convertPermissionUser(permissionUser, res.data)
+                .then(result => {
+                    if (result) {
+                        const c_permissionUser = convert.convertPermissionUser(permissionUser, result.data)
                         var permissionSetting = []
                         var permissionTotal = []
-                        permissionTotal = res.data.map(ele => {
+                        permissionTotal = result.data.map(ele => {
                             return {id: ele.id, name: ele.name, value: '0'}
                         })
                         permissionTotal.forEach(total => {

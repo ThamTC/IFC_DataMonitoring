@@ -131,6 +131,7 @@ const dbController = {
     const data = req.body.data
     try {
       const resData = await db.GS_UserIFC.update({ role: data }, { where: { id: id } })
+      await db.GS_RolePermission.update({permission: null},{where: {userId: id}})
       return res.status(200).json(resData)
     } catch (error) {
       return res.status(400).json(error)
