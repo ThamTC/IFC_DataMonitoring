@@ -211,6 +211,15 @@ const dbController = {
     } catch (error) {
       return res.status(400).json(error)
     }
+  },
+  getIssueByUser: async (req, res, next) => {
+    const params = req.params
+    try {
+      const resData = await db.GS_Issues.findAll({where: {assignee: params.assignee}})
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
   }
 };
 

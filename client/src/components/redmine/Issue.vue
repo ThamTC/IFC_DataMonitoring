@@ -120,7 +120,7 @@ export default {
         const localISOTime = new Date(Date.now() - tzoffset).toISOString()
         this.dateSelection = localISOTime.slice(0, 10)
         this.isLoading = true
-        this.getAllIssue()
+        this.getAllIssue({role: this.getUser.role, authName: this.getUser.username})
             .then(result => {
                 this.setIssues(result.data)
                 return dbRequest.getAllUsers()

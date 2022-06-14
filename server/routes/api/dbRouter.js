@@ -20,5 +20,6 @@ router.get("/issue/index", dbController.getIssues)
 router.post("/issue/create", dbController.createIssue)
 router.post("/issue/update", dbController.updateIssue)
 router.get("/issue/:id", dbController.getIssueIndex)
+router.get("/issue/by_user/:assignee", dbController.getIssueByUser)
 
 module.exports = router
