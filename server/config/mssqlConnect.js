@@ -28,7 +28,8 @@ const sequelize = new Sequelize(process.env.MSSQL_DATABASE || 'MYDB', process.en
       // Observe the need for this nested `options` field for MSSQL
       options: {
         // Your tedious options here
-        useUTC: true,
+        // useUTC: true,
+        timezone: "+07:00",
         dateFirst: 1,
         encrypt: false
       }

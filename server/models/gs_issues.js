@@ -17,8 +17,10 @@ module.exports = (sequelize, DataTypes) => {
     projectId: DataTypes.STRING,
     status: DataTypes.STRING,
     subject: DataTypes.STRING,
+    description: DataTypes.STRING,
+    priority: DataTypes.STRING,
     addedBy: DataTypes.STRING,
-    doneProcess: DataTypes.STRING,
+    doneProgress: DataTypes.STRING,
     assignee: DataTypes.STRING,
     startDate: DataTypes.DATE,
     dueDate: DataTypes.DATE

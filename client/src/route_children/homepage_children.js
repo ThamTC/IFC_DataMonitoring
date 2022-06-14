@@ -6,7 +6,9 @@ import SolarStatisticTable from '../components/tables/SolarStatisticTable.vue'
 import Default from '../components/Default.vue'
 import ManagerPermission from '../components/tables/ManagerPermission.vue'
 import ManagerRole from '../components/tables/ManagerRoles.vue'
-import RedmineIssues from '../components/tables/RedmineIssues.vue'
+import IssueDetail from '../components/redmine/IssueDetail.vue'
+import Issue from '../components/redmine/Issue.vue'
+import Redmine from '../components/redmine/Redmine.vue'
 import BMBRealTime from '../components/tables/BMBRealTimeTable.vue'
 
 export default [
@@ -53,7 +55,19 @@ export default [
     {
         path: "redmine/issues",
         name: "redmine_issues",
-        component: RedmineIssues
+        component: Redmine,
+        children: [
+            {
+                path: "",
+                name: "issue",
+                component: Issue
+            },
+            {
+                path: ":id",
+                name: "issue_detail",
+                component: IssueDetail
+            }
+        ]
     },
     {
         path: "bmb_room/realtime",

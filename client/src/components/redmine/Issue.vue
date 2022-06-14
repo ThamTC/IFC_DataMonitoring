@@ -21,8 +21,9 @@
                                 <tr id="0" class="text-center">
                                     <th style="width:5%">#</th>
                                     <th style="width:5%">Status</th>
-                                    <th style="width:75%">Subject</th>
-                                    <th style="width:15%">Updateded</th>
+                                    <th style="width:70%">Subject</th>
+                                    <th style="width:8%">%Done</th>
+                                    <th style="width:12%">Updateded</th>
                                     <!-- <th>Start Date</th>
                                     <th>Due Date</th>
                                     <th>UpdatedDate</th>
@@ -31,12 +32,21 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(item, idx) in dataItems" :key="idx"  class="text-center">
+                                <tr v-for="(item, idx) in dataItems" :key="idx" class="text-center">
                                     <!-- <td style="width:5%">{{idx+1}}</td> -->
-                                    <td style="width:5%"><router-link :to="{name: 'issue_detail', params: {id: idx}}">{{idx+1}}</router-link></td>
+                                    <td style="width:5%">
+                                        <router-link :to="{name: 'issue_detail', params: {id: idx+1}}" class="text-decoration-none">{{idx+1}}</router-link>
+                                    </td>
                                     <td style="width:5%">{{item.status}}</td>
-                                    <td style="width:75%">{{item.subject}}</td>
-                                    <td style="width:15%">{{item.updatedAt}}</td>
+                                    <td style="width:70%">
+                                        <router-link :to="{name: 'issue_detail', params: {id: idx+1}}" class="text-decoration-none">{{item.subject}}</router-link>
+                                    </td>
+                                    <td style="width:8%">
+                                      <div class="progress">
+                                            <div class="progress-bar bg-success" role="progressbar" :style="'width: '+item.doneProgress+'%'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">{{item.doneProgress}}%</div>
+                                        </div>
+                                    </td>
+                                    <td style="width:12%">{{item.updatedAt}}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -71,14 +81,18 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from 'vuex'
+import {
+    mapActions,
+    mapGetters,
+    mapMutations
+} from 'vuex'
 import dbRequest from '../../apis/dbRequest'
 import ModalAddIssue from '../modals/ModalAddIssue.vue'
 export default {
     components: {
         ModalAddIssue
     },
-    name: "RedmineIssues",
+    name: "Issue",
     data() {
         return {
             isLoading: false,
@@ -99,21 +113,23 @@ export default {
         }
     },
     created() {
-        this.dateSelection = new Date().toISOString().slice(0, 10)
+        const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+        const localISOTime = new Date(Date.now() - tzoffset).toISOString()
+        this.dateSelection = localISOTime.slice(0, 10)
         this.isLoading = true
         this.getAllIssue()
-        .then(result => {
-            this.setIssues(result.data)
-            return dbRequest.getAllUsers()
-        })
-        .then((data) => {
-            this.setManagerUsers(data.data)
-            this.isLoading = false
-        })
-        .catch(error => {
-            this.isError = true
-            this.error = error
-        })
+            .then(result => {
+                this.setIssues(result.data)
+                return dbRequest.getAllUsers()
+            })
+            .then((data) => {
+                this.setManagerUsers(data.data)
+                this.isLoading = false
+            })
+            .catch(error => {
+                this.isError = true
+                this.error = error
+            })
     },
     methods: {
         ...mapMutations(["setIssues", "setManagerUsers"]),
@@ -122,7 +138,13 @@ export default {
             var myModal = new bootstrap.Modal(document.getElementById('addIssueModal'))
             this.modal.name = ""
             this.modal.authName = this.getUser.username
-            this.modal.users = this.getManagerUsers.map(ele => {return {id: ele.id, name: ele.username}})
+            this.modal.users = this.getManagerUsers.map(ele => {
+                return {
+                    id: ele.id,
+                    name: ele.username
+                }
+            })
+            localStorage.setItem("issueDetail", JSON.stringify(this.modal))
             myModal.show()
         }
     },

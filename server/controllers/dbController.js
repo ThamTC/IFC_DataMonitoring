@@ -175,6 +175,42 @@ const dbController = {
     } catch (error) {
       return res.status(400).json(error)
     }
+  },
+  createIssue: async (req, res, next) => {
+    const issue = req.body.data
+    console.log(issue)
+    try {
+      const isExisted = await db.GS_Issues.findOne({where: {subject: issue.subject}, raw: true})
+      if (isExisted) {
+        return res.status(400).json("Subject is existed!")
+      }
+      const resData = await db.GS_Issues.create(issue)      
+      return res.status(200).json(resData)
+    } catch (error) {
+      console.log(error)
+      return res.status(400).json(error)
+    }
+  },
+  updateIssue: async (req, res, next) => {
+    const payload = req.body.data
+    const id = req.body.id
+    const dataUpdate = payload
+    try {
+      const resData = await db.GS_Issues.update(dataUpdate, {where: {id: id}})
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
+  },
+  getIssueIndex: async (req, res, next) => {
+    const params = req.params
+    const id = params.id
+    try {
+      const resData = await db.GS_Issues.findOne({where: {id: id}})
+      return res.status(200).json(resData)
+    } catch (error) {
+      return res.status(400).json(error)
+    }
   }
 };
 

@@ -29,7 +29,7 @@
                     <ErrorMessage name="subject" class="help-message mt-2" />
                     <div class="form-group">
                         <label for="descriptionArea">Description</label>
-                        <Field class="form-control" id="descriptionArea" rows="3" v-model="issueFormData.description" name="description"></Field>
+                        <Field class="form-control" id="descriptionArea" rows="3" v-model="issueFormData.description" name="description" />
                     </div>
                     <ErrorMessage name="description" class="help-message mt-2" />
                     <div class="row">
@@ -40,7 +40,7 @@
                         <div class="col-md-6">
                             <span>Assignee</span>
                             <select name="" id="assignee_select" class="form-control">
-                                <option :value="user.id" v-for="(user, idx) in getUsers" :key="idx" :selected="user.name==getAuthName">{{user.name}}</option>
+                                <option :value="user.name" v-for="(user, idx) in getUsers" :key="idx" :selected="user.name==getAuthName">{{user.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -54,11 +54,11 @@
                         <div class="col-md-6">
                             <span>Due Date</span>
                             <div class="input-group date" id="datepicker">
-                                <input type="date" class="form-control" id="duedate" v-model="issueFormData.endDate" />
+                                <input type="date" class="form-control" id="duedate" v-model="issueFormData.dueDate" />
                             </div>
                         </div>
                     </div>
-                    <div v-if="isMessage" :class='"alert mx-3 alert-" + type' role="alert">
+                    <div v-if="isMessage" :class='"text-center alert mt-3 alert-" + type' role="alert">
                         {{ message }}
                     </div>
                     <div class="modal-footer">
@@ -83,7 +83,8 @@ import {
     ErrorMessage
 } from 'vee-validate'
 import * as yup from 'yup';
-import { mapActions } from 'vuex';
+import { mapActions, mapMutations } from 'vuex';
+import dbRequest from '../../apis/dbRequest';
 export default {
     name: "ModalAddIssue",
     components: {
@@ -102,14 +103,14 @@ export default {
             message: null,
             type: null,
             isDisabled: false,
-            optionStatus: ["Open", "To Do", "In Progress", "Review", "Done"],
+            optionStatus: ["New", "To Do", "In Progress", "Review", "Done"],
             optionDone: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
             issueFormData: {
                 subject: null,
                 description: null,
                 addedBy: null,
                 startDate: null,
-                endDate: null
+                dueDate: null
             }
         }
     },
@@ -126,15 +127,48 @@ export default {
         getAuthName() {}
     },
     created() {
-        const dateNow = new Date().toISOString().slice(0, 10)
+        const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+        const localISOTime = new Date(Date.now() - tzoffset).toISOString()
+        const dateNow = localISOTime.slice(0, 10)
         this.issueFormData.startDate = dateNow
-        this.issueFormData.endDate = dateNow
+        this.issueFormData.dueDate = dateNow
     },
     methods: {
-        // ...mapActions([]),
+        ...mapMutations(["insertIssue"]),
         addIssue() {
+            const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+            const localISOTime = new Date(Date.now() - tzoffset).toISOString()
             const statusVal = document.getElementById("status_select").value
             const doneVal = document.getElementById("done_select").value
+            const assigneeVal = document.getElementById("assignee_select").value
+            const payload = {
+                projectId: 0,
+                status: statusVal,
+                subject: this.issueFormData.subject,
+                description: this.issueFormData.description,
+                priority: 0,
+                doneProgress: doneVal,
+                addedBy: this.issueFormData.addedBy,
+                assignee: assigneeVal,
+                startDate: this.issueFormData.startDate,
+                dueDate: this.issueFormData.dueDate,
+                updatedAt: localISOTime
+            }
+            this.isAdded = false
+            dbRequest.createIssue(payload)
+            .then(result => {
+                this.insertIssue(payload)
+                this.isMessage = true
+                this.isAdded = true
+                this.type = "success"
+                this.message = "Thêm issue thành công!"
+            })
+            .catch(err => {
+                this.isAdded = false
+                this.isMessage = true
+                this.type = "danger"
+                this.message = err.response
+            })
         }
     },
 }
