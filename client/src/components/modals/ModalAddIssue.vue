@@ -164,10 +164,10 @@ export default {
                 this.message = "Thêm issue thành công!"
             })
             .catch(err => {
-                this.isAdded = false
+                this.isAdded = true
                 this.isMessage = true
                 this.type = "danger"
-                this.message = err.response
+                this.message = err.response.data
             })
         }
     },

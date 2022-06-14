@@ -89,9 +89,9 @@ export default {
             }
             const deleteChannel = this.modal.name
             var updateChannel
-            if (this.modal == "realtime") {
+            if (this.modal.name == "realtime") {
                 updateChannel = "updateRealtime"
-            } else if (this.modal == "bmb_realtime") {
+            } else if (this.modal.name == "bmb_realtime") {
                 updateChannel = "updateRealtimeBmb"
             }
             else {

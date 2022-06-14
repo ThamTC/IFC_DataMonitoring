@@ -7,7 +7,9 @@
     "port": 1434,
     "dialect": "mssql",
     "encrypt": false,
-    "logging": false
+    "logging": false,
+    "timezone": "+07:00",
+    "operatorsAliases": false
   },
   "test": {
     "username": "sa",
@@ -17,7 +19,9 @@
     "port": 1434,
     "dialect": "mssql",
     "encrypt": false,
-    "logging": false
+    "logging": false,
+    "timezone": "+07:00",
+    "operatorsAliases": false
   },
   "production": {
     "username": "sa",
@@ -27,6 +31,8 @@
     "port": 1434,
     "dialect": "mssql",
     "encrypt": false,
-    "logging": false
+    "logging": false,
+    "timezone": "+07:00",
+    "operatorsAliases": false
   }
 }
