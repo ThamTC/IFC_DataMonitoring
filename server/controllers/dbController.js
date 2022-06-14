@@ -179,7 +179,6 @@ const dbController = {
   },
   createIssue: async (req, res, next) => {
     const issue = req.body.data
-    console.log(issue)
     try {
       const isExisted = await db.GS_Issues.findOne({where: {subject: issue.subject}, raw: true})
       if (isExisted) {
