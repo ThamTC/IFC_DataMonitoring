@@ -167,13 +167,15 @@ export default {
                 this.isError = true
                 this.error = error
             })
+        this.elePaginations = pagination.pagination(this.totalPage, this.curPage)
+    },
+    mounted() {
         this.users = this.getManagerUsers.map(ele => {
             return {
                 id: ele.id,
                 name: ele.username
             }
         })
-        this.elePaginations = pagination.pagination(this.totalPage, this.curPage)
     },
     methods: {
         ...mapMutations(["setIssues", "setManagerUsers"]),
@@ -238,6 +240,9 @@ export default {
             if (ele.dataset.page) {
                 const pageNumber = parseInt(e.target.dataset.page, 10)
                 if (!isNaN(pageNumber)) {
+                    this.curPage = pageNumber
+                    this.handleButtonLeft()
+                    this.handleButtonRight()
                     this.elePaginations = pagination.pagination(this.totalPage, pageNumber)
                 }
             }
