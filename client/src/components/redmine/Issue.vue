@@ -162,20 +162,18 @@ export default {
             .then((data) => {
                 this.setManagerUsers(data.data)
                 this.isLoading = false
+                this.users = data.data.map(ele => {
+                    return {
+                        id: ele.id,
+                        name: ele.username
+                    }
+                })
             })
             .catch(error => {
                 this.isError = true
                 this.error = error
             })
         this.elePaginations = pagination.pagination(this.totalPage, this.curPage)
-    },
-    mounted() {
-        this.users = this.getManagerUsers.map(ele => {
-            return {
-                id: ele.id,
-                name: ele.username
-            }
-        })
     },
     methods: {
         ...mapMutations(["setIssues", "setManagerUsers"]),
