@@ -57,22 +57,22 @@
                         </div>
                         <div v-if="dataItems.length" class="text-center mt-3">
                             <div class="page-container">
-                                <button class="first-page" :disabled="isPrev">
+                                <button @click="firstPage" class="first-page" :disabled="isPrev">
                                     <i class="fas fa-angle-double-left"></i>
                                 </button>
-                                <button class="prev-page" :disabled="isPrev">
+                                <button @click="prePage" class="prev-page" :disabled="isPrev">
                                     <i class="fas fa-angle-left"></i>
                                 </button>
                                 <div id="pagination">
-                                    <li :class='"pg-item " + item.active' :data-page="item.index" v-for="(item, idx) in elePaginations" :key="idx">
+                                    <li :class='"pg-item " + item.active' :data-page="item.index" v-for="(item, idx) in elePaginations" :key="idx" @click="choosePage">
                                         <a class="pg-link" href="#">{{item.index}}</a>
                                     </li>
                                 </div>
-                                <button class="next-page" :disabled="isNext">
+                                <button @click="nextPage" class="next-page" :disabled="isNext">
                                     <i class="fas fa-angle-right"></i>
                                 </button>
-                                <button class="last-page">
-                                    <i class="fas fa-angle-double-right" :disabled="isNext"></i>
+                                <button @click="lastPage" class="last-page" :disabled="isNext">
+                                    <i class="fas fa-angle-double-right"></i>
                                 </button>
                             </div>
                         </div>
@@ -120,8 +120,10 @@ export default {
             toDateSelection: null,
             users: [],
             elePaginations: [],
-            isPrev: true,
-            isNext: false
+            isPrev: false,
+            isNext: false,
+            curPage: 1,
+            totalPage: 10
         }
     },
     computed: {
@@ -171,8 +173,7 @@ export default {
                 name: ele.username
             }
         })
-        this.elePaginations = pagination.pagination()
-
+        this.elePaginations = pagination.pagination(this.totalPage, this.curPage)
     },
     methods: {
         ...mapMutations(["setIssues", "setManagerUsers"]),
@@ -187,6 +188,59 @@ export default {
         },
         formatDate(date) {
             return format.formatDate(date)
+        },
+        firstPage() {
+            this.isNext = false;
+            this.isPrev = true
+            this.curPage = 1
+            this.elePaginations = pagination.pagination(this.totalPage, this.curPage)
+        },
+        prePage() {
+            this.isNext = false;
+            this.curPage--
+            this.handleButtonLeft()
+            this.elePaginations = pagination.pagination(this.totalPage, this.curPage)
+        },
+        nextPage() {
+            this.isPrev = false;
+            this.curPage++
+            this.handleButtonRight()
+            this.elePaginations = pagination.pagination(this.totalPage, this.curPage)
+        },
+        lastPage() {
+            this.isNext = true
+            this.isPrev = false;
+            this.curPage = this.totalPage
+            this.elePaginations = pagination.pagination(this.totalPage, this.curPage)
+        },
+        handleButtonLeft() {
+            if (this.curPage <= 1) {
+                this.curPage = 1
+                this.isPrev = true;
+                this.isPrev = true;
+            } else {
+                this.isPrev = false;
+                this.isPrev = false;
+            }
+        },
+        handleButtonRight() {
+            if (this.curPage >= this.totalPage) {
+                this.curPage = this.totalPage
+                this.isNext = true;
+                this.isNext = true;
+            } else {
+                this.isNext = false;
+                this.isNext = false;
+            }
+        },
+        choosePage(e) {
+            const ele = e.target
+            if (ele.dataset.page) {
+                const pageNumber = parseInt(e.target.dataset.page, 10)
+                if (!isNaN(pageNumber)) {
+                    this.elePaginations = pagination.pagination(this.totalPage, pageNumber)
+                }
+            }
         }
     },
 }
