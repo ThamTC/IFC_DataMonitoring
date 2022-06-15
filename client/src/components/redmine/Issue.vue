@@ -137,13 +137,14 @@ export default {
         const accessToken = localStorage.getItem("accessToken")
         if (accessToken) {
             this.user = jwtDecode(accessToken)
+        } else {
+            this.user = this.getUser
         }
         this.getAllIssue({
-                role: this.getUser.role,
-                authName: this.getUser.username
+                role: this.user.role,
+                authName: this.user.username
             })
             .then(result => {
-                console.log(result.data)
                 this.setIssues(result.data)
                 return dbRequest.getAllUsers()
             })
