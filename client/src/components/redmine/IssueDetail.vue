@@ -97,7 +97,7 @@ export default {
             this.issue = issues[id - 1]
             this.issue.startDate = this.issue.startDate.slice(0, 10)
             this.issue.dueDate = this.issue.dueDate.slice(0, 10)
-            this.issue.id = id
+            this.issue.id = issues[id - 1].id
         } else {
             dbRequest.getIssueIndex(id)
                 .then(result => {

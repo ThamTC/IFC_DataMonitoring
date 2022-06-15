@@ -55,23 +55,28 @@
                                 </tbody>
                             </table>
                         </div>
-                        <nav v-if="dataItems.length" aria-label="Page navigation">
-                            <ul class="pagination mt-3 justify-content-center">
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+                        <div v-if="dataItems.length" class="text-center mt-3">
+                            <div class="page-container">
+                                <button class="first-page" :disabled="isPrev">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </button>
+                                <button class="prev-page" :disabled="isPrev">
+                                    <i class="fas fa-angle-left"></i>
+                                </button>
+                                <div id="pagination">
+                                    <li :class='"pg-item " + item.active' :data-page="item.index" v-for="(item, idx) in elePaginations" :key="idx">
+                                        <a class="pg-link" href="#">{{item.index}}</a>
+                                    </li>
+                                </div>
+                                <button class="next-page" :disabled="isNext">
+                                    <i class="fas fa-angle-right"></i>
+                                </button>
+                                <button class="last-page">
+                                    <i class="fas fa-angle-double-right" :disabled="isNext"></i>
+                                </button>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -95,6 +100,7 @@ import dbRequest from '../../apis/dbRequest'
 import ModalAddIssue from '../modals/ModalAddIssue.vue'
 import format from '../../untils/format'
 import jwtDecode from 'jwt-decode'
+import pagination from './pagination'
 export default {
     components: {
         ModalAddIssue
@@ -112,7 +118,10 @@ export default {
             },
             fromDateSelection: null,
             toDateSelection: null,
-            users: []
+            users: [],
+            elePaginations: [],
+            isPrev: true,
+            isNext: false
         }
     },
     computed: {
@@ -162,6 +171,8 @@ export default {
                 name: ele.username
             }
         })
+        this.elePaginations = pagination.pagination()
+
     },
     methods: {
         ...mapMutations(["setIssues", "setManagerUsers"]),
