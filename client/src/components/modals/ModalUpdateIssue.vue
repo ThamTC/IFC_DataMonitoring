@@ -109,7 +109,6 @@ export default {
                 dueDate: this.issueFormData.dueDate,
                 updatedAt: localISOTime
             }
-            console.log(this.issueFormData.id,payload)
             this.isAdded = false
             dbRequest.updateIssue(this.issueFormData.id, payload)
             .then(result => {
