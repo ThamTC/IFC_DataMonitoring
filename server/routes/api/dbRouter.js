@@ -19,10 +19,6 @@ router.route("/permission")
 router.post("/upload/images", dbController.uploadImages)
 router.get("/issues/counter", dbController.getCounter)
 router.use("/issues", router_redmine)
-// router.route("/issues")
-// .get(dbController.getIssues)
-// .post(dbController.createIssue)
-// .patch(dbController.updateIssue)
 router.get("/issue/:id", dbController.getIssueIndex)
 
 module.exports = router

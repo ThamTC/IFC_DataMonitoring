@@ -106,7 +106,7 @@
             </div>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button type="button" class="btn btn-primary" @click="addIssue">
-                    Add Issue
+                    Add Task
                 </button>
             </div>
         </div>
