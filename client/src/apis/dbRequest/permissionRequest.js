@@ -3,7 +3,7 @@ import axios from '../api'
 export default {
     getAllPermissions: async () => {
         try {
-            const resData = await axios.get("/api/db/permission/index")
+            const resData = await axios.get("/api/db/permission")
             return resData
         } catch (error) {
             throw error
@@ -11,7 +11,7 @@ export default {
     },
     createPermission: async (name) => {
         try {
-            const resData = await axios.post("/api/db/permission/create", {
+            const resData = await axios.post("/api/db/permission", {
                 name: name
             })
             return resData
@@ -21,7 +21,7 @@ export default {
     },
     delete: async (id) => {
         try {
-            const resData = await axios.post("api/db/permission/delete", {
+            const resData = await axios.delete("api/db/permission", {
                 id: id
             })
             return resData
@@ -31,7 +31,7 @@ export default {
     },
     updatePermission: async (userId, permission) => {
         try {
-            const resData = await axios.post("api/db/permission/update", {
+            const resData = await axios.patch("api/db/permission", {
                 userId: userId,
                 permission: permission
             })

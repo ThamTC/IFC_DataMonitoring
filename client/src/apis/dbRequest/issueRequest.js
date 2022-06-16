@@ -10,7 +10,7 @@ export default {
   },
   createIssue: async (data) => {
     try {
-      const resData = await axios.post("/api/db/issue/create", {
+      const resData = await axios.post("/api/db/issues", {
         data: data,
       });
       return resData;
@@ -20,7 +20,7 @@ export default {
   },
   updateIssue: async (id, data) => {
     try {
-      const resData = await axios.post("api/db/issue/update", {
+      const resData = await axios.patch("api/db/issues", {
         id: id,
         data: data,
       });

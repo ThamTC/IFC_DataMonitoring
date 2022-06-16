@@ -227,7 +227,7 @@ export default {
     },
     methods: {
         ...mapMutations(["setIssues", "setManagerUsers"]),
-        ...mapActions(["getAllIssue", "getIssueByUser", "getCounterIssue"]),
+        ...mapActions(["getAllIssue", "getCounterIssue"]),
         addIssue() {
             var myModal = new bootstrap.Modal(
                 document.getElementById("addIssueModal")
