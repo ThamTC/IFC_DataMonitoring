@@ -9,11 +9,13 @@
                     <div class="card-body">
                         <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
                             <div class="d-flex mb-3 justify-content-end">
+                                <span>Status:</span>
                                 <select @change="changeStatus" name="" class="me-3" v-model="statusSelection">
                                     <option :value="item" v-for="(item, idx) in statusOptions" :key="idx">
                                         {{ item }}
                                     </option>
                                 </select>
+                                <span>User:</span>
                                 <select @change="changeUser" name="" class="me-3" v-if="isCanShow"
                                     v-model="userSelection">
                                     <option value="All">All</option>
