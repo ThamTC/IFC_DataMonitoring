@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 
 const redmineController = {
     getIssues: async (req, res, next) => {
-        console.log(req.query)
+        const status = req.query.status
         const assignee = req.query.assignee
         const fromDate = req.query.startDate;
         const toDate = req.query.endDate;
@@ -11,10 +11,11 @@ const redmineController = {
         const limit = req.query?.limit ?? 10
         let where = {}
         try {
+            if (status !== 'All') {
+                where.status = status
+            }
             if (assignee !== "All") {
-                where = {
-                    assignee: assignee
-                }
+                where.assignee = assignee
             }
             where.startDate = { [Op.between]: [fromDate, toDate] }
             const resData = await db.GS_Issues.findAll({
@@ -29,15 +30,17 @@ const redmineController = {
         }
     },
     getCounter: async (req, res, next) => {
+        const status = req.query.status
         const assignee = req.query.assignee
         const fromDate = req.query.startDate;
         const toDate = req.query.endDate;
         let where = {}
         try {
+            if (status !== 'All') {
+                where.status = status
+            }
             if (assignee !== "All") {
-                where = {
-                    assignee: assignee
-                }
+                where.assignee = assignee
             }
             where.startDate = { [Op.between]: [fromDate, toDate] }
             const resData = await db.GS_Issues.count({

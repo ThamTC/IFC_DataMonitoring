@@ -4,6 +4,7 @@ export default {
     try {
       const resData = await axios.get("api/db/issues", {
         params: {
+            status: data.where.status,
             assignee: data.where.assignee,
             startDate: data.where.startDate,
             endDate: data.where.endDate,

@@ -9,8 +9,8 @@
                     <div class="card-body">
                         <div class="dataTable-wrapper dataTable-loading no-footer sortable searchable fixed-columns">
                             <div class="d-flex mb-3 justify-content-end">
-                                <select @change="changeProgress" name="" class="me-3" v-model="progressSelection">
-                                    <option :value="item" v-for="(item, idx) in doneProgress" :key="idx">
+                                <select @change="changeStatus" name="" class="me-3" v-model="statusSelection">
+                                    <option :value="item" v-for="(item, idx) in statusOptions" :key="idx">
                                         {{ item }}
                                     </option>
                                 </select>
@@ -148,8 +148,8 @@ export default {
             curPage: 1,
             totalPage: 10,
             oldPage: 1,
-            doneProgress: ["All", "New", "To Do", "In Progress", "Review", "Done"],
-            progressSelection: "All",
+            statusOptions: ["All", "New", "To Do", "In Progress", "Review", "Done"],
+            statusSelection: "All",
         };
     },
     computed: {
@@ -166,6 +166,7 @@ export default {
         },
     },
     created() {
+        
         const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
         const localISOTime = new Date(Date.now() - tzoffset).toISOString();
         this.fromDateSelection = localISOTime.slice(0, 10);
@@ -181,6 +182,7 @@ export default {
             this.user.role === "manager" ? "All" : this.user.username;
         const options = {
             where: {
+                status: this.statusSelection,
                 assignee: this.userSelection,
                 startDate: localISOTime.slice(0, 10) + "T00:00:00",
                 endDate: localISOTime,
@@ -228,9 +230,9 @@ export default {
         ...mapMutations(["setIssues", "setManagerUsers"]),
         ...mapActions(["getAllIssue", "getCounterIssue"]),
         bg_colordone(dueDate=Date.now(), status='Done') {
-            const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
-            const localISOTime = new Date(Date.now() - tzoffset).toISOString();
-            if (status !== 'Done' && dueDate < localISOTime) { 
+            const newDueDate = new Date(dueDate).getTime()
+            const localISOTime = new Date(Date.now()).getTime();
+            if (status !== 'Done' && newDueDate < localISOTime) {
                 return "danger"
             }
             return 'success'
@@ -307,6 +309,9 @@ export default {
                 }
             }
         },
+        changeStatus() {
+            this.requestIssue();
+        },
         changeUser() {
             this.requestIssue();
         },
@@ -315,14 +320,16 @@ export default {
         },
         requestIssue(offset = 1, limit = 10) {
             this.isError = false;
+            const statusSelect = this.statusSelection
             const userSelected = this.userSelection;
             const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
             const localISOTime = new Date(Date.now() - tzoffset).toISOString();
             if (this.fromDateSelection <= this.toDateSelection) {
                 const options = {
                     where: {
+                        status: statusSelect,
                         assignee: userSelected,
-                        startDate: this.fromDateSelection + "T00:00:00",
+                        startDate: this.fromDateSelection + "T00:00:00.000Z",
                         endDate: this.toDateSelection + localISOTime.slice(10),
                     },
                     offset: offset,
@@ -334,7 +341,7 @@ export default {
                         // set total page
                         const len = result.data;
                         const f_total = Math.floor(len / 10);
-                        this.totalPage = len % 10 > 0 ? f_total + 1 : 0;
+                        this.totalPage = len > 0 ? f_total + 1 : 0;
                         this.curPage = offset;
                         this.handleButtonRight();
                         this.elePaginations = pagination.pagination(

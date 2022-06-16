@@ -26,6 +26,7 @@ const sequelize = new Sequelize(process.env.MSSQL_DATABASE || 'MYDB', process.en
     dialect: 'mssql',
     dialectOptions: {
       useUTC: false, //for reading from database
+      timezone: '+07:00',
     },
     timezone: '+07:00',
     pool: {

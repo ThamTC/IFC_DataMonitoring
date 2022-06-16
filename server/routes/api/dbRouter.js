@@ -17,8 +17,7 @@ router.route("/permission")
 .delete(dbController.deletePermission)
 .patch(dbController.updatePermission)
 router.post("/upload/images", dbController.uploadImages)
-router.get("/issues/counter", dbController.getCounter)
+// router.get("/issues/counter", router_redmine)
 router.use("/issues", router_redmine)
-router.get("/issue/:id", dbController.getIssueIndex)
 
 module.exports = router
