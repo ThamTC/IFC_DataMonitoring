@@ -150,8 +150,8 @@ export default {
                 doneProgress: doneVal,
                 addedBy: this.issueFormData.addedBy,
                 assignee: assigneeVal,
-                startDate: this.issueFormData.startDate,
-                dueDate: this.issueFormData.dueDate,
+                startDate: this.issueFormData.startDate + localISOTime.slice(10),
+                dueDate: this.issueFormData.dueDate + 'T23:59:00',
                 updatedAt: localISOTime
             }
             this.isAdded = false

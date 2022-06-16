@@ -11,7 +11,7 @@
                 <div class="sb-nav-link-icon">
                     <i class="fas fa-users-cog"></i>
                 </div>
-                Issues
+                Tasks
             </router-link>
         </nav>
     </div>

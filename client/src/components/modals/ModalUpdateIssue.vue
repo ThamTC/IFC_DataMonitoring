@@ -105,8 +105,8 @@ export default {
                 status: statusVal,
                 doneProgress: doneVal,
                 assignee: assigneeVal,
-                startDate: this.issueFormData.startDate,
-                dueDate: this.issueFormData.dueDate,
+                startDate: this.issueFormData.startDate + new Date().toISOString().slice(10),
+                dueDate: this.issueFormData.dueDate + 'T23:59:00',
                 updatedAt: localISOTime
             }
             this.isAdded = false
@@ -115,8 +115,8 @@ export default {
                 this.issueFormData.status = payload.status
                 this.issueFormData.doneProgress = payload.doneProgress
                 this.issueFormData.assignee = payload.assignee
-                this.issueFormData.startDate = payload.startDate
-                this.issueFormData.dueDate = payload.dueDate
+                this.issueFormData.startDate = payload.startDate.slice(0,10)
+                this.issueFormData.dueDate = payload.dueDate.slice(0,10)
                 this.isMessage = true
                 this.isAdded = true
                 this.type = "success"
