@@ -10,13 +10,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         <span>Status</span>
-                        <select name="" id="status_select" class="form-select">
+                        <select name="" id="status_select-update" class="form-select" @change="changeStatus" v-model="statusSelection_Ud">
                             <option :value="status" v-for="(status, idx) in optionStatus" :key="idx" :selected="status==getIssue.status">{{status}}</option>
                         </select>
                     </div>
                     <div class="col-md-6">
                         <span>% Done</span>
-                        <select name="" id="done_select" class="form-select">
+                        <select name="" id="progress_select-update" class="form-select" @change="changeProgress" v-model="progressSelection_Ud">
                             <option :value="done" v-for="(done, idx) in optionDone" :key="idx" :selected="done==getIssue.doneProgress">{{done}}%</option>
                         </select>
                     </div>
@@ -79,7 +79,9 @@ export default {
             isDisabled: false,
             optionStatus: ["New", "To Do", "In Progress", "Review", "Done"],
             optionDone: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100],
-            issueFormData: {}
+            issueFormData: {},
+            statusSelection_Ud: null,
+            progressSelection_Ud: null
         }
     },
     props: ["modal"],
@@ -88,6 +90,8 @@ export default {
             return this.modal.users
         },
         getIssue() {
+            this.statusSelection_Ud = this.modal.data.status
+            this.progressSelection_Ud = this.modal.data.doneProgress
             return this.issueFormData = this.modal.data
         },
     },
@@ -95,15 +99,43 @@ export default {
         getIssue() {},
     },
     methods: {
+        changeStatus() {
+            const statusVal = this.statusSelection_Ud
+            if (statusVal === this.optionStatus[0]) {
+                this.progressSelection_Ud = this.optionDone[0]
+            } 
+            if (statusVal === this.optionStatus[2]) {
+                this.progressSelection_Ud = this.optionDone[1]
+            }
+            if (statusVal === this.optionStatus[3]) {
+                this.progressSelection_Ud = this.optionDone[8]
+            }
+            if (statusVal === this.optionStatus[4]) {
+                this.progressSelection_Ud = this.optionDone[10]
+            } 
+        },
+        changeProgress() {
+            const progressVal = this.progressSelection_Ud
+            if (progressVal === this.optionDone[0]) {
+                this.statusSelection_Ud = this.optionStatus[0]
+            }
+            if (progressVal >= this.optionDone[1]) {
+                this.statusSelection_Ud = this.optionStatus[2]
+            }
+            if (progressVal >= this.optionDone[8]) {
+                this.statusSelection_Ud = this.optionStatus[3]
+            }  
+            if (progressVal === this.optionDone[10]) {
+                this.statusSelection_Ud = this.optionStatus[4]
+            }
+        },
         updateIssue() {
             const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
             const localISOTime = new Date(Date.now() - tzoffset).toISOString()
-            const statusVal = document.getElementById("status_select").value
-            const doneVal = document.getElementById("done_select").value
             const assigneeVal = document.getElementById("assignee_select").value
             const payload = {
-                status: statusVal,
-                doneProgress: doneVal,
+                status: this.statusSelection_Ud,
+                doneProgress: this.progressSelection_Ud,
                 assignee: assigneeVal,
                 startDate: this.issueFormData.startDate + new Date().toISOString().slice(10),
                 dueDate: this.issueFormData.dueDate + 'T23:59:00',

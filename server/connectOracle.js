@@ -23,17 +23,17 @@ connectDB()
         { name: 23, value: 2 },
         { name: 26, value: 2 },
       ];
-      const result = await db.GS_Issues.findAll({
-        where: {
-          startDate: {
-            [Op.between]: [
-              "2022-06-14T00:00:00.000Z",
-              "2022-06-15T23:59:59.000Z",
-            ],
-          },
-        }, offset: 3, limit: 3,
-        raw: true,
-      });
+      // const result = await db.GS_Issues.findAll({
+      //   where: {
+      //     startDate: {
+      //       [Op.between]: [
+      //         "2022-06-14T00:00:00.000Z",
+      //         "2022-06-15T23:59:59.000Z",
+      //       ],
+      //     },
+      //   }, offset: 3, limit: 3,
+      //   raw: true,
+      // });
       // const result = await db.GS_Issues.count({
       //   where: {
       //     // assignee: 'KIEN',
@@ -53,11 +53,13 @@ connectDB()
       //     name: "abc"
       //   },
       // )
-      // await db.Permissions.destroy(
-      //   {
-      //     where: {id : 12}
-      //   },
-      // )
+      const result = await db.GS_Issues.destroy(
+        {
+          where: {
+            id: 13
+          }
+        },
+      )
       console.log(result);
     } else {
       console.log(data.error);
