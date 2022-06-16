@@ -16,10 +16,11 @@ router.post("/permission/create", dbController.createPermission)
 router.post("/permission/delete", dbController.deletePermission)
 router.post("/permission/update", dbController.updatePermission)
 router.post("/upload/images", dbController.uploadImages)
-router.get("/issue/index", dbController.getIssues)
+router.get("/issues", dbController.getIssues)
+router.get("/issues/counter", dbController.getCounter)
 router.post("/issue/create", dbController.createIssue)
 router.post("/issue/update", dbController.updateIssue)
 router.get("/issue/:id", dbController.getIssueIndex)
-router.get("/issue/by_user/:assignee", dbController.getIssueByUser)
+router.get("/issue/by_user/:assignee/:startDate/:endDate", dbController.getIssueByUser)
 
 module.exports = router

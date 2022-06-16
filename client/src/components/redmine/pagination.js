@@ -1,8 +1,3 @@
-const valuePage = {
-  curPage: 1,
-  numLinksTwoSide: 1,
-  totalPages: 10,
-};
 
 // DYNAMIC PAGINATION
 const pagination = {
@@ -22,7 +17,6 @@ const pagination = {
     let active = "";
     for (let pos = 1; pos <= totalPages; pos++) {
       active = pos === curPage ? "active" : "";
-
       // truncate
       if (totalPages >= 2 * range - 1) {
         if (
@@ -47,6 +41,9 @@ const pagination = {
             if (countTruncate === 1) render.push(dot);
           }
         }
+      } else {
+        // not truncate
+        render.push(renderPage(pos, active))
       }
     }
     if (renderTwoSide.length) {
