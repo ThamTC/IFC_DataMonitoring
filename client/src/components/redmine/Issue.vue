@@ -204,8 +204,9 @@ export default {
             })
             .then((result) => {
                 // set total page
-                const len = result.data.length;
-                this.totalPage = len / 10 > 0 ?? 1;
+                const len = result.data;
+                const f_total = Math.floor(len / 10);
+                this.totalPage = len%10 > 0 ? f_total+1 : 0;
                 this.elePaginations = pagination.pagination(
                     this.totalPage,
                     this.curPage
