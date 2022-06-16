@@ -15,7 +15,12 @@
                 fixed-columns
               ">
                         <div class="d-flex mb-3 justify-content-end">
-                            <select @change="changeUser" name="" id="assignee_select" class="me-3" v-if="isCanShow" v-model="userSelection">
+                            <select @change="changeProgress" name="" class="me-3" v-model="progressSelection">
+                                <option :value="item" v-for="(item, idx) in doneProgress" :key="idx">
+                                    {{ item }}
+                                </option>
+                            </select>
+                            <select @change="changeUser" name="" class="me-3" v-if="isCanShow" v-model="userSelection">
                                 <option value="All">All</option>
                                 <option :value="user.name" v-for="(user, idx) in users" :key="idx">
                                     {{ user.name }}
@@ -145,7 +150,9 @@ export default {
             isNext: false,
             curPage: 1,
             totalPage: 10,
-            oldPage: 1
+            oldPage: 1,
+            doneProgress: ['All', 'New', 'To Do', 'In Progress', 'Review', 'Done'],
+            progressSelection: 'All'
         };
     },
     computed: {
@@ -166,7 +173,6 @@ export default {
         const localISOTime = new Date(Date.now() - tzoffset).toISOString();
         this.fromDateSelection = localISOTime.slice(0, 10);
         this.toDateSelection = localISOTime.slice(0, 10);
-        this.userSelection = this.getUser.role === "manager" ? 'All' : this.getUser.username
         this.isLoading = true;
         const accessToken = localStorage.getItem("accessToken");
         if (accessToken) {
@@ -174,6 +180,7 @@ export default {
         } else {
             this.user = this.getUser;
         }
+        this.userSelection = this.user.role === "manager" ? 'All' : this.user.username
         const options = {
             where: {
                 assignee: this.userSelection,
