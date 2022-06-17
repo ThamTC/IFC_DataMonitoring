@@ -78,3 +78,14 @@ module.exports = {
 cd ~/project_path/server/
 run: pm2 start index.js --name myapp --watch
 
+// run server client
+cd ~/client
+npm run serve -- --mode=development
+// build client
+npm run build -- --mode=production
+
+// run server nodejs
+cd ~/server
+pm2 kill
+pm2 start index.js --name myapp --watch
+pm2 logs
