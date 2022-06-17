@@ -113,7 +113,6 @@ export default {
                         const editorEle = document.getElementById('editor')
                         editorEle.innerHTML += `<div class="desc-content mb-2">${ele.content}</div>`
                     });
-                    return dbRequest.getAllUsers()
                 })
                 .catch(error => console.log(error))
         } else {
