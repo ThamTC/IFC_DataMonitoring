@@ -2,7 +2,7 @@ import axios from "../api";
 export default {
   getIssueIndex: async (id) => {
     try {
-      const resData = await axios.get("/api/db/issue/"+id);
+      const resData = await axios.get("/api/db/issues/"+id);
       return resData;
     } catch (error) {
       throw error;

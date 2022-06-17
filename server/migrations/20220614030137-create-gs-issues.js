@@ -21,7 +21,8 @@ module.exports = {
       },
       subject: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       priority: {
         type: Sequelize.STRING,

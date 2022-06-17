@@ -53,11 +53,19 @@ connectDB()
       //     name: "abc"
       //   },
       // )
-      const result = await db.GS_Issues.destroy(
+      // const result = await db.GS_Issues.destroy(
+      //   {
+      //     where: {
+      //       id: {[Op.in]: [26, 27]}
+      //     }
+      //   },
+      // )
+      const result = await db.GS_Description.findAll(
         {
           where: {
-            id: 13
-          }
+            issueId: 28
+          },
+          raw: true
         },
       )
       console.log(result);

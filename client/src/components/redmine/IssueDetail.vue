@@ -56,11 +56,13 @@
                     <span class="fw-bold">Description</span>
                     <br>
                     <span class="mx-3">{{issue.description}}</span>
+                    <div id="editor"></div>
                 </div>
             </div>
 
         </div>
         <!-- <button type="button" class="btn btn-secondary" :disabled="true">Submit Change</button> -->
+        <c-k-editor-vue v-on:editor-submit="handleEditor" :editorProp="editorData"/>
     </div>
     <modal-update-issue :modal="modal" />
 </main>
@@ -68,22 +70,27 @@
 
 <script>
 import {
+  mapActions,
     mapGetters, mapMutations
 } from 'vuex'
 import dbRequest from '../../apis/dbRequest'
 import ModalUpdateIssue from '../modals/ModalUpdateIssue.vue'
+import CKEditorVue from '../CKEditor.vue'
 export default {
     name: "IssueDetail",
     components: {
-        ModalUpdateIssue
-    },
+    ModalUpdateIssue,
+    CKEditorVue
+},
     data() {
         return {
+            editorData: {},
             issue: {},
             modal: {
                 name: null,
                 data: {}
-            }
+            },
+            editorDataProp: null
         }
     },
     computed: {
@@ -94,26 +101,47 @@ export default {
         const id = params.id
         const issues = this.getIssues
         if (issues.length) {
-            this.issue = issues[id - 1]
-            this.issue.startDate = this.issue.startDate.slice(0, 10)
-            this.issue.dueDate = this.issue.dueDate.slice(0, 10)
-            this.issue.id = issues[id - 1].id
+            this.issue = issues.find(ele => ele.id == id)
+            this.issue.startDate = this.issue?.startDate.slice(0, 10) ?? ''
+            this.issue.dueDate = this.issue?.dueDate.slice(0, 10) ?? ''
+            this.issue.id = id
+            this.editorData.id = id
+            this.indexDescription(id)
+                .then(result => {
+                    const descriptions = [] = result.data
+                    descriptions.forEach(ele => {
+                        const editorEle = document.getElementById('editor')
+                        editorEle.innerHTML += `<div class="desc-content mb-2">${ele.content}</div>`
+                    });
+                    return dbRequest.getAllUsers()
+                })
+                .catch(error => console.log(error))
         } else {
             dbRequest.getIssueIndex(id)
                 .then(result => {
                     this.issue = result.data
+                    this.editorData.id = result.data.id
+                    this.issue.startDate = this.issue.startDate.slice(0, 10)
+                    this.issue.dueDate = this.issue.dueDate.slice(0, 10)
+                    return this.indexDescription(result.data.id)
+                })
+                .then(result => {
+                    const descriptions = [] = result.data
+                    descriptions.forEach(ele => {
+                        const editorEle = document.getElementById('editor')
+                        editorEle.innerHTML += `<div class="desc-content mb-2">${ele.content}</div>`
+                    });
                     return dbRequest.getAllUsers()
                 })
                 .then(result => {
                     this.setManagerUsers(result.data)
-                    this.issue.startDate = this.issue.startDate.slice(0, 10)
-                    this.issue.dueDate = this.issue.dueDate.slice(0, 10)
                 })
                 .catch(error => console.log(error))
         }
     },
     methods: {
         ...mapMutations(["setManagerUsers"]),
+        ...mapActions(["indexDescription"]),
         mapUsers() {
             return this.getManagerUsers.map(ele => {
                 return {
@@ -130,6 +158,10 @@ export default {
             this.modal.data = this.issue
             this.modal.users = this.mapUsers()
             myModal.show()
+        },
+        handleEditor(data) {
+            const editorEle = document.getElementById('editor')
+            editorEle.innerHTML += `<div class="desc-content mb-2">${data}</div>`
         }
     }
 }
@@ -138,5 +170,10 @@ export default {
 <style>
 .bg-yellow {
     background-color: #ffffdd;
+}
+.desc-content {
+    border: solid 1px gray;
+    border-radius: 2px;
+    padding: 0.2rem;
 }
 </style>

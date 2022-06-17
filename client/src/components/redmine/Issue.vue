@@ -56,14 +56,14 @@
                                             <td style="width: 5%">
                                                 <router-link :to="{
                                                     name: 'issue_detail',
-                                                    params: { id: idx + 1 },
+                                                    params: { id: item.id },
                                                 }" class="text-decoration-none">{{ item.id }}</router-link>
                                             </td>
                                             <td style="width: 7%">{{ item.status }}</td>
                                             <td style="width: 68%" class="text-start">
                                                 <router-link :to="{
                                                     name: 'issue_detail',
-                                                    params: { id: idx + 1 },
+                                                    params: { id: item.id },
                                                 }" class="text-decoration-none">{{ item.subject }}</router-link>
                                             </td>
                                             <td style="width: 8%">

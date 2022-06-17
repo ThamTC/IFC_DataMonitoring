@@ -7,6 +7,7 @@ import axios from "axios";
 import VueSocketIO from "vue-3-socket.io";
 import { io } from "socket.io-client";
 import VueCookies from "vue-cookies";
+import CKEditor from '@ckeditor/ckeditor5-vue'
 
 const app = createApp(App);
 app.use(
@@ -19,4 +20,5 @@ app.use(VueCookies);
 app.use(VueAxios, axios);
 app.use(router);
 app.use(store);
+app.use(CKEditor)
 app.mount("#app");

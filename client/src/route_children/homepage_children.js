@@ -10,6 +10,7 @@ import IssueDetail from '../components/redmine/IssueDetail.vue'
 import Issue from '../components/redmine/Issue.vue'
 import Redmine from '../components/redmine/Redmine.vue'
 import BMBRealTime from '../components/tables/BMBRealTimeTable.vue'
+import RedmineStatistic from '../components/redmine/RedmineStatistic.vue'
 
 export default [
     {
@@ -68,6 +69,11 @@ export default [
                 component: IssueDetail
             }
         ]
+    },
+    {
+        path: "redmine/statistic",
+        name: "redmine_statistic",
+        component: RedmineStatistic
     },
     {
         path: "bmb_room/realtime",

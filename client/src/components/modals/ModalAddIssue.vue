@@ -157,7 +157,7 @@ export default {
             this.isAdded = false
             dbRequest.createIssue(payload)
             .then(result => {
-                this.insertIssue(payload)
+                this.insertIssue(result.data)
                 this.isMessage = true
                 this.isAdded = true
                 this.type = "success"
