@@ -29,19 +29,18 @@ export default {
     methods: {
         ...mapActions(["createDescription"]),
         submitDescr() {
-            console.log(this.editorProp.id)
             const payload = {
                 issueId: this.editorProp.id,
                 content: this.editorData
             }
             this.createDescription(payload)
             .then(result => {
-                console.log(result.data)
+                this.$emit('editor-submit', this.editorData)
+                this.editorData = ''
             })
             .catch(error => {
                 console.log(error)
             })
-            this.$emit('editor-submit', this.editorData)
         }
     },
 }
