@@ -213,7 +213,7 @@ export default {
                 // set total page
                 const len = result.data;
                 const f_total = Math.floor(len / 10);
-                this.totalPage = len % 10 > 0 ? f_total + 1 : 0;
+                this.totalPage = len % 10 > 0 ? f_total + 1 : f_total ;
                 this.elePaginations = pagination.pagination(
                     this.totalPage,
                     this.curPage
@@ -348,7 +348,7 @@ export default {
                         // set total page
                         const len = result.data;
                         const f_total = Math.floor(len / 10);
-                        this.totalPage = len > 0 ? f_total + 1 : 0;
+                        this.totalPage = len % 10 > 0 ? f_total + 1 : f_total;
                         this.curPage = offset;
                         this.handleButtonRight();
                         this.elePaginations = pagination.pagination(
