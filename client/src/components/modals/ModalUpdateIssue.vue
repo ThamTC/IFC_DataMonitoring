@@ -9,6 +9,18 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
+                        <span>Added by</span>
+                        <input type="text" class="form-control" v-model="issueFormData.addedBy" disabled />
+                    </div>
+                    <div class="col-md-6">
+                        <span>Assignee</span>
+                        <select name="" id="assignee_select" class="form-control">
+                            <option :value="user.name" v-for="(user, idx) in getUsers" :key="idx" :selected="user.name==getIssue.assignee">{{user.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
                         <span>Status</span>
                         <select name="" id="status_select-update" class="form-select" @change="changeStatus" v-model="statusSelection_Ud">
                             <option :value="status" v-for="(status, idx) in optionStatus" :key="idx" :selected="status==getIssue.status">{{status}}</option>
@@ -22,18 +34,6 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6">
-                        <span>Added by</span>
-                        <input type="text" class="form-control" v-model="issueFormData.addedBy" disabled />
-                    </div>
-                    <div class="col-md-6">
-                        <span>Assignee</span>
-                        <select name="" id="assignee_select" class="form-control">
-                            <option :value="user.name" v-for="(user, idx) in getUsers" :key="idx" :selected="user.name==getIssue.assignee">{{user.name}}</option>
-                        </select>
-                    </div>
-                </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <span>Start Date</span>

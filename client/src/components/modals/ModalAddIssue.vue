@@ -10,6 +10,18 @@
                 <Form action="" @submit="addIssue" method="post" :validation-schema="schema">
                     <div class="row">
                         <div class="col-md-6">
+                            <span>Added by</span>
+                            <input type="text" class="form-control" v-model="issueFormData.addedBy" disabled />
+                        </div>
+                        <div class="col-md-6">
+                            <span>Assignee</span>
+                            <select name="" id="assignee_select" class="form-control">
+                                <option :value="user.name" v-for="(user, idx) in getUsers" :key="idx" :selected="user.name==getAuthName">{{user.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <span>Status</span>
                             <select name="" id="status_select" class="form-select">
                                 <option :value="status" v-for="(status, idx) in optionStatus" :key="idx" :selected="idx==0">{{status}}</option>
@@ -32,18 +44,7 @@
                         <Field class="form-control" id="descriptionArea" rows="3" v-model="issueFormData.description" name="description" />
                     </div>
                     <ErrorMessage name="description" class="help-message mt-2" />
-                    <div class="row">
-                        <div class="col-md-6">
-                            <span>Added by</span>
-                            <input type="text" class="form-control" v-model="issueFormData.addedBy" disabled />
-                        </div>
-                        <div class="col-md-6">
-                            <span>Assignee</span>
-                            <select name="" id="assignee_select" class="form-control">
-                                <option :value="user.name" v-for="(user, idx) in getUsers" :key="idx" :selected="user.name==getAuthName">{{user.name}}</option>
-                            </select>
-                        </div>
-                    </div>
+                    
                     <div class="row">
                         <div class="col-md-6">
                             <span>Start Date</span>
