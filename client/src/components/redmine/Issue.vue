@@ -170,9 +170,14 @@ export default {
     created() {
         
         const tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
-        const localISOTime = new Date(Date.now() - tzoffset).toISOString();
-        this.fromDateSelection = localISOTime.slice(0, 10);
-        this.toDateSelection = localISOTime.slice(0, 10);
+        const localISOTime = new Date(Date.now() - tzoffset);
+        const today = new Date()
+        const yesterday = new Date(today)
+        yesterday.setDate(yesterday.getDate() - 7)
+        const startDate = yesterday.toISOString()
+        
+        this.fromDateSelection = startDate.slice(0, 10);
+        this.toDateSelection = localISOTime.toISOString().slice(0, 10);
         this.isLoading = true;
         const accessToken = localStorage.getItem("accessToken");
         if (accessToken) {
@@ -186,8 +191,8 @@ export default {
             where: {
                 status: this.statusSelection,
                 assignee: this.userSelection,
-                startDate: localISOTime.slice(0, 10) + "T00:00:00",
-                endDate: localISOTime,
+                startDate: startDate.slice(0, 10) + "T00:00:00",
+                endDate: localISOTime.toISOString(),
             },
             offset: 1,
             limit: 10,
