@@ -222,7 +222,10 @@ export default {
                 this.handleButtonLeft();
                 this.handleButtonRight();
                 // get all issue per one page
-                options.offset = this.curPage
+                options.offset = this.curPage > 0 ? this.curPage : 1
+                if (this.getIssues.length > 0) {
+                    return {data: this.getIssues}
+                }
                 return this.getAllIssue(options);
             })
             .then((result) => {

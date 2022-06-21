@@ -53,21 +53,21 @@ connectDB()
       //     name: "abc"
       //   },
       // )
-      // const result = await db.GS_Issues.destroy(
-      //   {
-      //     where: {
-      //       id: {[Op.in]: [26, 27]}
-      //     }
-      //   },
-      // )
-      const result = await db.GS_Description.findAll(
+      const result = await db.GS_Issues.destroy(
         {
           where: {
-            issueId: 28
-          },
-          raw: true
+            id: {[Op.between]: [45, 46]}
+          }
         },
       )
+      // const result = await db.GS_Description.findAll(
+      //   {
+      //     where: {
+      //       issueId: 28
+      //     },
+      //     raw: true
+      //   },
+      // )
       console.log(result);
     } else {
       console.log(data.error);

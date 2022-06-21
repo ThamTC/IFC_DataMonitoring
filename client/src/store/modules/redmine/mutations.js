@@ -3,7 +3,9 @@ export default {
         state.issues = data
     },
     insertIssue(state, data) {
-        state.issues.push(data)
+        if (state.issues.length < 10) {
+            state.issues.push(data)
+        }
     },
     setDescriptions(state, data) {
         state.descriptions = data

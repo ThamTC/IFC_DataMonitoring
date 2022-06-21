@@ -151,6 +151,12 @@ const socketIo = {
             duration: 5000
         })
         this.$store.commit("setUsersLogin", usersLogin)
+    },
+    createIssue: function (data) {
+        const user = this.$store.getters.getUser
+        if (user.role == 'manager' || user.username == data.assignee) {
+            this.$store.commit("insertIssue", data)
+        }
     }
 };
 export default socketIo

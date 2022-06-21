@@ -63,6 +63,7 @@ const redmineController = {
                 return res.status(400).json("Subject is existed!");
             }
             const resData = await db.GS_Issues.create(issue);
+            global.io.sockets.emit("createIssue", resData)
             return res.status(200).json(resData);
         } catch (error) {
             return res.status(400).json(error);
