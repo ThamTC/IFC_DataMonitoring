@@ -214,6 +214,7 @@ export default {
                 const len = result.data;
                 const f_total = Math.floor(len / 10);
                 this.totalPage = len % 10 > 0 ? f_total + 1 : f_total ;
+                this.curPage = this.totalPage
                 this.elePaginations = pagination.pagination(
                     this.totalPage,
                     this.curPage
@@ -221,6 +222,7 @@ export default {
                 this.handleButtonLeft();
                 this.handleButtonRight();
                 // get all issue per one page
+                options.offset = this.curPage
                 return this.getAllIssue(options);
             })
             .then((result) => {
